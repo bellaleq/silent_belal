@@ -1,0 +1,5492 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SILENT BELAL - بزرگترین مارکت اپلیکیشن های هنری</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --header-height: 80px;
+            --sidebar-width: 280px;
+            --max-width: 1400px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--gray-800);
+            line-height: 1.7;
+            overflow-x: hidden;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        /* اسکرول بار سفارشی */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* تایپوگرافی */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+        }
+
+        h3 {
+            font-size: 2rem;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+        }
+
+        h5 {
+            font-size: 1.25rem;
+        }
+
+        h6 {
+            font-size: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--gray-700);
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* لایهبندی */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        /* دکمهها */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: var(--transition-slow);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray-600);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+        }
+
+        .btn-xl {
+            padding: 1.25rem 2.5rem;
+            font-size: 1.25rem;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* هدر اصلی */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .main-header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        /* ناوبری اصلی */
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        /* جستجو */
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 50px;
+            font-size: 1rem;
+            background: var(--gray-50);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        /* بخش هیرو */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 160px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* بخشهای مختلف */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-light {
+            background: white;
+        }
+
+        .section-gray {
+            background: var(--gray-50);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        /* کارت اپ */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .app-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: var(--shadow);
+        }
+
+        .app-info {
+            flex: 1;
+        }
+
+        .app-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .app-developer {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .app-description {
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .app-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .app-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .app-price.free {
+            color: var(--success);
+        }
+
+        .app-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--warning);
+        }
+
+        .app-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .app-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: var(--gray-100);
+            padding: 0.375rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+
+        .tag-primary {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+        }
+
+        /* دستهبندیها */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .category-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .category-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .category-description {
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* پنل مدیریت */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            background: var(--gray-50);
+        }
+
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            background: var(--gray-900);
+            color: white;
+            position: fixed;
+            top: var(--header-height);
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .admin-sidebar-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .admin-menu {
+            padding: 1rem 0;
+        }
+
+        .admin-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: var(--transition);
+            border-right: 3px solid transparent;
+        }
+
+        .admin-menu-item:hover,
+        .admin-menu-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-right-color: var(--primary);
+        }
+
+        .admin-menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-content {
+            flex: 1;
+            margin-right: var(--sidebar-width);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        /* آمار و ارقام */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* جدولها */
+        .table-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem 1.5rem;
+            text-align: right;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .table th {
+            background: var(--gray-50);
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background: var(--gray-50);
+        }
+
+        /* فرمها */
+        .form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-help {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 0.5rem;
+        }
+
+        /* آپلود فایل */
+        .file-upload {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: var(--transition);
+            background: var(--gray-50);
+            cursor: pointer;
+        }
+
+        .file-upload:hover,
+        .file-upload.dragover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        /* سیستم اعلانات */
+        .notifications {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            z-index: 1100;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 1rem;
+            border-right: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInLeft 0.3s ease;
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-right-color: var(--success);
+        }
+
+        .notification.error {
+            border-right-color: var(--danger);
+        }
+
+        .notification.warning {
+            border-right-color: var(--warning);
+        }
+
+        .notification.info {
+            border-right-color: var(--info);
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* فوتر */
+        .main-footer {
+            background: var(--gray-900);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-700);
+            color: var(--gray-400);
+        }
+
+        /* سیستم احراز هویت */
+        .auth-layout {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .auth-tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* دکمه Gmail */
+        .gmail-btn {
+            width: 100%;
+            background: #db4437;
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .gmail-btn:hover {
+            background: #c23321;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* رسپانسیو */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .section {
+                padding: 80px 0;
+            }
+            
+            .main-nav {
+                gap: 1rem;
+            }
+            
+            .search-container {
+                margin: 0 1rem;
+            }
+            
+            .admin-sidebar {
+                width: 250px;
+            }
+            
+            .admin-content {
+                margin-right: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .main-nav {
+                display: none;
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: var(--shadow-lg);
+                z-index: 999;
+            }
+            
+            .main-nav.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+                transform: translateX(100%);
+            }
+            
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .admin-content {
+                margin-right: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .hero-section {
+                padding: 120px 0 60px;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+            
+            .auth-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .form-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .admin-content {
+                padding: 1.5rem;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+
+        /* کلاسهای کمکی */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+
+        .mt-0 {
+            margin-top: 0;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .p-0 {
+            padding: 0;
+        }
+
+        .p-1 {
+            padding: 0.5rem;
+        }
+
+        .p-2 {
+            padding: 1rem;
+        }
+
+        .p-3 {
+            padding: 1.5rem;
+        }
+
+        .p-4 {
+            padding: 2rem;
+        }
+
+        .bg-white {
+            background: white;
+        }
+
+        .bg-gray {
+            background: var(--gray-50);
+        }
+
+        .bg-primary {
+            background: var(--primary);
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-success {
+            color: var(--success);
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .text-warning {
+            color: var(--warning);
+        }
+
+        .text-muted {
+            color: var(--gray-600);
+        }
+
+        .rounded {
+            border-radius: var(--radius);
+        }
+
+        .rounded-lg {
+            border-radius: var(--radius-lg);
+        }
+
+        .shadow {
+            box-shadow: var(--shadow);
+        }
+
+        .shadow-lg {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .h-100 {
+            height: 100%;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+        .justify-content-center {
+            justify-content: center;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        .position-absolute {
+            position: absolute;
+        }
+
+        .overflow-hidden {
+            overflow: hidden;
+        }
+
+        /* انیمیشنها */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease;
+        }
+
+        .animate-slideInDown {
+            animation: slideInDown 0.6s ease;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* اسکلت لودینگ */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-300) 50%, var(--gray-200) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* دکمه منوی موبایل */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-700);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* اسلایدر */
+        .slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slider-item {
+            flex: 0 0 100%;
+            padding: 2rem;
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .slider-prev {
+            right: 1rem;
+        }
+
+        .slider-next {
+            left: 1rem;
+        }
+
+        /* بدجهای پیشرفت */
+        .progress {
+            background: var(--gray-200);
+            border-radius: 50px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+            transition: width 0.6s ease;
+        }
+
+        /* مدال */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-slow);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: var(--transition-slow);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1rem 2rem 2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* تبها */
+        .tabs {
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: 2rem;
+        }
+
+        .tab-list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tab-item {
+            margin-bottom: -2px;
+        }
+
+        .tab-link {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--gray-600);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .tab-link.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* کارتهای ویژه */
+        .feature-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .feature-description {
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* سیستم امتیازدهی */
+        .rating {
+            display: inline-flex;
+            gap: 0.25rem;
+        }
+
+        .rating-star {
+            color: var(--gray-300);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .rating-star.active {
+            color: var(--warning);
+        }
+
+        .rating-star:hover {
+            color: var(--warning);
+            transform: scale(1.2);
+        }
+
+        /* بدج وضعیت */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-info {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        /* سیستم فیلتر */
+        .filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-option {
+            background: var(--gray-100);
+            border: 2px solid var(--gray-200);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .filter-option:hover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .filter-option.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* سیستم کامنت و نقد و بررسی */
+        .review-section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .review-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .review-meta {
+            flex: 1;
+        }
+
+        .review-author {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .review-date {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .review-content {
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* سیستم پشتیبانی */
+        .support-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .support-btn {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .support-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* سیستم جستجوی پیشرفته */
+        .advanced-search {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* سیستم مقایسه */
+        .comparison-table {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-header {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 200px repeat(auto-fit, minmax(150px, 1fr));
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-cell {
+            padding: 1rem 1.5rem;
+            border-left: 1px solid var(--gray-200);
+        }
+
+        .comparison-cell:first-child {
+            border-left: none;
+            background: var(--gray-50);
+            font-weight: 600;
+        }
+
+        /* سیستم دانلود */
+        .download-section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .download-progress {
+            margin: 2rem 0;
+        }
+
+        .download-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .download-stat {
+            text-align: center;
+        }
+
+        .download-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .download-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* سیستم اشتراکگذاری */
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .share-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-btn.facebook {
+            background: #3b5998;
+        }
+
+        .share-btn.twitter {
+            background: #1da1f2;
+        }
+
+        .share-btn.telegram {
+            background: #0088cc;
+        }
+
+        .share-btn.whatsapp {
+            background: #25d366;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow);
+        }
+
+        /* سیستم آمار پیشرفته */
+        .analytics-dashboard {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 2rem 0;
+        }
+
+        /* سیستم نوتیفیکیشن پیشرفته */
+        .notification-center {
+            position: fixed;
+            top: var(--header-height);
+            left: 2rem;
+            width: 350px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .notification-center.active {
+            transform: translateX(0);
+        }
+
+        .notification-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background: var(--gray-50);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .notification-message {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 0.5rem;
+        }
+
+        /* سیستم پروفایل کاربری */
+        .profile-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .profile-email {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* سیستم تنظیمات */
+        .settings-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .settings-group {
+            margin-bottom: 2rem;
+        }
+
+        .settings-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--gray-900);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .settings-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* سوئیچ */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gray-300);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* سیستم پشتیبانی تیکت */
+        .ticket-system {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .ticket-list {
+            margin-top: 2rem;
+        }
+
+        .ticket-item {
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .ticket-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .ticket-title {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .ticket-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .ticket-status.open {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .ticket-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .ticket-status.closed {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--gray-600);
+        }
+
+        .ticket-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .ticket-preview {
+            margin-top: 1rem;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        /* سیستم بلاگ */
+        .blog-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .blog-card {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .blog-excerpt {
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        /* سیستم FAQ */
+        .faq-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1.5rem 0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: var(--gray-900);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .faq-toggle {
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* سیستم چند زبانه */
+        .language-switcher {
+            position: relative;
+        }
+
+        .language-btn {
+            background: none;
+            border: none;
+            color: var(--gray-700);
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            min-width: 150px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .language-switcher:hover .language-dropdown {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .language-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .language-option:hover {
+            background: var(--gray-50);
+        }
+
+        /* سیستم تاریخ شمسی */
+        .persian-date {
+            font-family: 'Vazir', sans-serif;
+            direction: rtl;
+        }
+
+        /* سیستم چاپ */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .print-only {
+                display: block !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            
+            .container {
+                max-width: none !important;
+                padding: 0 !important;
+            }
+        }
+
+        /* سیستم دسترسیپذیری */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* سیستم تم تاریک */
+        .dark-mode {
+            background: var(--gray-900);
+            color: var(--gray-100);
+        }
+
+        .dark-mode .bg-white {
+            background: var(--gray-800);
+        }
+
+        .dark-mode .text-gray-900 {
+            color: var(--gray-100);
+        }
+
+        .dark-mode .text-gray-700 {
+            color: var(--gray-300);
+        }
+
+        .dark-mode .text-gray-600 {
+            color: var(--gray-400);
+        }
+
+        /* سیستم انیمیشنهای پیشرفته */
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0,0,0);
+            }
+            40%, 43% {
+                transform: translate3d(0,-30px,0);
+            }
+            70% {
+                transform: translate3d(0,-15px,0);
+            }
+            90% {
+                transform: translate3d(0,-4px,0);
+            }
+        }
+
+        @keyframes flash {
+            0%, 50%, 100% {
+                opacity: 1;
+            }
+            25%, 75% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes rubberBand {
+            0% {
+                transform: scale3d(1,1,1);
+            }
+            30% {
+                transform: scale3d(1.25,.75,1);
+            }
+            40% {
+                transform: scale3d(.75,1.25,1);
+            }
+            50% {
+                transform: scale3d(1.15,.85,1);
+            }
+            65% {
+                transform: scale3d(.95,1.05,1);
+            }
+            75% {
+                transform: scale3d(1.05,.95,1);
+            }
+            100% {
+                transform: scale3d(1,1,1);
+            }
+        }
+
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+
+        .animate-flash {
+            animation: flash 2s infinite;
+        }
+
+        .animate-rubberBand {
+            animation: rubberBand 1s;
+        }
+
+        /* سیستم شبکههای اجتماعی */
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* سیستم بازگشت به بالا */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* سیستم لودینگ صفحه */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--gray-200);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* سیستم خطا */
+        .error-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .error-content {
+            max-width: 500px;
+            padding: 2rem;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* سیستم موفقیت */
+        .success-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+        }
+
+        .success-content {
+            max-width: 500px;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+        }
+
+        .success-message {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .success-description {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* سیستم کد تخفیف */
+        .coupon-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .coupon-code {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 2rem 0;
+            display: inline-block;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .coupon-code:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* سیستم مقایسه قیمت */
+        .price-comparison {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .price-table th,
+        .price-table td {
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+
+        .price-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+        }
+
+        .price-feature {
+            text-align: right !important;
+            font-weight: 600;
+            background: var(--gray-50);
+        }
+
+        .price-highlight {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid var(--primary);
+        }
+
+        /* سیستم نظرسنجی */
+        .poll-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .poll-options {
+            margin: 2rem 0;
+        }
+
+        .poll-option {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .poll-option:hover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .poll-option.selected {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .poll-results {
+            margin-top: 2rem;
+        }
+
+        .poll-result {
+            margin-bottom: 1rem;
+        }
+
+        .poll-result-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .poll-result-bar {
+            background: var(--gray-200);
+            border-radius: 50px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .poll-result-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+            transition: width 1s ease;
+        }
+
+        /* سیستم بازی */
+        .game-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            margin: 2rem auto;
+            max-width: 320px;
+        }
+
+        .game-cell {
+            background: var(--gray-100);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-cell:hover {
+            background: var(--gray-200);
+        }
+
+        .game-cell.x {
+            color: var(--primary);
+        }
+
+        .game-cell.o {
+            color: var(--secondary);
+        }
+
+        /* سیستم چت زنده */
+        .live-chat {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+
+        .live-chat.active {
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: rgba(102, 126, 234, 0.1);
+            margin-right: auto;
+        }
+
+        .message.bot {
+            background: var(--gray-100);
+            margin-left: auto;
+        }
+
+        /* سیستم واقعیت افزوده */
+        .ar-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .ar-viewer {
+            width: 100%;
+            height: 400px;
+            background: var(--gray-200);
+            border-radius: var(--radius);
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+        }
+
+        /* سیستم واقعیت مجازی */
+        .vr-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .vr-headset {
+            width: 200px;
+            height: 200px;
+            background: var(--gray-200);
+            border-radius: 50%;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            font-size: 3rem;
+        }
+
+        /* سیستم هوش مصنوعی */
+        .ai-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .ai-recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .ai-card {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+        }
+
+        .ai-card-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .ai-card-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* سیستم بلاکچین */
+        .blockchain-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .blockchain-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .blockchain-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+
+        .blockchain-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .blockchain-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* سیستم اینترنت اشیا */
+        .iot-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .iot-devices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .iot-device {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .iot-device:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .iot-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .iot-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .iot-status {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        /* سیستم کوانتومی */
+        .quantum-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .quantum-computer {
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius);
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quantum-computer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        /* سیستم متاورس */
+        .metaverse-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .metaverse-world {
+            width: 100%;
+            height: 400px;
+            background: var(--gray-200);
+            border-radius: var(--radius);
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metaverse-world::before {
+            content: '🌍';
+            font-size: 8rem;
+            opacity: 0.3;
+        }
+
+        /* سیستم NFT */
+        .nft-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .nft-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .nft-card {
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .nft-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nft-image {
+            width: 100%;
+            height: 200px;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+        }
+
+        .nft-info {
+            padding: 1rem;
+        }
+
+        .nft-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .nft-creator {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .nft-price {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* سیستم DeFi */
+        .defi-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .defi-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .defi-stat {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .defi-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .defi-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* سیستم GameFi */
+        .gamefi-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .gamefi-games {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .gamefi-card {
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .gamefi-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .gamefi-image {
+            width: 100%;
+            height: 150px;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+        }
+
+        .gamefi-info {
+            padding: 1rem;
+        }
+
+        .gamefi-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .gamefi-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .gamefi-reward {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .gamefi-token {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* سیستم SocialFi */
+        .socialfi-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .socialfi-feed {
+            margin-top: 2rem;
+        }
+
+        .socialfi-post {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+        }
+
+        .socialfi-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .socialfi-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .socialfi-user {
+            flex: 1;
+        }
+
+        .socialfi-name {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .socialfi-time {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .socialfi-content {
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .socialfi-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .socialfi-action {
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .socialfi-action:hover {
+            color: var(--primary);
+        }
+
+        /* سیستم Creator Economy */
+        .creator-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .creator-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .creator-stat {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .creator-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .creator-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* سیستم DAO */
+        .dao-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dao-proposals {
+            margin-top: 2rem;
+        }
+
+        .dao-proposal {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+        }
+
+        .dao-proposal-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .dao-proposal-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .dao-voting {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .dao-vote-btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--gray-300);
+            background: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .dao-vote-btn.yes:hover {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .dao-vote-btn.no:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* سیستم Web3 */
+        .web3-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .web3-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .web3-feature {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .web3-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .web3-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .web3-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* سیستم پایان */
+        .system-complete {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .system-complete-icon {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .system-complete-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .system-complete-description {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* سیستم کپیرایت */
+        .copyright-notice {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* سیستم بهینهسازی موتورهای جستجو */
+        .seo-optimized {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* سیستم دسترسیپذیری پیشرفته */
+        .accessibility-tools {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius) 0 0 var(--radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .accessibility-btn {
+            display: block;
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .accessibility-btn:hover {
+            background: var(--gray-50);
+        }
+
+        /* سیستم پشتیبانی از خواننده صفحه */
+        .screen-reader-support {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* سیستم پایان کد */
+        .code-complete {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .code-complete-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .code-complete-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .code-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .code-stat {
+            text-align: center;
+        }
+
+        .code-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .final-message {
+            font-size: 1.25rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* گرید ۳ ستونی */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- لودینگ صفحه -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- سیستم اعلانات -->
+    <div class="notifications" id="notifications"></div>
+
+    <!-- هدر اصلی -->
+    <header class="main-header" id="mainHeader">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <span class="logo-icon">🎨</span>
+                    SILENT BELAL
+                </a>
+
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="جستجو بین هزاران اپلیکیشن هنری...">
+                </div>
+
+                <nav class="main-nav">
+                    <a href="#" class="nav-link active">خانه</a>
+                    <a href="#" class="nav-link">اپ ها</a>
+                    <a href="#" class="nav-link">دسته بندی ها</a>
+                    <a href="#" class="nav-link">توسعه دهندگان</a>
+                    <a href="#" class="nav-link">وبلاگ</a>
+                    <a href="#" class="nav-link">پشتیبانی</a>
+                    
+                    <div class="nav-links">
+                        <button class="btn btn-outline btn-sm" onclick="showAuthModal()">
+                            <i class="fas fa-user"></i>
+                            ورود توسعهدهندگان
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="adminLogin()">
+                            <i class="fas fa-user-shield"></i>
+                            مدیریت
+                        </button>
+                    </div>
+                </nav>
+
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوای اصلی -->
+    <main>
+        <!-- بخش هیرو -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title animate-fadeIn">
+                       SILENT BELAL
+                    </h1>
+                    <p class="hero-subtitle animate-fadeIn">
+                        بزرگترین مارکت تخصصی اپلیکیشن های هنری در جهان
+                    </p>
+                    <p class="hero-subtitle animate-fadeIn">
+                        کشف کنید، خلق کنید، الهام بگیرید
+                    </p class="hero-subtitle animate-fadeIn">
+                    برای معرفی کردن اپلیکیشن خود به واتساپ مسج بگذارید تا تایید نهایی ود.
+                    <p>
+
+                    </p>
+                    <div class="hero-buttons animate-fadeIn">
+                        <button class="btn btn-primary btn-xl" onclick="exploreApps()">
+                            <i class="fas fa-rocket"></i>
+                            شروع کنید
+                        </button>
+                        <button class="btn btn-outline btn-xl" onclick="showAuthModal()">
+                            <i class="fas fa-upload"></i>
+                            توسعهدهنده شوید
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش اپهای ویژه -->
+        <section class="section section-light">
+            <div class="container">
+                <h2 class="section-title">اپ های ویژه و منتخب</h2>
+                <div class="apps-grid" id="featuredAppsGrid">
+                    <!-- اپهای ویژه اینجا لود میشوند -->
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش دستهبندیها -->
+        <section class="section section-gray">
+            <div class="container">
+                <h2 class="section-title">دسته بندی های هنری</h2>
+                <div class="categories-grid">
+                    <a href="#" class="category-card" onclick="showCategory('painting')">
+                        <span class="category-icon">🎨</span>
+                        <h3 class="category-title">نقاشی و طراحی</h3>
+                        <p class="category-description">ابزارهای طراحی دیجیتال، نقاشی و تصویرسازی</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showCategory('music')">
+                        <span class="category-icon">🎵</span>
+                        <h3 class="category-title">موسیقی و صدا</h3>
+                        <p class="category-description">استودیوهای موسیقی، سازهای مجازی و آموزش</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showCategory('photo')">
+                        <span class="category-icon">📷</span>
+                        <h3 class="category-title">عکاسی و ادیت</h3>
+                        <p class="category-description">ویرایش عکس، فیلترهای هنری و افکتها</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showCategory('3d')">
+                        <span class="category-icon">🔶</span>
+                        <h3 class="category-title">سهبعدی و انیمیشن</h3>
+                        <p class="category-description">مدلسازی، رندرینگ و انیمیشنسازی</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showCategory('video')">
+                        <span class="category-icon">🎬</span>
+                        <h3 class="category-title">ویدیو و موشن</h3>
+                        <p class="category-description">تدوین ویدیو، موشن گرافیک و جلوههای ویژه</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showCategory('writing')">
+                        <span class="category-icon">✍️</span>
+                        <h3 class="category-title">نویسندگی و تایپوگرافی</h3>
+                        <p class="category-description">فونتها، تایپوگرافی و ابزارهای نویسندگی</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش آمار و ارقام -->
+        <section class="section section-light">
+            <div class="container">
+                <h2 class="section-title">SILENT BELALدر یک نگاه</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalApps">۵,۲۴۷</div>
+                        <div class="stat-label">اپلیکیشن فعال</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalDevelopers">۱۲,۸۵۶</div>
+                        <div class="stat-label">توسعهدهنده</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalDownloads">۲۵.۴M</div>
+                        <div class="stat-label">دانلود</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCountries">۱۵۸</div>
+                        <div class="stat-label">کشور</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش توسعهدهندگان -->
+        <section class="section section-gray">
+            <div class="container">
+                <h2 class="section-title">برای توسعهدهندگان</h2>
+                <div class="grid-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">💼</div>
+                        <h3 class="feature-title">اپلیکیشنهای خود را منتشر کنید</h3>
+                        <p class="feature-description">اپلیکیشنهای هنری خود را به میلیونها کاربر در سراسر جهان معرفی کنید</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3 class="feature-title">درآمدزایی کنید</h3>
+                        <p class="feature-description">از طریق فروش اپلیکیشن، خریدهای درونبرنامهای و تبلیغات درآمد کسب کنید</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">آمار پیشرفته</h3>
+                        <p class="feature-description">با ابزارهای تحلیلی پیشرفته، عملکرد اپلیکیشن خود را رصد کنید</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش سیستم کامل -->
+        <section class="system-complete">
+            <div class="container">
+                <div class="system-complete-icon">🚀</div>
+                <h2 class="system-complete-title">سیستم کامل SILENT BELAL</h2>
+                <p class="system-complete-description">
+                    یک پلتفرم جامع با تمام امکانات مورد نیاز برای توسعهدهندگان و کاربران
+                </p>
+                <div class="code-stats">
+                    <div class="code-stat">
+                        <div class="code-number">۸,۰۰۰+</div>
+                        <div class="code-label">بازدید کنند ها</div>
+                    </div>
+                    <div class="code-stat">
+                        <div class="code-number">۱۵۰+</div>
+                        <div class="code-label">ویژگی</div>
+                    </div>
+                    <div class="code-stat">
+                        <div class="code-number">۱۰۰%</div>
+                        <div class="code-label">عملیاتی</div>
+                    </div>
+                </div>
+                <p class="final-message">
+                    برای معرفی کردن اپلیکیشن خود به واتساپ مسج بگذارید تا تایید نهایی ود.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>درباره SILENT BELAL</h3>
+                    <p>بزرگترین مارکت تخصصی اپلیکیشن های هنری در جهان. مکانی برای کشف، خلق و الهام گرفتن.</p>
+                    <div class="social-links">
+                        <a href="https://t.me/kapisa_2" class="social-link"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.instagram.com/kapisa_2?igsh=MW56ZGd5ZzQ4MWM5eA==" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@kapisagroup_2?si=Y21vtn-UUZETeApj" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/share/17DJBdxN1D/" class="social-link"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>لینکهای مفید</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://t.me/kapisa_2">صفحه اصلی</a></li>
+                        <li><a href="https://wa.me/93790310747">اپ ها</a></li>
+                        <li><a href="https://t.me/kapisa_2">دسته بندی ها</a></li>
+                        <li><a href="https://wa.me/93790310747">توسعه دهندگان</a></li>
+                        <li><a href="https://t.me/kapisa_2">قیمت گذاری</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>پشتیبانی</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://t.me/kapisa_2">مرکز کمک</a></li>
+                        <li><a href="https://wa.me/93790310747">تماس با ما</a></li>
+                        <li><a href="https://wa.me/93790310747">پرسش های متداول</a></li>
+                        <li><a href="#">شرایط استفاده</a></li>
+                        <li><a href="#">حریم خصوصی</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> belalyaqoobi.4080@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> 0790310747</li>
+                        <li><i class="fas fa-map-marker-alt"></i> کابل افغانستان</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© ۲۰۲۴ SILENT BELAL. تمام حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- دکمه بازگشت به بالا -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- سیستم پشتیبانی -->
+    <div class="support-widget">
+        <button class="support-btn" onclick="toggleSupport()">
+            <i class="fas fa-headset"></i>
+        </button>
+    </div>
+
+    <!-- مدال احراز هویت -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>ورود به SILENT BELAL</h3>
+                <button class="modal-close" onclick="hideAuthModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" onclick="showAuthTab('login')">ورود</div>
+                    <div class="auth-tab" onclick="showAuthTab('register')">ثبتنام</div>
+                </div>
+                
+                <div id="loginForm">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label">ایمیل</label>
+                            <input type="email" class="form-input" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رمز عبور</label>
+                            <input type="password" class="form-input" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">ورود</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <p>یا ورود با</p>
+                        <button class="gmail-btn" onclick="handleGmailAuth()">
+                            <i class="fab fa-google"></i>
+                            Gmail
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="registerForm" class="hidden">
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label class="form-label">نام کامل</label>
+                            <input type="text" class="form-input" id="registerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ایمیل</label>
+                            <input type="email" class="form-input" id="registerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رمز عبور</label>
+                            <input type="password" class="form-input" id="registerPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">تکرار رمز عبور</label>
+                            <input type="password" class="form-input" id="registerConfirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">ثبتنام</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- سیستم چت زنده -->
+    <div class="live-chat" id="liveChat">
+        <div class="chat-header">
+            <h4>پشتیبانی آنلاین</h4>
+            <button class="modal-close" onclick="toggleSupport()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                سلام! به پشتیبانی SILENT BELAL خوش آمدید. چطور میتوانم کمکتان کنم؟
+            </div>
+        </div>
+        <div class="chat-input">
+            <div class="form-group">
+                <input type="text" class="form-input" id="chatInput" placeholder="پیام خود را بنویسید..." onkeypress="handleChatInput(event)">
+            </div>
+        </div>
+    </div>
+
+
+// سیستم اصلی SILENT BELAL - کد کامل و عملیاتی
+<script>
+    // سیستم اصلی ArtSpace - نسخه نهایی
+
+const CONFIG = {
+    ADMIN_EMAIL: 'wwtn6191@gmail.com',
+    ADMIN_PASSWORD: 'admin123',
+    DEVELOPER_EMAIL: 'developer@artspace.com',
+    DEVELOPER_PASSWORD: 'dev123',
+    MAX_FILE_SIZE: 100 * 1024 * 1024,
+    ALLOWED_FILE_TYPES: ['.apk', '.zip', '.rar']
+};
+
+class ArtSpaceDatabase {
+    constructor() {
+        this.version = '3.0.0';
+        this.init();
+    }
+
+    init() {
+        if (!localStorage.getItem('artspace_settings')) this.initializeSettings();
+        if (!localStorage.getItem('artspace_users')) this.initializeUsers();
+        if (!localStorage.getItem('artspace_developers')) this.initializeDevelopers();
+        if (!localStorage.getItem('artspace_apps')) this.initializeApps();
+        if (!localStorage.getItem('artspace_categories')) this.initializeCategories();
+        if (!localStorage.getItem('artspace_downloads')) this.initializeDownloads();
+        if (!localStorage.getItem('artspace_reviews')) this.initializeReviews();
+        if (!localStorage.getItem('artspace_analytics')) this.initializeAnalytics();
+        if (!localStorage.getItem('artspace_files')) this.initializeFiles();
+    }
+
+    initializeSettings() {
+        const settings = {
+            site_name: 'ArtSpace',
+            site_description: 'بزرگترین مارکت اپلیکیشن‌های هنری',
+            currency: 'تومان',
+            language: 'fa',
+            theme: 'light',
+            maintenance: false,
+            version: this.version
+        };
+        localStorage.setItem('artspace_settings', JSON.stringify(settings));
+    }
+
+    initializeFiles() {
+        localStorage.setItem('artspace_files', JSON.stringify([]));
+    }
+
+    initializeUsers() {
+        const users = [
+            {
+                id: 1,
+                name: 'مدیر سیستم',
+                email: CONFIG.ADMIN_EMAIL,
+                password: CONFIG.ADMIN_PASSWORD,
+                role: 'admin',
+                avatar: '👑',
+                created_at: new Date().toISOString(),
+                last_login: new Date().toISOString(),
+                status: 'active',
+                permissions: ['all']
+            },
+            {
+                id: 2,
+                name: 'توسعه‌دهنده نمونه',
+                email: CONFIG.DEVELOPER_EMAIL,
+                password: CONFIG.DEVELOPER_PASSWORD,
+                role: 'developer',
+                avatar: '👨‍💻',
+                created_at: new Date().toISOString(),
+                last_login: new Date().toISOString(),
+                status: 'active',
+                permissions: ['upload_apps', 'manage_apps']
+            }
+        ];
+        localStorage.setItem('artspace_users', JSON.stringify(users));
+    }
+
+    initializeDevelopers() {
+        const developers = [
+            {
+                id: 1,
+                user_id: 2,
+                company_name: 'ArtStudio Inc',
+                bio: 'تیم تخصصی در زمینه توسعه اپلیکیشن‌های هنری',
+                website: 'https://artstudio.com',
+                social_links: { twitter: '@artstudio', instagram: '@artstudio' },
+                total_apps: 2,
+                total_downloads: 23650,
+                rating: 4.7,
+                joined_date: new Date().toISOString()
+            }
+        ];
+        localStorage.setItem('artspace_developers', JSON.stringify(developers));
+    }
+
+    initializeApps() {
+        const apps = [
+            {
+                id: 1,
+                name: 'Procreate Mobile',
+                developer: 'ArtStudio Inc',
+                developer_id: 1,
+                description: 'اپلیکیشن حرفه‌ای طراحی دیجیتال با قلم‌های متنوع',
+                category: 'نقاشی و طراحی',
+                price: 0,
+                original_price: 299000,
+                rating: 4.8,
+                downloads: 15420,
+                size: '85MB',
+                version: '2.1.0',
+                icon: '🎨',
+                images: [],
+                file_url: 'procreate-mobile.apk',
+                file_name: 'procreate-mobile.apk',
+                file_size: 85000000,
+                status: 'approved',
+                featured: true,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                tags: ['طراحی', 'نقاشی', 'دیجیتال'],
+                requirements: ['اندروید ۸+', 'قلم نوری'],
+                whats_new: 'اضافه شدن ۲۰ قلم جدید'
+            },
+            {
+                id: 2,
+                name: 'Music Composer Pro',
+                developer: 'ArtStudio Inc',
+                developer_id: 1,
+                description: 'استودیو موسیقی کامل با سازهای مجازی',
+                category: 'موسیقی',
+                price: 299000,
+                original_price: 499000,
+                rating: 4.6,
+                downloads: 8230,
+                size: '120MB',
+                version: '1.5.2',
+                icon: '🎵',
+                images: [],
+                file_url: 'music-composer-pro.apk',
+                file_name: 'music-composer-pro.apk',
+                file_size: 120000000,
+                status: 'approved',
+                featured: true,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                tags: ['موسیقی', 'آهنگسازی', 'استودیو'],
+                requirements: ['اندروید ۹+', 'هدفون'],
+                whats_new: 'اضافه شدن ۱۰ ساز جدید'
+            }
+        ];
+        localStorage.setItem('artspace_apps', JSON.stringify(apps));
+    }
+
+    initializeCategories() {
+        const categories = [
+            { id: 1, name: 'نقاشی و طراحی', icon: '🎨', description: 'ابزارهای طراحی و نقاشی دیجیتال', app_count: 1247, color: '#667eea' },
+            { id: 2, name: 'موسیقی', icon: '🎵', description: 'استودیوهای موسیقی و سازهای مجازی', app_count: 856, color: '#764ba2' },
+            { id: 3, name: 'عکاسی', icon: '📷', description: 'ویرایش عکس و افکت‌های هنری', app_count: 934, color: '#f093fb' },
+            { id: 4, name: 'سه‌بعدی', icon: '🔶', description: 'مدل‌سازی و انیمیشن سه‌بعدی', app_count: 567, color: '#f5576c' },
+            { id: 5, name: 'انیمیشن', icon: '🎬', description: 'انیمیشن‌سازی دو بعدی و سه‌بعدی', app_count: 423, color: '#4facfe' },
+            { id: 6, name: 'نویسندگی', icon: '✍️', description: 'ابزارهای نویسندگی و تایپوگرافی', app_count: 298, color: '#43e97b' }
+        ];
+        localStorage.setItem('artspace_categories', JSON.stringify(categories));
+    }
+
+    initializeDownloads() {
+        localStorage.setItem('artspace_downloads', JSON.stringify([]));
+    }
+
+    initializeReviews() {
+        localStorage.setItem('artspace_reviews', JSON.stringify([]));
+    }
+
+    initializeAnalytics() {
+        const analytics = {
+            total_downloads: 0,
+            total_revenue: 0,
+            active_users: 0,
+            daily_downloads: [],
+            monthly_revenue: [],
+            popular_apps: [],
+            user_countries: []
+        };
+        localStorage.setItem('artspace_analytics', JSON.stringify(analytics));
+    }
+
+    // مدیریت فایل‌ها
+    getFiles() {
+        return JSON.parse(localStorage.getItem('artspace_files') || '[]');
+    }
+
+    addFile(fileData) {
+        const files = this.getFiles();
+        fileData.id = Date.now();
+        fileData.uploaded_at = new Date().toISOString();
+        files.push(fileData);
+        localStorage.setItem('artspace_files', JSON.stringify(files));
+        return fileData;
+    }
+
+    // ذخیره فایل واقعی در localStorage
+    saveFileToStorage(fileId, fileData) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const fileInfo = {
+                        id: fileId,
+                        name: fileData.name,
+                        type: fileData.type,
+                        size: fileData.size,
+                        data: e.target.result,
+                        uploaded_at: new Date().toISOString()
+                    };
+                    
+                    // ذخیره فایل در localStorage
+                    const existingFiles = JSON.parse(localStorage.getItem('artspace_file_storage') || '{}');
+                    existingFiles[fileId] = fileInfo;
+                    localStorage.setItem('artspace_file_storage', JSON.stringify(existingFiles));
+                    
+                    resolve(fileInfo);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(fileData);
+        });
+    }
+
+    // بازیابی فایل از localStorage
+    getFileFromStorage(fileId) {
+        try {
+            const existingFiles = JSON.parse(localStorage.getItem('artspace_file_storage') || '{}');
+            return existingFiles[fileId] || null;
+        } catch (error) {
+            console.error('خطا در بازیابی فایل:', error);
+            return null;
+        }
+    }
+
+    // مدیریت کاربران
+    getUsers() {
+        return JSON.parse(localStorage.getItem('artspace_users') || '[]');
+    }
+
+    addUser(user) {
+        const users = this.getUsers();
+        user.id = Date.now();
+        user.created_at = new Date().toISOString();
+        user.last_login = new Date().toISOString();
+        user.status = 'active';
+        user.avatar = user.avatar || '👤';
+        users.push(user);
+        localStorage.setItem('artspace_users', JSON.stringify(users));
+        return user;
+    }
+
+    findUserByEmail(email) {
+        const users = this.getUsers();
+        return users.find(user => user.email === email);
+    }
+
+    updateUser(id, updates) {
+        const users = this.getUsers();
+        const index = users.findIndex(user => user.id === id);
+        if (index !== -1) {
+            users[index] = { ...users[index], ...updates, updated_at: new Date().toISOString() };
+            localStorage.setItem('artspace_users', JSON.stringify(users));
+            return users[index];
+        }
+        return null;
+    }
+
+    // مدیریت توسعه‌دهندگان
+    getDevelopers() {
+        return JSON.parse(localStorage.getItem('artspace_developers') || '[]');
+    }
+
+    addDeveloper(developer) {
+        const developers = this.getDevelopers();
+        developer.id = Date.now();
+        developer.joined_date = new Date().toISOString();
+        developer.total_apps = 0;
+        developer.total_downloads = 0;
+        developer.rating = 0;
+        developers.push(developer);
+        localStorage.setItem('artspace_developers', JSON.stringify(developers));
+        return developer;
+    }
+
+    findDeveloperByUserId(userId) {
+        const developers = this.getDevelopers();
+        return developers.find(dev => dev.user_id === userId);
+    }
+
+    updateDeveloper(id, updates) {
+        const developers = this.getDevelopers();
+        const index = developers.findIndex(dev => dev.id === id);
+        if (index !== -1) {
+            developers[index] = { ...developers[index], ...updates };
+            localStorage.setItem('artspace_developers', JSON.stringify(developers));
+            return developers[index];
+        }
+        return null;
+    }
+
+    // مدیریت اپ‌ها
+    getApps() {
+        return JSON.parse(localStorage.getItem('artspace_apps') || '[]');
+    }
+
+    addApp(app) {
+        const apps = this.getApps();
+        
+        const existingApp = apps.find(a => a.name === app.name && a.developer_id === app.developer_id);
+        if (existingApp) {
+            throw new Error('اپلیکیشن با این نام از قبل وجود دارد');
+        }
+
+        app.id = Date.now();
+        app.created_at = new Date().toISOString();
+        app.updated_at = new Date().toISOString();
+        app.downloads = app.downloads || 0;
+        app.rating = app.rating || 0;
+        app.status = app.status || 'pending';
+        app.featured = app.featured || false;
+        
+        apps.push(app);
+        localStorage.setItem('artspace_apps', JSON.stringify(apps));
+        
+        this.updateDeveloperStats(app.developer_id);
+        
+        console.log('✅ اپ جدید ثبت شد:', app.name);
+        return app;
+    }
+
+    updateApp(id, updates) {
+        const apps = this.getApps();
+        const index = apps.findIndex(app => app.id === id);
+        if (index !== -1) {
+            apps[index] = { ...apps[index], ...updates, updated_at: new Date().toISOString() };
+            localStorage.setItem('artspace_apps', JSON.stringify(apps));
+            return apps[index];
+        }
+        return null;
+    }
+
+    deleteApp(id) {
+        const apps = this.getApps();
+        const filteredApps = apps.filter(app => app.id !== id);
+        localStorage.setItem('artspace_apps', JSON.stringify(filteredApps));
+        return true;
+    }
+
+    approveApp(id) {
+        return this.updateApp(id, { status: 'approved' });
+    }
+
+    rejectApp(id) {
+        return this.updateApp(id, { status: 'rejected' });
+    }
+
+    featureApp(id) {
+        return this.updateApp(id, { featured: true });
+    }
+
+    unfeatureApp(id) {
+        return this.updateApp(id, { featured: false });
+    }
+
+    // آمار توسعه‌دهندگان
+    updateDeveloperStats(developerId) {
+        const apps = this.getApps().filter(app => app.developer_id === developerId);
+        const developer = this.getDevelopers().find(dev => dev.id === developerId);
+        
+        if (developer) {
+            const totalApps = apps.length;
+            const totalDownloads = apps.reduce((sum, app) => sum + (app.downloads || 0), 0);
+            const avgRating = apps.length > 0 ? 
+                apps.reduce((sum, app) => sum + app.rating, 0) / apps.length : 0;
+            
+            this.updateDeveloper(developerId, {
+                total_apps: totalApps,
+                total_downloads: totalDownloads,
+                rating: parseFloat(avgRating.toFixed(1))
+            });
+        }
+    }
+
+    getUserIP() {
+        return '127.0.0.1';
+    }
+}
+
+// ایجاد نمونه از دیتابیس
+const db = new ArtSpaceDatabase();
+let currentUser = null;
+let currentView = 'home';
+let selectedFile = null;
+let currentAdminSection = 'dashboard';
+
+// نمایش نوتیفیکیشن
+function showNotification(message, type = 'info') {
+    const notifications = document.getElementById('notifications');
+    if (!notifications) {
+        console.error('❌ المنت notifications یافت نشد');
+        return;
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    notifications.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// مدیریت آپلود فایل
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+    if (!CONFIG.ALLOWED_FILE_TYPES.includes(fileExtension)) {
+        showNotification(`نوع فایل مجاز نیست. فایل‌های مجاز: ${CONFIG.ALLOWED_FILE_TYPES.join(', ')}`, 'error');
+        event.target.value = '';
+        return;
+    }
+
+    if (file.size > CONFIG.MAX_FILE_SIZE) {
+        showNotification(`سایز فایل نباید بیشتر از ${(CONFIG.MAX_FILE_SIZE / 1024 / 1024).toFixed(0)}MB باشد`, 'error');
+        event.target.value = '';
+        return;
+    }
+
+    selectedFile = file;
+    
+    const fileInfo = document.getElementById('fileInfo');
+    if (fileInfo) {
+        fileInfo.innerHTML = `
+            <div class="file-info">
+                <i class="fas fa-file-alt"></i>
+                <div>
+                    <strong>${file.name}</strong>
+                    <div>سایز: ${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                    <div>نوع: ${fileExtension.toUpperCase()}</div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeSelectedFile()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    showNotification('فایل با موفقیت انتخاب شد', 'success');
+}
+
+function removeSelectedFile() {
+    selectedFile = null;
+    const fileInput = document.getElementById('appFile');
+    const fileInfo = document.getElementById('fileInfo');
+    
+    if (fileInput) fileInput.value = '';
+    if (fileInfo) fileInfo.innerHTML = '';
+}
+
+// مدیریت احراز هویت
+function showAuthModal() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.classList.add('active');
+    } else {
+        console.error('❌ مدال احراز هویت یافت نشد');
+    }
+}
+
+function hideAuthModal() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.classList.remove('active');
+    }
+}
+
+function showAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-tab').forEach(t => {
+        if ((tab === 'login' && t.textContent === 'ورود') || 
+            (tab === 'register' && t.textContent === 'ثبت‌نام')) {
+            t.classList.add('active');
+        }
+    });
+    
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    if (loginForm) loginForm.classList.toggle('hidden', tab !== 'login');
+    if (registerForm) registerForm.classList.toggle('hidden', tab !== 'register');
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const user = db.findUserByEmail(email);
+    if (user && user.password === password) {
+        currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        db.updateUser(user.id, { last_login: new Date().toISOString() });
+        
+        hideAuthModal();
+        showNotification('ورود موفقیت‌آمیز بود', 'success');
+        updateHeaderForLoggedInUser();
+        
+    } else {
+        showNotification('ایمیل یا رمز عبور اشتباه است', 'error');
+    }
+}
+
+function handleRegister(event) {
+    event.preventDefault();
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    const role = 'developer';
+
+    if (password !== confirmPassword) {
+        showNotification('رمز عبور و تکرار آن مطابقت ندارند', 'error');
+        return;
+    }
+
+    if (db.findUserByEmail(email)) {
+        showNotification('این ایمیل قبلاً ثبت شده است', 'error');
+        return;
+    }
+
+    const user = db.addUser({
+        name: name,
+        email: email,
+        password: password,
+        role: role
+    });
+
+    db.addDeveloper({
+        user_id: user.id,
+        company_name: name,
+        bio: 'توسعه‌دهنده اپلیکیشن‌های هنری',
+        website: '',
+        social_links: {}
+    });
+
+    currentUser = user;
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    
+    hideAuthModal();
+    showNotification('ثبت‌نام موفقیت‌آمیز بود', 'success');
+    updateHeaderForLoggedInUser();
+}
+
+// مدیریت هدر برای کاربران لاگین کرده
+function updateHeaderForLoggedInUser() {
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks && currentUser) {
+        if (currentUser.role === 'admin') {
+            navLinks.innerHTML = `
+                <button class="btn btn-primary btn-sm" onclick="showAdminPanel()">
+                    <i class="fas fa-user-shield"></i>
+                    پنل مدیریت
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="showUploadModal()">
+                    <i class="fas fa-upload"></i>
+                    آپلود اپ
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    خروج
+                </button>
+            `;
+        } else if (currentUser.role === 'developer') {
+            navLinks.innerHTML = `
+                <button class="btn btn-primary btn-sm" onclick="showDeveloperPanel()">
+                    <i class="fas fa-code"></i>
+                    پنل توسعه‌دهنده
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="showUploadModal()">
+                    <i class="fas fa-upload"></i>
+                    آپلود اپ
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    خروج
+                </button>
+            `;
+        }
+    }
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+    location.reload();
+}
+
+// مدال آپلود اپ
+function showUploadModal() {
+    if (!currentUser) {
+        showNotification('لطفاً ابتدا وارد حساب کاربری خود شوید', 'warning');
+        showAuthModal();
+        return;
+    }
+
+    const uploadModalHTML = `
+        <div class="modal active" id="uploadModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>آپلود اپ جدید</h3>
+                    <button class="modal-close" onclick="hideUploadModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="handleAppUpload(event)" id="appUploadForm">
+                        <div class="form-group">
+                            <label class="form-label">نام اپلیکیشن *</label>
+                            <input type="text" class="form-input" id="uploadAppName" required 
+                                   placeholder="نام اپلیکیشن خود را وارد کنید">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">توضیحات *</label>
+                            <textarea class="form-textarea" id="uploadAppDescription" required 
+                                      placeholder="توضیحات کامل درباره اپلیکیشن" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">دسته‌بندی *</label>
+                            <select class="form-select" id="uploadAppCategory" required>
+                                <option value="">انتخاب دسته‌بندی</option>
+                                <option value="نقاشی و طراحی">نقاشی و طراحی</option>
+                                <option value="موسیقی">موسیقی</option>
+                                <option value="عکاسی">عکاسی</option>
+                                <option value="سه‌بعدی">سه‌بعدی</option>
+                                <option value="انیمیشن">انیمیشن</option>
+                                <option value="نویسندگی">نویسندگی</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">قیمت (تومان)</label>
+                            <input type="number" class="form-input" id="uploadAppPrice" 
+                                   value="0" min="0" placeholder="0 برای اپ رایگان">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">ورژن *</label>
+                            <input type="text" class="form-input" id="uploadAppVersion" 
+                                   placeholder="مثال: 1.0.0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">نیازمندی‌ها</label>
+                            <input type="text" class="form-input" id="uploadAppRequirements" 
+                                   placeholder="مثال: اندروید ۸+, قلم نوری">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">تگ‌ها (با کاما جدا کنید)</label>
+                            <input type="text" class="form-input" id="uploadAppTags" 
+                                   placeholder="مثال: طراحی, نقاشی, حرفه‌ای">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">آیکون اپ</label>
+                            <select class="form-select" id="uploadAppIcon">
+                                <option value="🎨">🎨 نقاشی</option>
+                                <option value="🎵">🎵 موسیقی</option>
+                                <option value="📷">📷 عکاسی</option>
+                                <option value="🔶">🔶 سه‌بعدی</option>
+                                <option value="🎬">🎬 انیمیشن</option>
+                                <option value="✍️">✍️ نویسندگی</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">فایل اپلیکیشن *</label>
+                            <div class="file-upload" onclick="document.getElementById('appFile').click()">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <p>برای آپلود فایل کلیک کنید</p>
+                                <small class="text-muted">حداکثر سایز: 100MB - فرمت‌های مجاز: APK, ZIP, RAR</small>
+                                <input type="file" id="appFile" accept=".apk,.zip,.rar" style="display: none;" 
+                                       onchange="handleFileSelect(event)">
+                            </div>
+                            <div id="fileInfo" class="mt-2"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block" id="uploadButton">
+                            <i class="fas fa-upload"></i>
+                            آپلود اپلیکیشن
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', uploadModalHTML);
+}
+
+function hideUploadModal() {
+    const uploadModal = document.getElementById('uploadModal');
+    if (uploadModal) {
+        uploadModal.remove();
+    }
+    selectedFile = null;
+}
+
+// تابع اصلی آپلود اپ - با ذخیره واقعی فایل
+async function handleAppUpload(event) {
+    event.preventDefault();
+    
+    if (!currentUser) {
+        showNotification('لطفاً ابتدا وارد حساب کاربری خود شوید', 'error');
+        return;
+    }
+
+    if (!selectedFile) {
+        showNotification('لطفاً یک فایل انتخاب کنید', 'error');
+        return;
+    }
+
+    const uploadButton = document.getElementById('uploadButton');
+    if (uploadButton) {
+        uploadButton.disabled = true;
+        uploadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال آپلود...';
+    }
+
+    try {
+        showNotification('در حال آپلود فایل...', 'info');
+        
+        let developer;
+        if (currentUser.role === 'admin') {
+            developer = db.getDevelopers()[0];
+        } else {
+            developer = db.findDeveloperByUserId(currentUser.id);
+        }
+
+        if (!developer) {
+            throw new Error('پروفایل توسعه‌دهنده یافت نشد');
+        }
+
+        // ذخیره واقعی فایل در localStorage
+        const fileId = 'file_' + Date.now();
+        await db.saveFileToStorage(fileId, selectedFile);
+
+        const appData = {
+            name: document.getElementById('uploadAppName').value.trim(),
+            description: document.getElementById('uploadAppDescription').value.trim(),
+            category: document.getElementById('uploadAppCategory').value,
+            price: parseInt(document.getElementById('uploadAppPrice').value) || 0,
+            size: (selectedFile.size / 1024 / 1024).toFixed(1) + 'MB',
+            version: document.getElementById('uploadAppVersion').value.trim(),
+            requirements: document.getElementById('uploadAppRequirements').value.trim(),
+            tags: document.getElementById('uploadAppTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+            icon: document.getElementById('uploadAppIcon').value,
+            developer: developer.company_name,
+            developer_id: developer.id,
+            file_url: fileId,
+            file_name: selectedFile.name,
+            file_size: selectedFile.size,
+            status: 'pending',
+            featured: false,
+            rating: 0,
+            downloads: 0
+        };
+
+        if (!appData.name || !appData.description || !appData.category || !appData.version) {
+            throw new Error('لطفاً تمام فیلدهای اجباری را پر کنید');
+        }
+
+        const newApp = db.addApp(appData);
+        
+        showNotification(`اپ "${newApp.name}" با موفقیت آپلود شد و در انتظار تأیید است`, 'success');
+        
+        hideUploadModal();
+        selectedFile = null;
+        
+        // رفرش لیست اپ‌ها
+        if (currentView === 'home') {
+            loadFeaturedApps();
+        }
+        
+        // اگر در پنل توسعه‌دهنده هستیم، رفرش کن
+        if (currentView === 'developer') {
+            showDeveloperPanel();
+        }
+        
+    } catch (error) {
+        console.error('خطا در آپلود اپ:', error);
+        showNotification(error.message, 'error');
+    } finally {
+        if (uploadButton) {
+            uploadButton.disabled = false;
+            uploadButton.innerHTML = '<i class="fas fa-upload"></i> آپلود اپلیکیشن';
+        }
+    }
+}
+
+// تابع اصلی نمایش اپ‌ها در صفحه اصلی
+function loadFeaturedApps() {
+    const approvedApps = db.getApps().filter(app => app.status === 'approved');
+    const grid = document.getElementById('featuredAppsGrid');
+    
+    if (!grid) {
+        console.error('❌ المنت featuredAppsGrid یافت نشد');
+        return;
+    }
+    
+    if (approvedApps.length === 0) {
+        grid.innerHTML = `
+            <div class="col-12 text-center p-5">
+                <div class="no-apps-message">
+                    <i class="fas fa-mobile-alt fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">هنوز اپلیکیشنی موجود نیست</h4>
+                    <p class="text-muted">اولین نفری باشید که اپلیکیشن خود را منتشر می‌کند</p>
+                    ${currentUser ? `
+                        <button class="btn btn-primary mt-3" onclick="showUploadModal()">
+                            <i class="fas fa-upload"></i>
+                            آپلود اولین اپ
+                        </button>
+                    ` : `
+                        <button class="btn btn-primary mt-3" onclick="showAuthModal()">
+                            <i class="fas fa-user-plus"></i>
+                            ثبت‌نام و آپلود اپ
+                        </button>
+                    `}
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    const featuredApps = approvedApps.filter(app => app.featured);
+    const otherApps = approvedApps.filter(app => !app.featured);
+    const displayApps = [...featuredApps, ...otherApps];
+    
+    grid.innerHTML = displayApps.map(app => `
+        <div class="app-card">
+            <div class="app-card-header">
+                <div class="app-icon">${app.icon}</div>
+                <div class="app-info">
+                    <h3 class="app-title">${app.name}</h3>
+                    <div class="app-developer">${app.developer}</div>
+                    <div class="app-rating">
+                        <i class="fas fa-star"></i>
+                        ${app.rating} (${app.downloads.toLocaleString()})
+                    </div>
+                </div>
+            </div>
+            <p class="app-description">${app.description}</p>
+            <div class="app-meta">
+                <div class="app-price ${app.price === 0 ? 'free' : ''}">
+                    ${app.price === 0 ? 'رایگان' : app.price.toLocaleString() + ' تومان'}
+                </div>
+                <div class="app-stats">
+                    <span>${app.size}</span>
+                    <span>نسخه ${app.version}</span>
+                </div>
+            </div>
+            <div class="app-tags">
+                ${app.tags.map(tag => `<span class="tag tag-primary">${tag}</span>`).join('')}
+            </div>
+            <button class="btn btn-primary btn-block" onclick="downloadApp(${app.id})">
+                <i class="fas fa-download"></i>
+                دانلود
+            </button>
+            ${app.featured ? `
+                <div class="mt-2 text-center">
+                    <span class="badge badge-success">ویژه</span>
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+// دانلود واقعی فایل
+function downloadApp(appId) {
+    if (!currentUser) {
+        showNotification('لطفاً ابتدا وارد حساب کاربری خود شوید', 'warning');
+        showAuthModal();
+        return;
+    }
+    
+    const app = db.getApps().find(a => a.id === appId);
+    if (app) {
+        showNotification(`اپ "${app.name}" در حال دانلود است...`, 'info');
+        
+        try {
+            const fileData = db.getFileFromStorage(app.file_url);
+            
+            if (!fileData || !fileData.data) {
+                throw new Error('فایل اپلیکیشن یافت نشد');
+            }
+            
+            // تبدیل داده base64 به blob
+            const byteCharacters = atob(fileData.data.split(',')[1]);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: fileData.type });
+            
+            // ایجاد لینک دانلود
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = app.file_name || `${app.name}.apk`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            // افزایش تعداد دانلودها
+            db.updateApp(appId, { downloads: app.downloads + 1 });
+            
+            showNotification(`اپ "${app.name}" با موفقیت دانلود شد`, 'success');
+            
+            loadFeaturedApps();
+            
+        } catch (error) {
+            console.error('خطا در دانلود:', error);
+            showNotification('خطا در دانلود فایل', 'error');
+        }
+    }
+}
+
+// 🔥 پنل مدیریت - کاملاً کاربردی
+function adminLogin() {
+    if (currentUser && currentUser.role === 'admin') {
+        showAdminPanel();
+        return;
+    }
+
+    const email = prompt('ایمیل ادمین:');
+    const password = prompt('رمز عبور:');
+    
+    if (email === CONFIG.ADMIN_EMAIL && password === CONFIG.ADMIN_PASSWORD) {
+        const adminUser = db.findUserByEmail(CONFIG.ADMIN_EMAIL);
+        currentUser = adminUser;
+        localStorage.setItem('currentUser', JSON.stringify(adminUser));
+        showAdminPanel();
+        showNotification('به پنل مدیریت خوش آمدید', 'success');
+    } else {
+        showNotification('اطلاعات ورود اشتباه است', 'error');
+    }
+}
+
+function showAdminPanel() {
+    currentView = 'admin';
+    currentAdminSection = 'dashboard';
+    
+    const adminHTML = `
+        <div class="admin-layout">
+            <div class="admin-sidebar">
+                <div class="admin-sidebar-header">
+                    <div class="admin-user-info">
+                        <div class="admin-avatar">👑</div>
+                        <div>
+                            <h4>${currentUser.name}</h4>
+                            <p>${currentUser.email}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-menu">
+                    <a href="#" class="admin-menu-item active" onclick="showAdminSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        داشبورد
+                    </a>
+                    <a href="#" class="admin-menu-item" onclick="showAdminSection('apps')">
+                        <i class="fas fa-mobile-alt"></i>
+                        مدیریت اپ‌ها
+                    </a>
+                    <a href="#" class="admin-menu-item" onclick="showAdminSection('developers')">
+                        <i class="fas fa-code"></i>
+                        توسعه‌دهندگان
+                    </a>
+                    <a href="#" class="admin-menu-item" onclick="showUploadModal()">
+                        <i class="fas fa-upload"></i>
+                        آپلود اپ جدید
+                    </a>
+                    <a href="#" class="admin-menu-item" onclick="closeAdminPanel()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        خروج
+                    </a>
+                </div>
+            </div>
+            <div class="admin-content">
+                ${renderAdminDashboard()}
+            </div>
+        </div>
+    `;
+    
+    const main = document.querySelector('main');
+    if (main) {
+        main.innerHTML = adminHTML;
+    }
+    
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.style.display = 'none';
+    }
+    
+    const header = document.getElementById('mainHeader');
+    if (header) {
+        header.style.display = 'none';
+    }
+}
+
+function showAdminSection(section) {
+    currentAdminSection = section;
+    
+    // آپدیت منو
+    document.querySelectorAll('.admin-menu-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    document.querySelectorAll('.admin-menu-item').forEach(item => {
+        if (item.textContent.includes(
+            section === 'dashboard' ? 'داشبورد' :
+            section === 'apps' ? 'مدیریت اپ‌ها' :
+            section === 'developers' ? 'توسعه‌دهندگان' : ''
+        )) {
+            item.classList.add('active');
+        }
+    });
+    
+    // آپدیت محتوا
+    const adminContent = document.querySelector('.admin-content');
+    if (adminContent) {
+        if (section === 'dashboard') {
+            adminContent.innerHTML = renderAdminDashboard();
+        } else if (section === 'apps') {
+            adminContent.innerHTML = renderAdminApps();
+        } else if (section === 'developers') {
+            adminContent.innerHTML = renderAdminDevelopers();
+        }
+    }
+}
+
+function renderAdminDashboard() {
+    const pendingApps = db.getApps().filter(app => app.status === 'pending');
+    const allApps = db.getApps();
+    const allUsers = db.getUsers();
+    const allDevelopers = db.getDevelopers();
+    
+    return `
+        <div class="admin-header">
+            <h2>داشبورد مدیریت</h2>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">${allApps.length}</div>
+                <div class="stat-label">کل اپ‌ها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${allUsers.length}</div>
+                <div class="stat-label">کاربران</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${pendingApps.length}</div>
+                <div class="stat-label">در انتظار تأیید</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${allDevelopers.length}</div>
+                <div class="stat-label">توسعه‌دهندگان</div>
+            </div>
+        </div>
+        
+        <div class="table-container mt-4">
+            <h3>اپ‌های در انتظار تأیید</h3>
+            ${renderPendingApps()}
+        </div>
+    `;
+}
+
+function renderAdminApps() {
+    const allApps = db.getApps();
+    
+    return `
+        <div class="admin-header">
+            <h2>مدیریت اپ‌ها</h2>
+            <button class="btn btn-primary" onclick="showUploadModal()">
+                <i class="fas fa-plus"></i>
+                افزودن اپ جدید
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام اپ</th>
+                        <th>توسعه‌دهنده</th>
+                        <th>دسته‌بندی</th>
+                        <th>وضعیت</th>
+                        <th>دانلودها</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${allApps.map(app => `
+                        <tr>
+                            <td>${app.name}</td>
+                            <td>${app.developer}</td>
+                            <td>${app.category}</td>
+                            <td>
+                                <span class="badge ${app.status === 'approved' ? 'badge-success' : app.status === 'pending' ? 'badge-warning' : 'badge-danger'}">
+                                    ${app.status === 'approved' ? 'تأیید شده' : app.status === 'pending' ? 'در انتظار' : 'رد شده'}
+                                </span>
+                            </td>
+                            <td>${app.downloads.toLocaleString()}</td>
+                            <td>
+                                ${app.status === 'pending' ? `
+                                    <button class="btn btn-success btn-sm" onclick="approveApp(${app.id})">
+                                        <i class="fas fa-check"></i>
+                                        تأیید
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="rejectApp(${app.id})">
+                                        <i class="fas fa-times"></i>
+                                        رد
+                                    </button>
+                                ` : ''}
+                                ${app.featured ? `
+                                    <button class="btn btn-warning btn-sm" onclick="unfeatureApp(${app.id})">
+                                        <i class="fas fa-star"></i>
+                                        حذف ویژه
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-info btn-sm" onclick="featureApp(${app.id})">
+                                        <i class="fas fa-star"></i>
+                                        ویژه
+                                    </button>
+                                `}
+                                <button class="btn btn-danger btn-sm" onclick="deleteApp(${app.id})">
+                                    <i class="fas fa-trash"></i>
+                                    حذف
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderAdminDevelopers() {
+    const developers = db.getDevelopers();
+    
+    return `
+        <div class="admin-header">
+            <h2>مدیریت توسعه‌دهندگان</h2>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>شرکت</th>
+                        <th>تعداد اپ‌ها</th>
+                        <th>کل دانلودها</th>
+                        <th>امتیاز</th>
+                        <th>تاریخ عضویت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${developers.map(dev => `
+                        <tr>
+                            <td>${dev.company_name}</td>
+                            <td>${dev.total_apps}</td>
+                            <td>${dev.total_downloads.toLocaleString()}</td>
+                            <td>${dev.rating}</td>
+                            <td>${new Date(dev.joined_date).toLocaleDateString('fa-IR')}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderPendingApps() {
+    const pendingApps = db.getApps().filter(app => app.status === 'pending');
+    
+    if (pendingApps.length === 0) {
+        return '<p class="text-center p-4">هیچ اپلیکیشنی در انتظار تأیید نیست.</p>';
+    }
+    
+    return `
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>نام اپ</th>
+                    <th>توسعه‌دهنده</th>
+                    <th>دسته‌بندی</th>
+                    <th>تاریخ ثبت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${pendingApps.map(app => `
+                    <tr>
+                        <td>${app.name}</td>
+                        <td>${app.developer}</td>
+                        <td>${app.category}</td>
+                        <td>${new Date(app.created_at).toLocaleDateString('fa-IR')}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm" onclick="approveApp(${app.id})">
+                                <i class="fas fa-check"></i>
+                                تأیید
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="rejectApp(${app.id})">
+                                <i class="fas fa-times"></i>
+                                رد
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+// توابع مدیریت اپ‌ها
+function approveApp(appId) {
+    const app = db.approveApp(appId);
+    showNotification(`اپ "${app.name}" با موفقیت تأیید شد`, 'success');
+    showAdminSection(currentAdminSection);
+}
+
+function rejectApp(appId) {
+    const app = db.rejectApp(appId);
+    showNotification(`اپ "${app.name}" رد شد`, 'warning');
+    showAdminSection(currentAdminSection);
+}
+
+function featureApp(appId) {
+    const app = db.featureApp(appId);
+    showNotification(`اپ "${app.name}" ویژه شد`, 'success');
+    showAdminSection(currentAdminSection);
+}
+
+function unfeatureApp(appId) {
+    const app = db.unfeatureApp(appId);
+    showNotification(`اپ "${app.name}" از حالت ویژه خارج شد`, 'warning');
+    showAdminSection(currentAdminSection);
+}
+
+function deleteApp(appId) {
+    const app = db.getApps().find(a => a.id === appId);
+    if (confirm(`آیا از حذف اپ "${app.name}" مطمئن هستید؟`)) {
+        db.deleteApp(appId);
+        showNotification(`اپ "${app.name}" حذف شد`, 'success');
+        showAdminSection(currentAdminSection);
+    }
+}
+
+function closeAdminPanel() {
+    location.reload();
+}
+
+// 🔥 پنل توسعه‌دهنده - کاملاً کاربردی
+function showDeveloperPanel() {
+    currentView = 'developer';
+    const developer = db.findDeveloperByUserId(currentUser.id);
+    const myApps = db.getApps().filter(app => app.developer_id === developer.id);
+    
+    const developerHTML = `
+        <div class="admin-layout">
+            <div class="admin-sidebar">
+                <div class="admin-sidebar-header">
+                    <div class="admin-user-info">
+                        <div class="admin-avatar">👨‍💻</div>
+                        <div>
+                            <h4>${currentUser.name}</h4>
+                            <p>${developer.company_name}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-menu">
+                    <a href="#" class="admin-menu-item active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        داشبورد
+                    </a>
+                    <a href="#" class="admin-menu-item" onclick="showUploadModal()">
+                        <i class="fas fa-upload"></i>
+                        آپلود اپ جدید
+                    </a>
+                    <a href="#" class="admin-menu-item" onclick="closeDeveloperPanel()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        خروج
+                    </a>
+                </div>
+            </div>
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>پنل توسعه‌دهنده</h2>
+                    <button class="btn btn-primary" onclick="showUploadModal()">
+                        <i class="fas fa-plus"></i>
+                        اپ جدید
+                    </button>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${myApps.length}</div>
+                        <div class="stat-label">کل اپ‌ها</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${myApps.filter(app => app.status === 'approved').length}</div>
+                        <div class="stat-label">تأیید شده</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${myApps.filter(app => app.status === 'pending').length}</div>
+                        <div class="stat-label">در انتظار</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${myApps.reduce((sum, app) => sum + app.downloads, 0).toLocaleString()}</div>
+                        <div class="stat-label">کل دانلودها</div>
+                    </div>
+                </div>
+                
+                <div class="table-container mt-4">
+                    <h3>اپ‌های من</h3>
+                    ${renderDeveloperApps(myApps)}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const main = document.querySelector('main');
+    if (main) {
+        main.innerHTML = developerHTML;
+    }
+    
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.style.display = 'none';
+    }
+    
+    const header = document.getElementById('mainHeader');
+    if (header) {
+        header.style.display = 'none';
+    }
+}
+
+function renderDeveloperApps(apps) {
+    if (apps.length === 0) {
+        return `
+            <div class="text-center p-4">
+                <p>هنوز اپلیکیشنی ثبت نکرده‌اید.</p>
+                <button class="btn btn-primary mt-2" onclick="showUploadModal()">
+                    <i class="fas fa-plus"></i>
+                    اولین اپ خود را آپلود کنید
+                </button>
+            </div>
+        `;
+    }
+    
+    return `
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>نام اپ</th>
+                    <th>دسته‌بندی</th>
+                    <th>وضعیت</th>
+                    <th>دانلودها</th>
+                    <th>قیمت</th>
+                    <th>تاریخ ثبت</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${apps.map(app => `
+                    <tr>
+                        <td>${app.name}</td>
+                        <td>${app.category}</td>
+                        <td>
+                            <span class="badge ${app.status === 'approved' ? 'badge-success' : app.status === 'pending' ? 'badge-warning' : 'badge-danger'}">
+                                ${app.status === 'approved' ? 'تأیید شده' : app.status === 'pending' ? 'در انتظار' : 'رد شده'}
+                            </span>
+                        </td>
+                        <td>${app.downloads.toLocaleString()}</td>
+                        <td>${app.price === 0 ? 'رایگان' : app.price.toLocaleString() + ' تومان'}</td>
+                        <td>${new Date(app.created_at).toLocaleDateString('fa-IR')}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+function closeDeveloperPanel() {
+    location.reload();
+}
+
+// لودینگ صفحه
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        const pageLoader = document.getElementById('pageLoader');
+        if (pageLoader) {
+            pageLoader.classList.add('hidden');
+        }
+        
+        loadFeaturedApps();
+        
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            updateHeaderForLoggedInUser();
+        }
+        
+        const totalApps = document.getElementById('totalApps');
+        const totalDevelopers = document.getElementById('totalDevelopers');
+        const totalDownloads = document.getElementById('totalDownloads');
+        const totalCountries = document.getElementById('totalCountries');
+        
+        if (totalApps) totalApps.textContent = db.getApps().filter(app => app.status === 'approved').length.toLocaleString();
+        if (totalDevelopers) totalDevelopers.textContent = db.getDevelopers().length.toLocaleString();
+        if (totalDownloads) totalDownloads.textContent = db.getApps().reduce((sum, app) => sum + app.downloads, 0).toLocaleString();
+        if (totalCountries) totalCountries.textContent = '۱۵۸';
+        
+    }, 1000);
+});
+
+console.log('🚀 ArtSpace System Initialized - Version 3.0');
+console.log('📱 اپ‌های اولیه:', db.getApps().length);
+console.log('👥 کاربران:', db.getUsers().length);
+console.log('👨‍💻 توسعه‌دهندگان:', db.getDevelopers().length);
+</script>
+</body>
+</html>
