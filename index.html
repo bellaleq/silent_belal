@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سیستم مدیریت فروشگاه - نسخه ابری</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <!-- اضافه کردن کتابخانه Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,6 +20,10 @@
                 <div class="user-info" id="userInfo" style="display: none;">
                     <div id="userName"></div>
                     <div class="user-avatar" id="userAvatar"></div>
+                    <button id="userProfile" class="btn-info">
+                        <i class="ti ti-user"></i>
+                        پروفایل
+                    </button>
                     <button id="userLogout" class="btn-danger">
                         <i class="ti ti-logout"></i>
                         خروج
@@ -58,6 +64,25 @@
                         <i class="ti ti-login"></i>
                         ورود
                     </button>
+                    
+                    <div class="google-btn-container">
+                        <div id="g_id_onload"
+                            data-client_id="627857769759-7stscotup44r2aqmdpavr615bu20sk99.apps.googleusercontent.com"
+                            data-context="signin"
+                            data-ux_mode="popup"
+                            data-callback="handleGoogleSignIn"
+                            data-auto_prompt="false">
+                        </div>
+
+                        <div class="g_id_signin"
+                            data-type="standard"
+                            data-shape="rectangular"
+                            data-theme="outline"
+                            data-text="signin_with"
+                            data-size="large"
+                            data-logo_alignment="left">
+                        </div>
+                    </div>
                 </form>
                 
                 <form id="adminLoginForm" style="display: none;">
@@ -81,6 +106,9 @@
                         <i class="ti ti-user-plus"></i>
                         ثبت نام
                     </button>
+                    <div style="margin-top: 10px;">
+                        <span class="auth-link" id="forgotPassword">رمز عبور خود را فراموش کردهاید؟</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,6 +150,34 @@
                 
                 <div style="text-align: center; margin-top: 20px;">
                     <button id="backToLogin" class="btn-info" style="width: 100%;">
+                        <i class="ti ti-arrow-back"></i>
+                        بازگشت به صفحه ورود
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحه بازیابی رمز عبور -->
+        <div id="forgotPasswordPage" class="page hidden">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2>بازیابی رمز عبور</h2>
+                    <p>ایمیل خود را وارد کنید تا لینک بازیابی برای شما ارسال شود</p>
+                </div>
+                
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="recoveryEmail">ایمیل:</label>
+                        <input type="email" id="recoveryEmail" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">
+                        <i class="ti ti-send"></i>
+                        ارسال لینک بازیابی
+                    </button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button id="backToLoginFromForgot" class="btn-info" style="width: 100%;">
                         <i class="ti ti-arrow-back"></i>
                         بازگشت به صفحه ورود
                     </button>
@@ -189,6 +245,7 @@
                     <div class="tab" data-tab="categories">دستهبندیها</div>
                     <div class="tab" data-tab="sales">فروشها</div>
                     <div class="tab" data-tab="settings">تنظیمات</div>
+                    <div class="tab" data-tab="profile">پروفایل</div>
                 </div>
                 
                 <!-- تب محصولات -->
@@ -394,6 +451,47 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- تب پروفایل -->
+                <div id="userProfileTab" class="user-tab hidden">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>اطلاعات حساب کاربری</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <form id="profileForm">
+                                <div class="form-group">
+                                    <label for="profileStoreName">نام فروشگاه:</label>
+                                    <input type="text" id="profileStoreName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileOwnerName">نام صاحب فروشگاه:</label>
+                                    <input type="text" id="profileOwnerName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileEmail">ایمیل:</label>
+                                    <input type="email" id="profileEmail" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="currentPassword">رمز عبور فعلی:</label>
+                                    <input type="password" id="currentPassword">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">رمز عبور جدید:</label>
+                                    <input type="password" id="newPassword">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmNewPassword">تکرار رمز عبور جدید:</label>
+                                    <input type="password" id="confirmNewPassword">
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="ti ti-device-floppy"></i>
+                                    ذخیره تغییرات
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -481,6 +579,7 @@
                                 <th>رمز عبور</th>
                                 <th>وضعیت</th>
                                 <th>تاریخ ثبتنام</th>
+                                <th>نوع ورود</th>
                             </tr>
                         </thead>
                         <tbody id="userCredentialsTable">
@@ -600,4 +699,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
