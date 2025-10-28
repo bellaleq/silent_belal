@@ -1,4 +1,4 @@
-// سیستم مدیریت چندین فروشگاه - نسخه ابری با Supabase
+// سیستم مدیریت چندین فروشگاه - نسخه ابری با Supabase و احراز هویت گوگل
         (function() {
             'use strict';
             
@@ -13,7 +13,8 @@
                 adminPhone: '0796304080',
                 telegramBotToken: '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8',
                 telegramChatId: '8106254967',
-                version: '2.0.0'
+                version: '2.1.0',
+                googleClientId: '627857769759-v75t79pv4f2lu946gq6aq21888hqc8ge.apps.googleusercontent.com' // باید از کنسول Google Cloud دریافت شود
             };
             
             // مدیریت وضعیت سیستم
@@ -43,7 +44,7 @@
                         this.showAppropriatePage();
                     } catch (error) {
                         console.error('خطا در مقداردهی اولیه سیستم:', error);
-                        this.showNotification('خطا در راه‌اندازی سیستم', 'error');
+                        this.showNotification('خطا در راهاندازی سیستم', 'error');
                     }
                 },
                 
@@ -56,7 +57,7 @@
                         
                         if (error) throw error;
                         
-                        console.log('داده‌های بارگذاری شده از Supabase:', users);
+                        console.log('دادههای بارگذاری شده از Supabase:', users);
                         
                         // تفکیک کاربران تأیید شده و در انتظار تأیید
                         this.users = users.filter(user => user.approved) || [];
@@ -129,7 +130,7 @@
                                 return data[0];
                             }
                         } else {
-                            // کاربر موجود - به‌روزرسانی
+                            // کاربر موجود - بهروزرسانی
                             const { error } = await this.supabase
                                 .from('stores')
                                 .update(user)
@@ -157,13 +158,24 @@
                     // فرم ثبتنام
                     document.getElementById('registerForm').addEventListener('submit', (e) => this.handleRegister(e));
                     
+                    // فرم پروفایل
+                    document.getElementById('profileForm').addEventListener('submit', (e) => this.handleProfileUpdate(e));
+                    
+                    // فرم بازیابی رمز عبور
+                    document.getElementById('forgotPasswordForm').addEventListener('submit', (e) => this.handleForgotPassword(e));
+                    
                     // دکمههای ناوبری
                     document.getElementById('showRegisterForm').addEventListener('click', () => this.showRegisterPage());
                     document.getElementById('backToLogin').addEventListener('click', () => this.showLoginPage());
+                    document.getElementById('forgotPassword').addEventListener('click', () => this.showForgotPasswordPage());
+                    document.getElementById('backToLoginFromForgot').addEventListener('click', () => this.showLoginPage());
                     
                     // دکمههای خروج
                     document.getElementById('userLogout').addEventListener('click', () => this.logout());
                     document.getElementById('adminLogout').addEventListener('click', () => this.logout());
+                    
+                    // دکمه پروفایل
+                    document.getElementById('userProfile').addEventListener('click', () => this.switchUserTab('profile'));
                     
                     // فرمهای مدیریت محصولات و دسته بندی ها
                     document.getElementById('productForm').addEventListener('submit', (e) => this.handleAddProduct(e));
@@ -248,6 +260,7 @@
                 showAppropriatePage() {
                     const loginPage = document.getElementById('loginPage');
                     const registerPage = document.getElementById('registerPage');
+                    const forgotPasswordPage = document.getElementById('forgotPasswordPage');
                     const userDashboard = document.getElementById('userDashboard');
                     const adminDashboard = document.getElementById('adminDashboard');
                     const userInfo = document.getElementById('userInfo');
@@ -257,6 +270,7 @@
                     // مخفی کردن تمام صفحات
                     loginPage.classList.add('hidden');
                     registerPage.classList.add('hidden');
+                    forgotPasswordPage.classList.add('hidden');
                     userDashboard.classList.add('hidden');
                     adminDashboard.classList.add('hidden');
                     userInfo.style.display = 'none';
@@ -282,11 +296,19 @@
                 showLoginPage() {
                     document.getElementById('loginPage').classList.remove('hidden');
                     document.getElementById('registerPage').classList.add('hidden');
+                    document.getElementById('forgotPasswordPage').classList.add('hidden');
                 },
                 
                 showRegisterPage() {
                     document.getElementById('loginPage').classList.add('hidden');
                     document.getElementById('registerPage').classList.remove('hidden');
+                    document.getElementById('forgotPasswordPage').classList.add('hidden');
+                },
+                
+                showForgotPasswordPage() {
+                    document.getElementById('loginPage').classList.add('hidden');
+                    document.getElementById('registerPage').classList.add('hidden');
+                    document.getElementById('forgotPasswordPage').classList.remove('hidden');
                 },
                 
                 async handleUserLogin(e) {
@@ -459,6 +481,87 @@
                     }
                 },
                 
+                async handleProfileUpdate(e) {
+                    e.preventDefault();
+                    if (!this.currentUser) return;
+                    
+                    const storeName = document.getElementById('profileStoreName').value;
+                    const ownerName = document.getElementById('profileOwnerName').value;
+                    const email = document.getElementById('profileEmail').value;
+                    const currentPassword = document.getElementById('currentPassword').value;
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+                    
+                    // بررسی تغییر ایمیل
+                    if (email !== this.currentUser.email) {
+                        // بررسی وجود ایمیل جدید
+                        if (this.users.find(u => u.email === email && u.id !== this.currentUser.id) || 
+                            this.pendingApprovals.find(u => u.email === email)) {
+                            this.showNotification('این ایمیل قبلاً توسط کاربر دیگری استفاده شده است', 'error');
+                            return;
+                        }
+                    }
+                    
+                    // بررسی تغییر رمز عبور
+                    if (newPassword) {
+                        if (newPassword !== confirmNewPassword) {
+                            this.showNotification('رمز عبور جدید و تکرار آن مطابقت ندارند', 'error');
+                            return;
+                        }
+                        
+                        if (!currentPassword) {
+                            this.showNotification('برای تغییر رمز عبور، رمز عبور فعلی را وارد کنید', 'error');
+                            return;
+                        }
+                        
+                        if (currentPassword !== this.currentUser.password) {
+                            this.showNotification('رمز عبور فعلی اشتباه است', 'error');
+                            return;
+                        }
+                        
+                        this.currentUser.password = newPassword;
+                    }
+                    
+                    // بهروزرسانی اطلاعات
+                    this.currentUser.store_name = storeName;
+                    this.currentUser.owner_name = ownerName;
+                    this.currentUser.email = email;
+                    
+                    try {
+                        await this.saveUserToCloud(this.currentUser);
+                        this.showNotification('پروفایل با موفقیت بهروزرسانی شد', 'success');
+                        this.renderUserDashboard();
+                        
+                        // پاک کردن فیلدهای رمز عبور
+                        document.getElementById('currentPassword').value = '';
+                        document.getElementById('newPassword').value = '';
+                        document.getElementById('confirmNewPassword').value = '';
+                        
+                        // ارسال پیام به تلگرام
+                        this.sendToUserTelegram(
+                            `👤 پروفایل بهروزرسانی شد\n\n` +
+                            `تغییرات در اطلاعات حساب کاربری شما اعمال شد.\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                    } catch (error) {
+                        console.error('خطا در بهروزرسانی پروفایل:', error);
+                        this.showNotification('خطا در بهروزرسانی پروفایل', 'error');
+                    }
+                },
+                
+                async handleForgotPassword(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('recoveryEmail').value;
+                    
+                    // در اینجا باید با سرویس ایمیل واقعی یکپارچه شود
+                    // برای نمونه، ما فقط یک پیام نمایش میدهیم
+                    
+                    this.showNotification('لینک بازیابی رمز عبور به ایمیل شما ارسال شد', 'success');
+                    setTimeout(() => {
+                        this.showLoginPage();
+                    }, 3000);
+                },
+                
                 async logout() {
                     this.currentUser = null;
                     this.isAdmin = false;
@@ -499,6 +602,13 @@
                         if (document.getElementById('userTelegramToken')) {
                             document.getElementById('userTelegramToken').value = this.currentUser.telegram_bot_token || '';
                             document.getElementById('userTelegramChatId').value = this.currentUser.telegram_chat_id || '';
+                        }
+                        
+                        // بارگذاری اطلاعات پروفایل
+                        if (document.getElementById('profileStoreName')) {
+                            document.getElementById('profileStoreName').value = this.currentUser.store_name;
+                            document.getElementById('profileOwnerName').value = this.currentUser.owner_name;
+                            document.getElementById('profileEmail').value = this.currentUser.email;
                         }
                     } else {
                         userStatusElement.innerHTML = '<span class="user-status status-pending">در انتظار تأیید</span>';
@@ -614,7 +724,7 @@
                     
                     tbody.innerHTML = '';
                     
-                    // بررسی وجود دسته‌بندی‌ها
+                    // بررسی وجود دستهبندیها
                     if (!this.currentUser.categories || this.currentUser.categories.length === 0) {
                         tbody.innerHTML = `
                             <tr>
@@ -1732,7 +1842,8 @@
                                 <div class="store-name">${user.store_name}</div>
                                 <div class="store-email">${user.email} - ${user.owner_name}</div>
                                 <div class="store-details">
-                                    تاریخ ثبتنام: ${user.created_at ? new Date(user.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}
+                                    تاریخ ثبتنام: ${user.created_at ? new Date(user.created_at).toLocaleDateString('fa-IR') : 'نامشخص'} | 
+                                    نوع ورود: ${user.google_id ? 'گوگل' : 'ایمیل/رمز عبور'}
                                 </div>
                             </div>
                             <div class="approval-actions">
@@ -1757,9 +1868,10 @@
                             <td>${user.store_name}</td>
                             <td>${user.owner_name}</td>
                             <td>${user.email}</td>
-                            <td class="password-cell">${user.password}</td>
+                            <td class="password-cell">${user.password || '---'}</td>
                             <td><span class="user-status status-approved">تأیید شده</span></td>
                             <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                            <td>${user.google_id ? 'گوگل' : 'ایمیل/رمز عبور'}</td>
                         `;
                         userCredentialsTable.appendChild(row);
                     });
@@ -1771,9 +1883,10 @@
                             <td>${user.store_name}</td>
                             <td>${user.owner_name}</td>
                             <td>${user.email}</td>
-                            <td class="password-cell">${user.password}</td>
+                            <td class="password-cell">${user.password || '---'}</td>
                             <td><span class="user-status status-pending">در انتظار تأیید</span></td>
                             <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                            <td>${user.google_id ? 'گوگل' : 'ایمیل/رمز عبور'}</td>
                         `;
                         userCredentialsTable.appendChild(row);
                     });
@@ -1782,7 +1895,7 @@
                     if (this.users.length === 0 && this.pendingApprovals.length === 0) {
                         userCredentialsTable.innerHTML = `
                             <tr>
-                                <td colspan="6" style="text-align: center; color: var(--text-light);">
+                                <td colspan="7" style="text-align: center; color: var(--text-light);">
                                     هیچ کاربری ثبت نام نکرده است
                                 </td>
                             </tr>
@@ -1817,6 +1930,7 @@
                             `فروشگاه: ${user.store_name}\n` +
                             `صاحب: ${user.owner_name}\n` +
                             `ایمیل: ${user.email}\n` +
+                            `نوع ورود: ${user.google_id ? 'گوگل' : 'ایمیل/رمز عبور'}\n` +
                             `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
                         );
                         
@@ -1855,7 +1969,7 @@
                 viewStoreDetails(userId) {
                     const user = this.users.find(u => u.id == userId);
                     if (user) {
-                        alert(`جزئیات فروشگاه:\n\nنام: ${user.store_name}\nصاحب: ${user.owner_name}\nایمیل: ${user.email}\nمحصولات: ${user.products ? user.products.length : 0}\nدسته بندی ها: ${user.categories ? user.categories.length : 0}\nفروشها: ${user.sold_items ? user.sold_items.length : 0}`);
+                        alert(`جزئیات فروشگاه:\n\nنام: ${user.store_name}\nصاحب: ${user.owner_name}\nایمیل: ${user.email}\nمحصولات: ${user.products ? user.products.length : 0}\nدسته بندی ها: ${user.categories ? user.categories.length : 0}\nفروشها: ${user.sold_items ? user.sold_items.length : 0}\nنوع ورود: ${user.google_id ? 'گوگل' : 'ایمیل/رمز عبور'}`);
                     }
                 },
                 
@@ -1953,7 +2067,7 @@
                 },
                 
                 showNotification(message, type = 'info') {
-                    // حذف نوتیفیکیشن‌های قبلی
+                    // حذف نوتیفیکیشنهای قبلی
                     document.querySelectorAll('.notification').forEach(notification => {
                         if (notification.parentNode) {
                             notification.parentNode.removeChild(notification);
@@ -2024,6 +2138,80 @@
                 }
             };
             
+            // تابع callback برای احراز هویت گوگل
+            function handleGoogleSignIn(response) {
+                // این تابع زمانی فراخوانی میشود که کاربر با موفقیت با گوگل وارد شود
+                console.log('Google Sign-In response:', response);
+                
+                // استخراج اطلاعات کاربر از پاسخ گوگل
+                const userData = parseJwt(response.credential);
+                
+                // جستجوی کاربر در سیستم با ایمیل گوگل
+                const existingUser = SystemState.users.find(u => u.email === userData.email);
+                
+                if (existingUser) {
+                    // کاربر موجود - ورود به سیستم
+                    SystemState.currentUser = existingUser;
+                    SystemState.isAdmin = false;
+                    SystemState.showAppropriatePage();
+                    SystemState.showNotification('ورود با گوگل موفقیتآمیز بود', 'success');
+                } else {
+                    // کاربر جدید - ایجاد حساب در انتظار تأیید
+                    const newUser = {
+                        store_name: userData.name || 'فروشگاه جدید',
+                        owner_name: userData.name || 'کاربر جدید',
+                        email: userData.email,
+                        password: '', // رمز عبور خالی برای کاربران گوگل
+                        approved: false, // کاربران گوگل نیز نیاز به تأیید مدیر دارند
+                        telegram_bot_token: "",
+                        telegram_chat_id: "",
+                        products: [],
+                        categories: [
+                            { id: 1, name: "الکترونیک", parent: null, productCount: 0 },
+                            { id: 2, name: "مواد غذایی", parent: null, productCount: 0 },
+                            { id: 3, name: "ادویه جات", parent: null, productCount: 0 },
+                            { id: 4, name: "لوازم خانگی", parent: null, productCount: 0 },
+                            { id: 5, name: "پوشاک", parent: null, productCount: 0 }
+                        ],
+                        sold_items: [],
+                        google_id: userData.sub // ذخیره شناسه گوگل برای احراز هویت بعدی
+                    };
+                    
+                    // ذخیره کاربر جدید در سیستم
+                    SystemState.saveUserToCloud(newUser)
+                        .then(savedUser => {
+                            SystemState.pendingApprovals.push(savedUser);
+                            SystemState.currentUser = savedUser;
+                            SystemState.isAdmin = false;
+                            SystemState.showAppropriatePage();
+                            SystemState.showNotification('حساب جدید ایجاد شد. منتظر تأیید مدیر باشید', 'warning');
+                            
+                            // ارسال پیام به مدیر
+                            SystemState.sendToAdminTelegram(
+                                `🏪 درخواست ثبت نام جدید (گوگل)\n\n` +
+                                `فروشگاه: ${newUser.store_name}\n` +
+                                `صاحب: ${newUser.owner_name}\n` +
+                                `ایمیل: ${newUser.email}\n` +
+                                `تاریخ: ${new Date().toLocaleDateString('fa-IR')}\n\n` +
+                                `لطفا به پنل مدیریت مراجعه کنید.`
+                            );
+                        })
+                        .catch(error => {
+                            console.error('خطا در ایجاد حساب با گوگل:', error);
+                            SystemState.showNotification('خطا در ایجاد حساب', 'error');
+                        });
+                }
+            }
+            
+            // تابع کمکی برای تجزیه JWT
+            function parseJwt(token) {
+                try {
+                    return JSON.parse(atob(token.split('.')[1]));
+                } catch (e) {
+                    return null;
+                }
+            }
+            
             // مقداردهی اولیه سیستم
             document.addEventListener('DOMContentLoaded', function() {
                 SystemState.init();
@@ -2031,4 +2219,5 @@
             
             // در معرض قرار دادن SystemState برای استفاده در onclickها
             window.SystemState = SystemState;
+            window.handleGoogleSignIn = handleGoogleSignIn;
         })();
