@@ -187,7 +187,20 @@
             color: white; 
         }
         
-        .btn-success:hover, .btn-danger:hover, .btn-warning:hover, .btn-info:hover {
+        .btn-google {
+            background: white;
+            color: #757575;
+            border: 1px solid #ddd;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn-google:hover {
+            background: #f8f9fa;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-success:hover, .btn-danger:hover, .btn-warning:hover, .btn-info:hover, .btn-google:hover {
             opacity: 0.9;
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
@@ -537,6 +550,23 @@
             align-items: center;
             justify-content: center;
             margin-left: 8px;
+        }
+        
+        /* استایل لینکها */
+        .auth-link {
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .auth-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        /* استایل دکمه گوگل */
+        .google-btn-container {
+            margin: 20px 0;
+            text-align: center;
         }
         
         /* استایل ریسپانسیو */
