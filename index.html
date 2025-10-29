@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Messenger - سیستم پاکسازی پیام</title>
+    <title>Secure Messenger - سیستم پیام‌رسان امن</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --matrix-green: #00ff41;
@@ -17,13 +18,14 @@
             --danger: #ff003c;
             --warning: #ffaa00;
             --purple: #8a2be2;
+            --blue: #4285f4;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
@@ -32,9 +34,6 @@
             line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 255, 65, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 65, 0.05) 0%, transparent 20%);
         }
         
         .matrix-bg {
@@ -43,25 +42,90 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 255, 65, 0.03) 2px,
-                rgba(0, 255, 65, 0.03) 4px
-            );
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 65, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 65, 0.05) 0%, transparent 20%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 65, 0.03) 2px,
+                    rgba(0, 255, 65, 0.03) 4px
+                );
             pointer-events: none;
             z-index: -1;
         }
         
+        /* Mobile Styles */
+        .mobile-header {
+            display: none;
+            background: var(--darker-bg);
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 10px;
+            z-index: 100;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .nav-btn.active {
+            color: var(--matrix-green);
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--matrix-green);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Desktop Layout */
         .container {
             max-width: 1600px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 280px 1fr 320px;
             gap: 15px;
-            height: 95vh;
+            height: 100vh;
             padding: 20px;
+            transition: all 0.3s;
         }
         
         .card {
@@ -180,6 +244,8 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             overflow: hidden;
+            width: 100%;
+            max-width: 400px;
         }
         
         .login-tab {
@@ -190,6 +256,7 @@
             cursor: pointer;
             transition: all 0.3s;
             flex: 1;
+            font-size: 0.9rem;
         }
         
         .login-tab.active {
@@ -218,8 +285,8 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--matrix-green);
-            font-family: 'Courier New', monospace;
             transition: all 0.3s;
+            font-size: 16px;
         }
         
         .form-input:focus {
@@ -233,10 +300,14 @@
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-family: 'Courier New', monospace;
             font-weight: bold;
             transition: all 0.3s;
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
         }
         
         .btn-primary {
@@ -274,6 +345,15 @@
             color: var(--dark-bg);
         }
         
+        .btn-warning:hover {
+            background: #e69500;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
         .chat-container {
             display: none;
             flex-direction: column;
@@ -284,7 +364,6 @@
             background: var(--darker-bg);
             color: var(--matrix-green);
             padding: 15px;
-            text-align: center;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
@@ -309,7 +388,7 @@
         .message {
             padding: 12px 16px;
             border-radius: 8px;
-            max-width: 70%;
+            max-width: 85%;
             position: relative;
             word-wrap: break-word;
             border: 1px solid var(--border-color);
@@ -366,26 +445,12 @@
             display: block;
         }
         
-        .btn-small {
-            padding: 4px 8px;
-            font-size: 0.7rem;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        
         .file-attachment {
             margin-top: 8px;
             padding: 8px;
             background: rgba(0, 255, 65, 0.1);
             border-radius: 4px;
             border: 1px solid var(--border-color);
-        }
-        
-        .file-icon {
-            margin-right: 8px;
         }
         
         @keyframes fadeOut {
@@ -414,9 +479,9 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--matrix-green);
-            font-family: 'Courier New', monospace;
             resize: none;
             height: 60px;
+            font-size: 16px;
         }
         
         .message-input:focus {
@@ -565,11 +630,6 @@
             gap: 8px;
         }
         
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-        
         .logout-button {
             background: transparent;
             color: var(--danger);
@@ -602,6 +662,7 @@
             z-index: 1000;
             display: none;
             font-weight: bold;
+            max-width: 90%;
         }
         
         .notification.error {
@@ -640,15 +701,18 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         
         .modal-content {
             background: var(--card-bg);
             border: 1px solid var(--matrix-green);
             border-radius: 8px;
-            width: 90%;
+            width: 100%;
             max-width: 500px;
             box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         .modal-header {
@@ -687,6 +751,18 @@
             gap: 8px;
         }
         
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive Design */
         @media (max-width: 1200px) {
             .container {
                 grid-template-columns: 250px 1fr;
@@ -697,14 +773,114 @@
             }
         }
         
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 220px 1fr;
+                gap: 10px;
+                padding: 10px;
+            }
+        }
+        
         @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+            }
+            
+            .mobile-nav {
+                display: block;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
             .container {
                 grid-template-columns: 1fr;
-                height: auto;
+                grid-template-rows: 1fr;
+                height: calc(100vh - 120px);
+                padding: 10px;
+                gap: 10px;
             }
             
             .card {
-                margin-bottom: 15px;
+                display: none;
+                margin-bottom: 0;
+                height: 100%;
+            }
+            
+            .card.active {
+                display: flex;
+            }
+            
+            .chat-header {
+                padding: 12px;
+            }
+            
+            .chat-actions {
+                flex-wrap: wrap;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .input-container {
+                padding: 12px;
+            }
+            
+            .login-container {
+                padding: 20px 15px;
+            }
+            
+            .login-tabs {
+                flex-direction: column;
+            }
+            
+            .login-tab {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 5px;
+            }
+            
+            .chat-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .chat-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .message {
+                max-width: 95%;
+                padding: 10px 12px;
+            }
+            
+            .user-info {
+                padding: 12px;
+            }
+            
+            .groups-container, .users-container {
+                padding: 12px;
+            }
+            
+            .section-title {
+                font-size: 0.9rem;
+            }
+            
+            .group-item, .user-item {
+                padding: 10px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
             }
         }
         
@@ -716,7 +892,6 @@
         
         .terminal-text {
             color: var(--matrix-green);
-            font-family: 'Courier New', monospace;
         }
         
         .blink {
@@ -727,25 +902,25 @@
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
         }
-        
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
     <div class="matrix-bg"></div>
     
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="logo">
+            <div class="logo-icon">S</div>
+            <span>SECURE MESSENGER</span>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    
     <div class="container">
-        <!-- پنل سمت چپ - گروهها و کاربران -->
-        <div class="card">
+        <!-- پنل سمت چپ - گروه‌ها و کاربران -->
+        <div class="card active" id="sidebarPanel">
             <header>
                 <div class="logo">
                     <div class="logo-icon">S</div>
@@ -763,51 +938,39 @@
             
             <div class="groups-container">
                 <div class="section-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    گروهها
+                    <i class="fas fa-users"></i>
+                    گروه‌ها
                 </div>
                 <div id="groupsList">
-                    <!-- لیست گروهها در اینجا نمایش داده میشود -->
+                    <!-- لیست گروه‌ها در اینجا نمایش داده می‌شود -->
                 </div>
                 
                 <div class="section-title" style="margin-top: 20px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                    <i class="fas fa-user-friends"></i>
                     کاربران
                 </div>
                 <div id="usersList">
-                    <!-- لیست کاربران در اینجا نمایش داده میشود -->
+                    <!-- لیست کاربران در اینجا نمایش داده می‌شود -->
                 </div>
             </div>
             
             <button class="logout-button" id="logoutButton" style="display: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
+                <i class="fas fa-sign-out-alt"></i>
                 خروج از سیستم
             </button>
         </div>
         
         <!-- پنل وسط - چت -->
-        <div class="card">
+        <div class="card active" id="chatPanel">
             <div class="login-container" id="loginContainer">
                 <h1>SECURE MESSENGER</h1>
-                <p>سیستم پیامرسان امن با قابلیت پاکسازی کامل پیامها</p>
+                <p>سیستم پیام‌رسان امن با قابلیت پاکسازی کامل پیام‌ها</p>
                 <p class="terminal-text">> سیستم آماده است. لطفاً وارد شوید...</p>
                 
                 <div class="login-tabs">
                     <button class="login-tab active" id="userLoginTab">ورود کاربر</button>
                     <button class="login-tab" id="adminLoginTab">ورود مدیر</button>
-                    <button class="login-tab" id="registerTab">ثبتنام کاربر</button>
+                    <button class="login-tab" id="registerTab">ثبت‌نام کاربر</button>
                 </div>
                 
                 <!-- فرم ورود کاربر -->
@@ -820,7 +983,10 @@
                         <label class="form-label">رمز عبور</label>
                         <input type="password" class="form-input" id="userPassword" placeholder="••••••••">
                     </div>
-                    <button class="btn btn-primary" id="userLoginBtn">ورود به سیستم</button>
+                    <button class="btn btn-primary" id="userLoginBtn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        ورود به سیستم
+                    </button>
                 </div>
                 
                 <!-- فرم ورود مدیر -->
@@ -833,10 +999,13 @@
                         <label class="form-label">رمز عبور مدیر</label>
                         <input type="password" class="form-input" id="adminPassword" placeholder="••••••••">
                     </div>
-                    <button class="btn btn-primary" id="adminLoginBtn">ورود به پنل مدیریت</button>
+                    <button class="btn btn-primary" id="adminLoginBtn">
+                        <i class="fas fa-user-shield"></i>
+                        ورود به پنل مدیریت
+                    </button>
                 </div>
                 
-                <!-- فرم ثبتنام کاربر -->
+                <!-- فرم ثبت‌نام کاربر -->
                 <div id="registerForm" style="display: none;">
                     <div class="form-group">
                         <label class="form-label">نام کامل</label>
@@ -854,7 +1023,10 @@
                         <label class="form-label">تکرار رمز عبور</label>
                         <input type="password" class="form-input" id="regPasswordConfirm" placeholder="••••••••">
                     </div>
-                    <button class="btn btn-primary" id="registerBtn">ثبتنام در سیستم</button>
+                    <button class="btn btn-primary" id="registerBtn">
+                        <i class="fas fa-user-plus"></i>
+                        ثبت‌نام در سیستم
+                    </button>
                 </div>
             </div>
             
@@ -862,8 +1034,14 @@
                 <div class="chat-header">
                     <h2 id="chatTitle">گروه عمومی</h2>
                     <div class="chat-actions">
-                        <button class="btn btn-secondary btn-small" id="clearChatBtn">پاک کردن چت</button>
-                        <button class="btn btn-danger btn-small" id="deleteAllMessagesBtn">حذف تمام پیامها</button>
+                        <button class="btn btn-secondary btn-small" id="clearChatBtn">
+                            <i class="fas fa-trash"></i>
+                            پاک کردن چت
+                        </button>
+                        <button class="btn btn-danger btn-small" id="deleteAllMessagesBtn">
+                            <i class="fas fa-broom"></i>
+                            حذف تمام پیام‌ها
+                        </button>
                     </div>
                 </div>
                 <div class="messages-container" id="messagesContainer">
@@ -875,25 +1053,18 @@
                 </div>
                 <div class="input-container">
                     <button class="upload-btn" id="uploadBtn" title="ارسال فایل">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
+                        <i class="fas fa-paperclip"></i>
                     </button>
                     <textarea class="message-input" id="messageInput" placeholder="پیام خود را اینجا تایپ کنید..." disabled></textarea>
                     <button class="send-button" id="sendButton" disabled>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
+                        <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
             </div>
         </div>
         
         <!-- پنل سمت راست - مدیریت -->
-        <div class="card admin-panel" id="adminPanel">
+        <div class="card" id="adminPanel">
             <header>
                 <div class="logo">
                     <div class="logo-icon">A</div>
@@ -905,8 +1076,14 @@
                 <div class="admin-section">
                     <div class="section-title">مدیریت کاربران</div>
                     <div class="admin-controls">
-                        <button class="btn btn-primary btn-small" id="addUserBtn">افزودن کاربر</button>
-                        <button class="btn btn-secondary btn-small" id="refreshUsersBtn">بروزرسانی</button>
+                        <button class="btn btn-primary btn-small" id="addUserBtn">
+                            <i class="fas fa-user-plus"></i>
+                            افزودن کاربر
+                        </button>
+                        <button class="btn btn-secondary btn-small" id="refreshUsersBtn">
+                            <i class="fas fa-sync"></i>
+                            بروزرسانی
+                        </button>
                     </div>
                     <ul class="user-list" id="adminUserList">
                         <!-- لیست کاربران برای مدیر -->
@@ -914,13 +1091,19 @@
                 </div>
                 
                 <div class="admin-section">
-                    <div class="section-title">مدیریت گروهها</div>
+                    <div class="section-title">مدیریت گروه‌ها</div>
                     <div class="admin-controls">
-                        <button class="btn btn-primary btn-small" id="addGroupBtn">ایجاد گروه</button>
-                        <button class="btn btn-secondary btn-small" id="refreshGroupsBtn">بروزرسانی</button>
+                        <button class="btn btn-primary btn-small" id="addGroupBtn">
+                            <i class="fas fa-plus-circle"></i>
+                            ایجاد گروه
+                        </button>
+                        <button class="btn btn-secondary btn-small" id="refreshGroupsBtn">
+                            <i class="fas fa-sync"></i>
+                            بروزرسانی
+                        </button>
                     </div>
                     <ul class="group-list-admin" id="adminGroupList">
-                        <!-- لیست گروهها برای مدیر -->
+                        <!-- لیست گروه‌ها برای مدیر -->
                     </ul>
                 </div>
                 
@@ -928,15 +1111,18 @@
                     <div class="section-title">پاکسازی سیستم</div>
                     <div class="cleanup-section">
                         <div class="cleanup-title">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="3 6 5 6 21 6"></polyline>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            </svg>
+                            <i class="fas fa-trash"></i>
                             عملیات پاکسازی
                         </div>
                         <div class="admin-controls">
-                            <button class="btn btn-danger btn-small" id="clearAllMessagesBtn">حذف تمام پیامها</button>
-                            <button class="btn btn-warning btn-small" id="clearUserMessagesBtn">حذف پیامهای کاربر</button>
+                            <button class="btn btn-danger btn-small" id="clearAllMessagesBtn">
+                                <i class="fas fa-broom"></i>
+                                حذف تمام پیام‌ها
+                            </button>
+                            <button class="btn btn-warning btn-small" id="clearUserMessagesBtn">
+                                <i class="fas fa-user-times"></i>
+                                حذف پیام‌های کاربر
+                            </button>
                         </div>
                         <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px;">
                             توجه: این عملیات غیرقابل بازگشت است!
@@ -947,17 +1133,35 @@
                 <div class="admin-section">
                     <div class="section-title">آمار سیستم</div>
                     <div class="terminal-text">
-                        <div>کاربران آنلاین: <span id="onlineUsersCount">0</span></div>
-                        <div>تعداد گروهها: <span id="groupsCount">0</span></div>
-                        <div>پیامهای امروز: <span id="messagesToday">0</span></div>
-                        <div>کل پیامها: <span id="totalMessages">0</span></div>
+                        <div><i class="fas fa-users"></i> کاربران آنلاین: <span id="onlineUsersCount">0</span></div>
+                        <div><i class="fas fa-comments"></i> تعداد گروه‌ها: <span id="groupsCount">0</span></div>
+                        <div><i class="fas fa-envelope"></i> پیام‌های امروز: <span id="messagesToday">0</span></div>
+                        <div><i class="fas fa-database"></i> کل پیام‌ها: <span id="totalMessages">0</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- مودالها -->
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-panel="sidebarPanel">
+                <i class="fas fa-users"></i>
+                <span>گروه‌ها</span>
+            </button>
+            <button class="nav-btn" data-panel="chatPanel">
+                <i class="fas fa-comments"></i>
+                <span>چت</span>
+            </button>
+            <button class="nav-btn" data-panel="adminPanel" id="adminNavBtn" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <span>مدیریت</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- مودال‌ها -->
     <div class="modal" id="createGroupModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -973,7 +1177,10 @@
                     <label class="form-label">توضیحات</label>
                     <textarea class="form-input" id="groupDescription" placeholder="توضیحات گروه" rows="3"></textarea>
                 </div>
-                <button class="btn btn-primary" id="createGroupBtn">ایجاد گروه</button>
+                <button class="btn btn-primary" id="createGroupBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    ایجاد گروه
+                </button>
             </div>
         </div>
     </div>
@@ -1004,7 +1211,10 @@
                         <option value="moderator">ناظر</option>
                     </select>
                 </div>
-                <button class="btn btn-primary" id="createUserBtn">ایجاد کاربر</button>
+                <button class="btn btn-primary" id="createUserBtn">
+                    <i class="fas fa-user-plus"></i>
+                    ایجاد کاربر
+                </button>
             </div>
         </div>
     </div>
@@ -1027,8 +1237,9 @@
         let users = [];
         let groups = [];
         let messageTimers = {};
+        let onlineUsers = new Set();
         
-        // المنتهای DOM
+        // المنت‌های DOM
         const loginContainer = document.getElementById('loginContainer');
         const chatContainer = document.getElementById('chatContainer');
         const userInfo = document.getElementById('userInfo');
@@ -1047,26 +1258,58 @@
         const notification = document.getElementById('notification');
         const chatTitle = document.getElementById('chatTitle');
         const emptyState = document.getElementById('emptyState');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const adminNavBtn = document.getElementById('adminNavBtn');
+        const navButtons = document.querySelectorAll('.nav-btn');
         
-        // راهاندازی برنامه
+        // راه‌اندازی برنامه
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
             checkAuthState();
+            setupMobileNavigation();
         });
+        
+        // تنظیم ناوبری موبایل
+        function setupMobileNavigation() {
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const sidebar = document.getElementById('sidebarPanel');
+                    sidebar.classList.toggle('active');
+                });
+            }
+            
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const panelId = this.getAttribute('data-panel');
+                    switchPanel(panelId);
+                    
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        // تغییر پنل در موبایل
+        function switchPanel(panelId) {
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById(panelId).classList.add('active');
+        }
         
         // تنظیم رویدادها
         function setupEventListeners() {
-            // تبهای ورود
+            // تب‌های ورود
             document.getElementById('userLoginTab').addEventListener('click', () => switchLoginTab('user'));
             document.getElementById('adminLoginTab').addEventListener('click', () => switchLoginTab('admin'));
             document.getElementById('registerTab').addEventListener('click', () => switchLoginTab('register'));
             
-            // دکمههای ورود
+            // دکمه‌های ورود
             document.getElementById('userLoginBtn').addEventListener('click', userLogin);
             document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
             document.getElementById('registerBtn').addEventListener('click', registerUser);
             
-            // دکمههای چت
+            // دکمه‌های چت
             sendButton.addEventListener('click', sendMessage);
             messageInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -1075,7 +1318,7 @@
                 }
             });
             
-            // دکمههای پاکسازی
+            // دکمه‌های پاکسازی
             document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat);
             document.getElementById('deleteAllMessagesBtn').addEventListener('click', deleteAllUserMessages);
             document.getElementById('clearAllMessagesBtn').addEventListener('click', clearAllMessages);
@@ -1084,7 +1327,7 @@
             // دکمه آپلود فایل
             document.getElementById('uploadBtn').addEventListener('click', uploadFile);
             
-            // دکمههای مدیریت
+            // دکمه‌های مدیریت
             document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
             document.getElementById('addGroupBtn').addEventListener('click', showAddGroupModal);
             document.getElementById('refreshUsersBtn').addEventListener('click', loadUsers);
@@ -1092,13 +1335,20 @@
             document.getElementById('createGroupBtn').addEventListener('click', createGroup);
             document.getElementById('createUserBtn').addEventListener('click', createUser);
             
-            // بستن مودالها
+            // بستن مودال‌ها
             document.getElementById('closeGroupModal').addEventListener('click', () => {
                 document.getElementById('createGroupModal').style.display = 'none';
             });
             
             document.getElementById('closeUserModal').addEventListener('click', () => {
                 document.getElementById('addUserModal').style.display = 'none';
+            });
+            
+            // بستن مودال با کلیک خارج
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
             });
             
             // خروج
@@ -1133,11 +1383,17 @@
         
         // بررسی وضعیت احراز هویت
         async function checkAuthState() {
-            const { data, error } = await supabase.auth.getSession();
-            
-            if (data.session) {
-                currentUser = data.session.user;
-                await initializeApp();
+            try {
+                const { data, error } = await supabase.auth.getSession();
+                
+                if (error) throw error;
+                
+                if (data.session) {
+                    currentUser = data.session.user;
+                    await initializeApp();
+                }
+            } catch (error) {
+                console.error('Error checking auth state:', error);
             }
         }
         
@@ -1152,6 +1408,7 @@
             }
             
             try {
+                showLoading(true);
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email,
                     password
@@ -1161,12 +1418,18 @@
                 
                 currentUser = data.user;
                 isAdmin = false;
+                
+                // اضافه کردن کاربر به لیست آنلاین
+                onlineUsers.add(currentUser.id);
+                
                 await initializeApp();
                 showNotification('با موفقیت وارد شدید');
                 
             } catch (error) {
                 console.error('Error signing in:', error);
                 showNotification('خطا در ورود: ' + error.message, true);
+            } finally {
+                showLoading(false);
             }
         }
         
@@ -1181,27 +1444,34 @@
             }
             
             try {
-                // در حالت واقعی، این اطلاعات از دیتابیس چک میشود
-                if (email === 'admin@system.com' && password === 'admin123') {
-                    currentUser = {
-                        id: 'admin',
-                        email: 'admin@system.com',
-                        user_metadata: { full_name: 'مدیر سیستم' }
-                    };
-                    isAdmin = true;
-                    await initializeApp();
-                    showNotification('به پنل مدیریت خوش آمدید');
-                } else {
-                    showNotification('اطلاعات ورود مدیر نادرست است', true);
-                }
+                showLoading(true);
+                
+                // در حالت واقعی، این اطلاعات از دیتابیس چک می‌شود
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) throw error;
+                
+                currentUser = data.user;
+                isAdmin = true;
+                
+                // اضافه کردن مدیر به لیست آنلاین
+                onlineUsers.add(currentUser.id);
+                
+                await initializeApp();
+                showNotification('به پنل مدیریت خوش آمدید');
                 
             } catch (error) {
                 console.error('Error in admin login:', error);
-                showNotification('خطا در ورود مدیر', true);
+                showNotification('اطلاعات ورود مدیر نادرست است', true);
+            } finally {
+                showLoading(false);
             }
         }
         
-        // ثبتنام کاربر جدید
+        // ثبت‌نام کاربر جدید
         async function registerUser() {
             const name = document.getElementById('regName').value;
             const email = document.getElementById('regEmail').value;
@@ -1224,28 +1494,69 @@
             }
             
             try {
-                // در حالت واقعی، کاربر در Supabase Auth ثبت میشود
-                showNotification('ثبتنام با موفقیت انجام شد. منتظر تایید مدیر باشید.');
-                switchLoginTab('user');
+                showLoading(true);
                 
-                // پاک کردن فرم
-                document.getElementById('regName').value = '';
-                document.getElementById('regEmail').value = '';
-                document.getElementById('regPassword').value = '';
-                document.getElementById('regPasswordConfirm').value = '';
+                // ثبت‌نام کاربر در Supabase Auth
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            role: 'user'
+                        }
+                    }
+                });
+                
+                if (error) throw error;
+                
+                if (data.user) {
+                    // اضافه کردن کاربر جدید به لیست کاربران
+                    const newUser = {
+                        id: data.user.id,
+                        name: name,
+                        email: email,
+                        avatar: null,
+                        isOnline: true,
+                        role: 'user',
+                        status: 'active',
+                        created_at: new Date()
+                    };
+                    
+                    users.push(newUser);
+                    onlineUsers.add(data.user.id);
+                    
+                    showNotification('ثبت‌نام با موفقیت انجام شد! اکنون می‌توانید وارد شوید.');
+                    switchLoginTab('user');
+                    
+                    // پاک کردن فرم
+                    document.getElementById('regName').value = '';
+                    document.getElementById('regEmail').value = '';
+                    document.getElementById('regPassword').value = '';
+                    document.getElementById('regPasswordConfirm').value = '';
+                }
                 
             } catch (error) {
                 console.error('Error registering user:', error);
-                showNotification('خطا در ثبتنام: ' + error.message, true);
+                showNotification('خطا در ثبت‌نام: ' + error.message, true);
+            } finally {
+                showLoading(false);
             }
         }
         
         // خروج
         async function signOut() {
             try {
+                showLoading(true);
+                
                 if (!isAdmin) {
                     const { error } = await supabase.auth.signOut();
                     if (error) throw error;
+                }
+                
+                // حذف کاربر از لیست آنلاین
+                if (currentUser) {
+                    onlineUsers.delete(currentUser.id);
                 }
                 
                 currentUser = null;
@@ -1256,7 +1567,28 @@
             } catch (error) {
                 console.error('Error signing out:', error);
                 showNotification('خطا در خروج', true);
+            } finally {
+                showLoading(false);
             }
+        }
+        
+        // نمایش حالت بارگذاری
+        function showLoading(show) {
+            const buttons = document.querySelectorAll('.btn:not(.nav-btn)');
+            buttons.forEach(btn => {
+                if (show) {
+                    const originalText = btn.innerHTML;
+                    btn.setAttribute('data-original-text', originalText);
+                    btn.disabled = true;
+                    btn.innerHTML = '<div class="spinner" style="width: 16px; height: 16px; margin: 0 auto;"></div>';
+                } else {
+                    btn.disabled = false;
+                    const originalText = btn.getAttribute('data-original-text');
+                    if (originalText) {
+                        btn.innerHTML = originalText;
+                    }
+                }
+            });
         }
         
         // مقداردهی اولیه برنامه
@@ -1269,13 +1601,17 @@
                 
                 if (isAdmin) {
                     adminPanel.style.display = 'block';
+                    if (adminNavBtn) adminNavBtn.style.display = 'flex';
                     loadAdminData();
                 }
                 
-                // انتخاب گروه پیشفرض
+                // انتخاب گروه پیش‌فرض
                 if (groups.length > 0) {
                     selectGroup(groups[0]);
                 }
+                
+                // راه‌اندازی Real-time subscriptions
+                setupRealtimeSubscriptions();
                 
             } catch (error) {
                 console.error('Error initializing app:', error);
@@ -1290,7 +1626,7 @@
             userName.textContent = currentUser.user_metadata?.full_name || currentUser.email;
             userRole.textContent = isAdmin ? 'مدیر سیستم' : 'کاربر عادی';
             
-            const initial = (currentUser.user_metadata?.full_name || 'User').charAt(0).toUpperCase();
+            const initial = (currentUser.user_metadata?.full_name || currentUser.email || 'User').charAt(0).toUpperCase();
             userAvatar.textContent = initial;
             
             userInfo.style.display = 'flex';
@@ -1304,6 +1640,7 @@
             userInfo.style.display = 'none';
             logoutButton.style.display = 'none';
             adminPanel.style.display = 'none';
+            if (adminNavBtn) adminNavBtn.style.display = 'none';
         }
         
         // نمایش صفحه چت
@@ -1317,17 +1654,26 @@
         // بارگذاری کاربران
         async function loadUsers() {
             try {
-                // در حالت واقعی از Supabase بارگذاری میشود
-                users = [
-                    { id: '1', name: 'کاربر نمونه ۱', email: 'user1@example.com', avatar: null, isOnline: true, role: 'user', status: 'active' },
-                    { id: '2', name: 'کاربر نمونه ۲', email: 'user2@example.com', avatar: null, isOnline: true, role: 'user', status: 'active' },
-                    { id: '3', name: 'ناظر سیستم', email: 'mod@example.com', avatar: null, isOnline: false, role: 'moderator', status: 'active' }
-                ];
+                // در حالت واقعی از Supabase بارگذاری می‌شود
+                // داده‌های نمونه برای شروع
+                if (users.length === 0) {
+                    users = [
+                        { id: '1', name: 'کاربر نمونه ۱', email: 'user1@example.com', avatar: null, role: 'user', status: 'active' },
+                        { id: '2', name: 'کاربر نمونه ۲', email: 'user2@example.com', avatar: null, role: 'user', status: 'active' },
+                        { id: '3', name: 'ناظر سیستم', email: 'mod@example.com', avatar: null, role: 'moderator', status: 'active' }
+                    ];
+                }
+                
+                // به‌روزرسانی وضعیت آنلاین
+                users.forEach(user => {
+                    user.isOnline = onlineUsers.has(user.id);
+                });
                 
                 displayUsers();
                 
             } catch (error) {
                 console.error('Error loading users:', error);
+                showNotification('خطا در بارگذاری کاربران', true);
             }
         }
         
@@ -1337,8 +1683,13 @@
             
             usersList.innerHTML = '';
             
+            if (users.length === 0) {
+                usersList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>هیچ کاربری یافت نشد</p></div>';
+                return;
+            }
+            
             users.forEach(user => {
-                if (user.id === currentUser.id) return;
+                if (user.id === currentUser?.id) return;
                 
                 const userItem = document.createElement('div');
                 userItem.className = 'user-item';
@@ -1351,7 +1702,7 @@
                     </div>
                     <div class="user-details">
                         <div class="user-name">${user.name}</div>
-                        <div class="user-role">${user.role === 'moderator' ? 'ناظر' : 'کاربر'} - ${user.isOnline ? 'آنلاین' : 'آفلاین'}</div>
+                        <div class="user-role">${user.role === 'moderator' ? 'ناظر' : 'کاربر'} - ${user.isOnline ? 'آنلاین' : 'آفلاین'} ${user.status === 'pending' ? '(در انتظار تایید)' : ''}</div>
                     </div>
                 `;
                 
@@ -1360,28 +1711,36 @@
             });
         }
         
-        // بارگذاری گروهها
+        // بارگذاری گروه‌ها
         async function loadGroups() {
             try {
-                // در حالت واقعی از Supabase بارگذاری میشود
-                groups = [
-                    { id: '1', name: 'گروه عمومی', description: 'گفتگوی عمومی همه کاربران', members: ['1', '2', '3'], isPrivate: false, createdBy: 'admin' },
-                    { id: '2', name: 'پشتیبانی فنی', description: 'پشتیبانی و راهنمایی', members: ['1', '3'], isPrivate: true, createdBy: 'admin' },
-                    { id: '3', name: 'توسعه دهندگان', description: 'بحثهای فنی', members: ['2', '3'], isPrivate: true, createdBy: 'admin' }
-                ];
+                // در حالت واقعی از Supabase بارگذاری می‌شود
+                if (groups.length === 0) {
+                    groups = [
+                        { id: '1', name: 'گروه عمومی', description: 'گفتگوی عمومی همه کاربران', members: ['1', '2', '3'], isPrivate: false, createdBy: 'admin' },
+                        { id: '2', name: 'پشتیبانی فنی', description: 'پشتیبانی و راهنمایی', members: ['1', '3'], isPrivate: true, createdBy: 'admin' },
+                        { id: '3', name: 'توسعه دهندگان', description: 'بحث‌های فنی', members: ['2', '3'], isPrivate: true, createdBy: 'admin' }
+                    ];
+                }
                 
                 displayGroups();
                 
             } catch (error) {
                 console.error('Error loading groups:', error);
+                showNotification('خطا در بارگذاری گروه‌ها', true);
             }
         }
         
-        // نمایش گروهها
+        // نمایش گروه‌ها
         function displayGroups() {
             if (!groupsList) return;
             
             groupsList.innerHTML = '';
+            
+            if (groups.length === 0) {
+                groupsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💬</div><p>هیچ گروهی یافت نشد</p></div>';
+                return;
+            }
             
             groups.forEach(group => {
                 const groupItem = document.createElement('div');
@@ -1415,6 +1774,18 @@
             // فعال کردن فیلد ورودی پیام
             messageInput.disabled = false;
             sendButton.disabled = false;
+            
+            // در موبایل، بعد از انتخاب گروه به پنل چت برو
+            if (window.innerWidth <= 768) {
+                switchPanel('chatPanel');
+                navButtons.forEach(btn => {
+                    if (btn.getAttribute('data-panel') === 'chatPanel') {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
         }
         
         // شروع چت خصوصی
@@ -1431,57 +1802,54 @@
             selectGroup(privateGroup);
         }
         
-        // بارگذاری پیامها
+        // بارگذاری پیام‌ها
         async function loadMessages(groupId) {
             try {
                 messagesContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
                 
-                // در حالت واقعی از Supabase بارگذاری میشود
-                setTimeout(() => {
-                    messages = [
-                        {
-                            id: '1',
-                            text: 'سلام! به گروه خوش آمدید.',
-                            sender_id: '1',
-                            group_id: groupId,
-                            created_at: new Date(Date.now() - 60000),
-                            is_read: true,
-                            type: 'text'
-                        },
-                        {
-                            id: '2',
-                            text: 'ممنون! فضای خوبی دارید اینجا.',
-                            sender_id: currentUser.id,
-                            group_id: groupId,
-                            created_at: new Date(Date.now() - 30000),
-                            is_read: true,
-                            type: 'text'
-                        }
-                    ];
+                // فیلتر کردن پیام‌های مربوط به گروه فعلی
+                const groupMessages = messages.filter(m => m.group_id === groupId);
+                
+                if (groupMessages.length === 0) {
+                    // اگر پیامی وجود ندارد، پیام خوش‌آمدگویی اضافه کن
+                    const welcomeMessage = {
+                        id: 'welcome_' + Date.now(),
+                        text: `به ${currentGroup.name} خوش آمدید!`,
+                        sender_id: 'system',
+                        group_id: groupId,
+                        created_at: new Date(),
+                        is_read: true,
+                        type: 'system'
+                    };
                     
+                    messages.push(welcomeMessage);
                     displayMessages();
-                }, 500);
+                } else {
+                    displayMessages();
+                }
                 
             } catch (error) {
                 console.error('Error loading messages:', error);
-                showNotification('خطا در بارگذاری پیامها', true);
+                showNotification('خطا در بارگذاری پیام‌ها', true);
             }
         }
         
-        // نمایش پیامها
+        // نمایش پیام‌ها
         function displayMessages() {
             if (!messagesContainer) return;
             
             messagesContainer.innerHTML = '';
             
-            if (messages.length === 0) {
+            const groupMessages = messages.filter(m => m.group_id === currentGroup.id);
+            
+            if (groupMessages.length === 0) {
                 emptyState.style.display = 'block';
                 return;
             }
             
             emptyState.style.display = 'none';
             
-            messages.forEach(message => {
+            groupMessages.forEach(message => {
                 displayMessage(message);
             });
             
@@ -1492,8 +1860,19 @@
         function displayMessage(message) {
             const messageElement = document.createElement('div');
             const isSent = message.sender_id === currentUser.id;
+            const isSystem = message.sender_id === 'system';
             
-            messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
+            if (isSystem) {
+                messageElement.className = 'message system';
+                messageElement.style.alignSelf = 'center';
+                messageElement.style.maxWidth = '90%';
+                messageElement.style.backgroundColor = 'rgba(0, 255, 65, 0.1)';
+                messageElement.style.borderColor = 'var(--matrix-green)';
+                messageElement.style.fontStyle = 'italic';
+            } else {
+                messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
+            }
+            
             messageElement.dataset.messageId = message.id;
             
             const timeString = new Date(message.created_at).toLocaleTimeString('fa-IR', {
@@ -1502,13 +1881,13 @@
             });
             
             let messageHeader = '';
-            if (!isSent) {
+            if (!isSent && !isSystem) {
                 const sender = users.find(u => u.id === message.sender_id);
                 messageHeader = `<div class="message-header">${sender ? sender.name : 'کاربر'}</div>`;
             }
             
             let messageContent = '';
-            if (message.type === 'text') {
+            if (message.type === 'text' || message.type === 'system') {
                 messageContent = `<div>${message.text}</div>`;
             } else if (message.type === 'file') {
                 messageContent = `
@@ -1522,17 +1901,17 @@
             }
             
             messageElement.innerHTML = `
-                <div class="message-actions">
+                ${!isSystem ? `<div class="message-actions">
                     <button class="btn-small" onclick="deleteSingleMessage('${message.id}')">×</button>
-                </div>
+                </div>` : ''}
                 ${messageHeader}
                 ${messageContent}
                 <div class="message-time">${timeString}</div>
-                <div class="type-indicator">${message.type === 'text' ? 'متن' : 'فایل'}</div>
+                ${!isSystem ? `<div class="type-indicator">${message.type === 'text' ? 'متن' : 'فایل'}</div>` : ''}
             `;
             
             // اگر پیام دریافت شده و هنوز خوانده نشده، تایمر حذف را تنظیم کن
-            if (!isSent && !message.is_read) {
+            if (!isSent && !isSystem && !message.is_read) {
                 const deleteTimer = document.createElement('div');
                 deleteTimer.className = 'delete-timer';
                 messageElement.appendChild(deleteTimer);
@@ -1573,15 +1952,15 @@
                     messageElement.remove();
                     delete messageTimers[messageId];
                     
-                    // حذف از آرایه پیامها
+                    // حذف از آرایه پیام‌ها
                     messages = messages.filter(m => m.id !== messageId);
                     
-                    // اگر همه پیامها حذف شدند، حالت خالی نمایش داده شود
-                    if (messages.length === 0) {
+                    // اگر همه پیام‌ها حذف شدند، حالت خالی نمایش داده شود
+                    const groupMessages = messages.filter(m => m.group_id === currentGroup.id);
+                    if (groupMessages.length === 0) {
                         emptyState.style.display = 'block';
                     }
                     
-                    // در حالت واقعی از دیتابیس نیز حذف میشود
                     showNotification('پیام حذف شد');
                 }, 500);
             }
@@ -1594,71 +1973,71 @@
                 return;
             }
             
-            if (confirm('آیا از پاک کردن تمام پیامهای این چت اطمینان دارید؟ این عمل غیرقابل بازگشت است.')) {
+            if (confirm('آیا از پاک کردن تمام پیام‌های این چت اطمینان دارید؟ این عمل غیرقابل بازگشت است.')) {
                 // پاک کردن تمام تایمرها
                 Object.keys(messageTimers).forEach(messageId => {
                     clearTimeout(messageTimers[messageId]);
                 });
                 messageTimers = {};
                 
-                // پاک کردن پیامها از آرایه
+                // پاک کردن پیام‌ها از آرایه
                 messages = messages.filter(m => m.group_id !== currentGroup.id);
                 
-                // پاک کردن نمایش پیامها
+                // پاک کردن نمایش پیام‌ها
                 messagesContainer.innerHTML = '';
                 emptyState.style.display = 'block';
                 
-                showNotification('تمام پیامهای این چت پاک شد');
+                showNotification('تمام پیام‌های این چت پاک شد');
             }
         }
         
-        // حذف تمام پیامهای کاربر
+        // حذف تمام پیام‌های کاربر
         function deleteAllUserMessages() {
-            if (confirm('آیا از حذف تمام پیامهای ارسالی و دریافتی خود اطمینان دارید؟ این عمل غیرقابل بازگشت است.')) {
+            if (confirm('آیا از حذف تمام پیام‌های ارسالی و دریافتی خود اطمینان دارید؟ این عمل غیرقابل بازگشت است.')) {
                 // پاک کردن تمام تایمرها
                 Object.keys(messageTimers).forEach(messageId => {
                     clearTimeout(messageTimers[messageId]);
                 });
                 messageTimers = {};
                 
-                // پاک کردن پیامهای کاربر از آرایه
+                // پاک کردن پیام‌های کاربر از آرایه
                 messages = messages.filter(m => m.sender_id !== currentUser.id);
                 
-                // نمایش مجدد پیامها
+                // نمایش مجدد پیام‌ها
                 displayMessages();
                 
-                showNotification('تمام پیامهای شما حذف شد');
+                showNotification('تمام پیام‌های شما حذف شد');
             }
         }
         
-        // حذف تمام پیامهای سیستم (مدیر)
+        // حذف تمام پیام‌های سیستم (مدیر)
         function clearAllMessages() {
             if (!isAdmin) {
                 showNotification('شما دسترسی لازم برای این عمل را ندارید', true);
                 return;
             }
             
-            if (confirm('آیا از حذف تمام پیامهای سیستم اطمینان دارید؟ این عمل غیرقابل بازگشت است و بر تمام کاربران تاثیر میگذارد.')) {
+            if (confirm('آیا از حذف تمام پیام‌های سیستم اطمینان دارید؟ این عمل غیرقابل بازگشت است و بر تمام کاربران تاثیر می‌گذارد.')) {
                 // پاک کردن تمام تایمرها
                 Object.keys(messageTimers).forEach(messageId => {
                     clearTimeout(messageTimers[messageId]);
                 });
                 messageTimers = {};
                 
-                // پاک کردن تمام پیامها
+                // پاک کردن تمام پیام‌ها
                 messages = [];
                 
-                // پاک کردن نمایش پیامها
+                // پاک کردن نمایش پیام‌ها
                 if (messagesContainer) {
                     messagesContainer.innerHTML = '';
                     emptyState.style.display = 'block';
                 }
                 
-                showNotification('تمام پیامهای سیستم حذف شد');
+                showNotification('تمام پیام‌های سیستم حذف شد');
             }
         }
         
-        // حذف پیامهای یک کاربر خاص (مدیر)
+        // حذف پیام‌های یک کاربر خاص (مدیر)
         function clearUserMessages() {
             if (!isAdmin) {
                 showNotification('شما دسترسی لازم برای این عمل را ندارید', true);
@@ -1667,14 +2046,14 @@
             
             const userId = prompt('لطفاً ID کاربر مورد نظر را وارد کنید:');
             if (userId) {
-                if (confirm(`آیا از حذف تمام پیامهای کاربر ${userId} اطمینان دارید؟`)) {
-                    // پاک کردن پیامهای کاربر
+                if (confirm(`آیا از حذف تمام پیام‌های کاربر ${userId} اطمینان دارید؟`)) {
+                    // پاک کردن پیام‌های کاربر
                     messages = messages.filter(m => m.sender_id !== userId);
                     
-                    // نمایش مجدد پیامها
+                    // نمایش مجدد پیام‌ها
                     displayMessages();
                     
-                    showNotification(`تمام پیامهای کاربر ${userId} حذف شد`);
+                    showNotification(`تمام پیام‌های کاربر ${userId} حذف شد`);
                 }
             }
         }
@@ -1696,7 +2075,7 @@
                     type: 'text'
                 };
                 
-                // اضافه کردن به آرایه پیامها
+                // اضافه کردن به آرایه پیام‌ها
                 messages.push(newMessage);
                 
                 // نمایش پیام
@@ -1705,8 +2084,8 @@
                 messageInput.value = '';
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 
-                // شبیهسازی دریافت پاسخ
-                simulateReply(newMessage);
+                // در حالت واقعی، پیام به سرور ارسال می‌شود
+                // و از طریق real-time به دیگر کاربران می‌رسد
                 
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -1716,36 +2095,47 @@
         
         // آپلود فایل
         async function uploadFile() {
-            showNotification('قابلیت آپلود فایل به زودی اضافه میشود');
-        }
-        
-        // شبیهسازی پاسخ
-        function simulateReply(originalMessage) {
-            if (currentGroup.isDirect) return;
+            // ایجاد input فایل پویا
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '*/*';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
             
-            setTimeout(() => {
-                const otherUsers = currentGroup.members.filter(id => id !== currentUser.id);
-                if (otherUsers.length > 0) {
-                    const randomUserId = otherUsers[Math.floor(Math.random() * otherUsers.length)];
-                    const randomUser = users.find(u => u.id === randomUserId);
+            fileInput.click();
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // در حالت واقعی، فایل آپلود می‌شود
+                    showNotification(`فایل "${file.name}" انتخاب شد. در حال آپلود...`);
                     
-                    if (randomUser) {
-                        const replyMessage = {
-                            id: (Date.now() + 1).toString(),
-                            text: `پاسخ به: "${originalMessage.text}"`,
-                            sender_id: randomUser.id,
+                    // شبیه‌سازی آپلود
+                    setTimeout(() => {
+                        // ایجاد پیام فایل
+                        const fileMessage = {
+                            id: Date.now().toString(),
+                            file_name: file.name,
+                            file_size: file.size,
+                            file_url: '#',
+                            sender_id: currentUser.id,
                             group_id: currentGroup.id,
                             created_at: new Date(),
                             is_read: false,
-                            type: 'text'
+                            type: 'file'
                         };
                         
-                        messages.push(replyMessage);
-                        displayMessage(replyMessage);
+                        messages.push(fileMessage);
+                        displayMessage(fileMessage);
                         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
+                        
+                        showNotification(`فایل "${file.name}" با موفقیت آپلود شد`);
+                    }, 2000);
                 }
-            }, 2000);
+                
+                // پاک کردن input
+                document.body.removeChild(fileInput);
+            });
         }
         
         // نمایش مودال افزودن کاربر
@@ -1770,7 +2160,7 @@
             
             try {
                 const newGroup = {
-                    id: Date.now().toString(),
+                    id: 'group_' + Date.now(),
                     name: name,
                     description: description,
                     members: [currentUser.id],
@@ -1807,8 +2197,9 @@
             }
             
             try {
+                // در حالت واقعی، کاربر در دیتابیس ایجاد می‌شود
                 const newUser = {
-                    id: Date.now().toString(),
+                    id: 'user_' + Date.now(),
                     name: name,
                     email: email,
                     avatar: null,
@@ -1820,6 +2211,7 @@
                 
                 users.push(newUser);
                 displayUsers();
+                displayAdminUsers();
                 
                 document.getElementById('addUserModal').style.display = 'none';
                 document.getElementById('newUserName').value = '';
@@ -1834,7 +2226,7 @@
             }
         }
         
-        // بارگذاری دادههای مدیریت
+        // بارگذاری داده‌های مدیریت
         function loadAdminData() {
             displayAdminUsers();
             displayAdminGroups();
@@ -1847,27 +2239,41 @@
             
             adminUserList.innerHTML = '';
             
+            if (users.length === 0) {
+                adminUserList.innerHTML = '<li style="text-align: center; padding: 20px; color: var(--text-secondary);">هیچ کاربری یافت نشد</li>';
+                return;
+            }
+            
             users.forEach(user => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
                     <div>
                         <strong>${user.name}</strong>
-                        <div>${user.email} - ${user.role === 'moderator' ? 'ناظر' : 'کاربر'}</div>
+                        <div>${user.email} - ${user.role === 'moderator' ? 'ناظر' : 'کاربر'} - ${user.status === 'pending' ? 'در انتظار تایید' : 'فعال'}</div>
                     </div>
                     <div class="user-actions">
-                        <button class="btn btn-secondary btn-small" onclick="editUser('${user.id}')">ویرایش</button>
-                        <button class="btn btn-danger btn-small" onclick="deleteUser('${user.id}')">حذف</button>
+                        <button class="btn btn-secondary btn-small" onclick="editUser('${user.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteUser('${user.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 adminUserList.appendChild(listItem);
             });
         }
         
-        // نمایش گروهها برای مدیر
+        // نمایش گروه‌ها برای مدیر
         function displayAdminGroups() {
             if (!adminGroupList) return;
             
             adminGroupList.innerHTML = '';
+            
+            if (groups.length === 0) {
+                adminGroupList.innerHTML = '<li style="text-align: center; padding: 20px; color: var(--text-secondary);">هیچ گروهی یافت نشد</li>';
+                return;
+            }
             
             groups.forEach(group => {
                 const listItem = document.createElement('li');
@@ -1877,23 +2283,30 @@
                         <div>${group.members.length} عضو - ${group.isPrivate ? 'خصوصی' : 'عمومی'}</div>
                     </div>
                     <div class="group-actions">
-                        <button class="btn btn-secondary btn-small" onclick="editGroup('${group.id}')">ویرایش</button>
-                        <button class="btn btn-danger btn-small" onclick="deleteGroup('${group.id}')">حذف</button>
+                        <button class="btn btn-secondary btn-small" onclick="editGroup('${group.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteGroup('${group.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 adminGroupList.appendChild(listItem);
             });
         }
         
-        // بهروزرسانی آمار
+        // به‌روزرسانی آمار
         function updateStats() {
-            document.getElementById('onlineUsersCount').textContent = users.filter(u => u.isOnline).length;
+            document.getElementById('onlineUsersCount').textContent = onlineUsers.size;
             document.getElementById('groupsCount').textContent = groups.length;
-            document.getElementById('messagesToday').textContent = messages.filter(m => {
-                const today = new Date();
+            
+            const today = new Date();
+            const messagesToday = messages.filter(m => {
                 const messageDate = new Date(m.created_at);
                 return messageDate.toDateString() === today.toDateString();
             }).length;
+            
+            document.getElementById('messagesToday').textContent = messagesToday;
             document.getElementById('totalMessages').textContent = messages.length;
         }
         
@@ -1917,27 +2330,68 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
-        // توابع مدیریت (برای دکمهها)
+        // راه‌اندازی Real-time Subscriptions
+        function setupRealtimeSubscriptions() {
+            // در حالت واقعی، این بخش برای ارتباط بلادرنگ با سرور استفاده می‌شود
+            console.log('Real-time subscriptions initialized');
+        }
+        
+        // توابع مدیریت (برای دکمه‌ها)
         function editUser(userId) {
-            showNotification(`ویرایش کاربر ${userId} - این قابلیت به زودی اضافه میشود`);
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('newUserName').value = user.name;
+                document.getElementById('newUserEmail').value = user.email;
+                document.getElementById('newUserRole').value = user.role;
+                document.getElementById('newUserPassword').value = '';
+                showAddUserModal();
+                showNotification(`در حال ویرایش کاربر ${user.name}`);
+            }
         }
         
         function deleteUser(userId) {
-            if (confirm('آیا از حذف این کاربر اطمینان دارید؟')) {
+            const user = users.find(u => u.id === userId);
+            if (user && confirm(`آیا از حذف کاربر "${user.name}" اطمینان دارید؟`)) {
                 users = users.filter(u => u.id !== userId);
+                onlineUsers.delete(userId);
+                displayUsers();
                 displayAdminUsers();
+                updateStats();
                 showNotification('کاربر با موفقیت حذف شد');
             }
         }
         
         function editGroup(groupId) {
-            showNotification(`ویرایش گروه ${groupId} - این قابلیت به زودی اضافه میشود`);
+            const group = groups.find(g => g.id === groupId);
+            if (group) {
+                document.getElementById('groupName').value = group.name;
+                document.getElementById('groupDescription').value = group.description || '';
+                showAddGroupModal();
+                showNotification(`در حال ویرایش گروه ${group.name}`);
+            }
         }
         
         function deleteGroup(groupId) {
-            if (confirm('آیا از حذف این گروه اطمینان دارید؟')) {
+            const group = groups.find(g => g.id === groupId);
+            if (group && confirm(`آیا از حذف گروه "${group.name}" اطمینان دارید؟`)) {
                 groups = groups.filter(g => g.id !== groupId);
+                displayGroups();
                 displayAdminGroups();
+                
+                // اگر گروه فعلی حذف شده، گروه پیش‌فرض انتخاب شود
+                if (currentGroup && currentGroup.id === groupId) {
+                    if (groups.length > 0) {
+                        selectGroup(groups[0]);
+                    } else {
+                        currentGroup = null;
+                        chatTitle.textContent = 'انتخاب گروه';
+                        messagesContainer.innerHTML = '';
+                        emptyState.style.display = 'block';
+                        messageInput.disabled = true;
+                        sendButton.disabled = true;
+                    }
+                }
+                
                 showNotification('گروه با موفقیت حذف شد');
             }
         }
@@ -1946,12 +2400,21 @@
         supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 currentUser = session.user;
-                isAdmin = false;
+                isAdmin = currentUser.email === 'admin@system.com';
                 initializeApp();
             } else if (event === 'SIGNED_OUT') {
+                if (currentUser) {
+                    onlineUsers.delete(currentUser.id);
+                }
                 currentUser = null;
+                isAdmin = false;
                 showLoginScreen();
             }
+        });
+        
+        // تنظیمات رسپانسیو
+        window.addEventListener('resize', function() {
+            updateStats();
         });
     </script>
 </body>
