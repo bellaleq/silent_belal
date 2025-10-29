@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم مدیریت چندین فروشگاه - نسخه ابری</title>
+    <title>سیستم مدیریت چندین فروشگاه - نسخه کامل</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -603,58 +603,39 @@
             background-color: var(--primary);
         }
         
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            
-            .print-section, .print-section * {
-                visibility: visible;
-            }
-            
-            .print-content {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                padding: 20px;
-            }
-            
-            .no-print {
-                display: none !important;
-            }
-            
-            .print-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-                font-size: 14px;
-            }
-            
-            .print-table th, .print-table td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: right;
-            }
-            
-            .print-table th {
-                background-color: #f2f2f2;
-                font-weight: bold;
-            }
-            
-            .print-header {
-                text-align: center;
-                margin-bottom: 20px;
-                border-bottom: 2px solid #333;
-                padding-bottom: 10px;
-            }
-            
-            .print-footer {
-                text-align: center;
-                margin-top: 30px;
-                font-size: 12px;
-                color: #666;
-            }
+        .database-setup {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .database-setup h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .setup-steps {
+            margin: 20px 0;
+            padding-right: 20px;
+        }
+        
+        .setup-steps li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .setup-code {
+            background: #f8f9fc;
+            border: 1px solid #e3e6f0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            direction: ltr;
+            text-align: left;
         }
         
         @media (max-width: 1200px) {
@@ -737,9 +718,98 @@
 <body>
     <div class="container">
         <header>
-            <h1>سیستم مدیریت چندین فروشگاه - نسخه ابری</h1>
+            <h1>سیستم مدیریت چندین فروشگاه - نسخه کامل</h1>
             <p>مدیریت فروشگاهها، محصولات، دستهبندیها و ثبت فروش با قابلیت ورود جداگانه برای هر فروشگاه</p>
         </header>
+        
+        <!-- صفحه راه‌اندازی دیتابیس -->
+        <div id="databaseSetup" class="database-setup" style="display: none;">
+            <h2>راه‌اندازی اولیه سیستم</h2>
+            <p>برای استفاده از سیستم، ابتدا باید دیتابیس را راه‌اندازی کنید:</p>
+            
+            <div class="setup-steps">
+                <ol>
+                    <li>به پنل Supabase بروید و یک پروژه جدید ایجاد کنید</li>
+                    <li>از بخش SQL Editor، کد زیر را اجرا کنید:</li>
+                </ol>
+                
+                <div class="setup-code">
+-- ایجاد جداول سیستم
+CREATE TABLE IF NOT EXISTS stores (
+  id SERIAL PRIMARY KEY,
+  store_name VARCHAR(255) NOT NULL,
+  owner_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS admins (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS categories (
+  id SERIAL PRIMARY KEY,
+  store_id INTEGER REFERENCES stores(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  parent_id INTEGER REFERENCES categories(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  id SERIAL PRIMARY KEY,
+  store_id INTEGER REFERENCES stores(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  category_id INTEGER REFERENCES categories(id),
+  price INTEGER NOT NULL,
+  parent_id INTEGER REFERENCES products(id),
+  description TEXT,
+  is_sold BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS sales (
+  id SERIAL PRIMARY KEY,
+  store_id INTEGER REFERENCES stores(id) ON DELETE CASCADE,
+  product_id INTEGER REFERENCES products(id),
+  product_name VARCHAR(255) NOT NULL,
+  price INTEGER NOT NULL,
+  sale_date TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ایجاد مدیر پیش‌فرض
+INSERT INTO admins (email, password) 
+VALUES ('admin@example.com', 'admin123')
+ON CONFLICT (email) DO NOTHING;
+
+-- ایجاد فروشگاه نمونه
+INSERT INTO stores (store_name, owner_name, email, password) 
+VALUES ('فروشگاه نمونه', 'مدیر نمونه', 'store@example.com', '123456')
+ON CONFLICT (email) DO NOTHING;
+                </div>
+                
+                <ol start="3">
+                    <li>مقادیر SUPABASE_URL و SUPABASE_ANON_KEY را از پنل Supabase کپی کرده و در کد زیر جایگزین کنید</li>
+                    <li>سپس دکمه "بررسی اتصال" را بزنید</li>
+                </ol>
+            </div>
+            
+            <div class="form-group">
+                <label for="supabaseUrl">SUPABASE_URL</label>
+                <input type="text" id="supabaseUrl" placeholder="https://your-project.supabase.co">
+            </div>
+            
+            <div class="form-group">
+                <label for="supabaseKey">SUPABASE_ANON_KEY</label>
+                <input type="text" id="supabaseKey" placeholder="your-anon-key-here">
+            </div>
+            
+            <button id="testConnection" class="btn-success">بررسی اتصال</button>
+            <button id="autoSetup" class="btn-primary" style="display: none;">راه‌اندازی خودکار</button>
+        </div>
         
         <!-- صفحه ورود -->
         <div id="loginPage" class="login-container">
@@ -765,11 +835,11 @@
                 <form id="adminLoginForm" style="display: none;">
                     <div class="form-group">
                         <label for="adminEmail">ایمیل مدیر</label>
-                        <input type="email" id="adminEmail" placeholder="ایمیل مدیر را وارد کنید" required>
+                        <input type="email" id="adminEmail" value="admin@example.com" required>
                     </div>
                     <div class="form-group">
                         <label for="adminPassword">رمز عبور مدیر</label>
-                        <input type="password" id="adminPassword" placeholder="رمز عبور مدیر را وارد کنید" required>
+                        <input type="password" id="adminPassword" value="admin123" required>
                     </div>
                     <button type="submit" id="adminLoginBtn">ورود به پنل مدیریت</button>
                 </form>
@@ -777,6 +847,10 @@
                 <div style="margin-top: 20px; text-align: center;">
                     <p>حساب کاربری ندارید؟</p>
                     <button type="button" class="btn-success" id="showRegisterForm">ثبتنام فروشگاه جدید</button>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <button type="button" class="btn-info" id="showDatabaseSetup">راه‌اندازی دیتابیس</button>
                 </div>
             </div>
         </div>
@@ -903,33 +977,6 @@
                         </div>
                         <button type="button" class="btn-warning" id="markAsSold">ثبت به عنوان فروخته شده</button>
                     </div>
-                    
-                    <div class="card">
-                        <h2>پشتیبانگیری و بازیابی</h2>
-                        <div class="backup-section">
-                            <p>برای حفظ امنیت دادهها، میتوانید از اطلاعات خود پشتیبان بگیرید:</p>
-                            <div class="backup-buttons">
-                                <button type="button" class="btn-success" id="backupData">پشتیبانگیری</button>
-                                <button type="button" class="btn-warning" id="restoreData">بازیابی اطلاعات</button>
-                            </div>
-                            <input type="file" id="restoreFile" accept=".json" style="display: none;">
-                        </div>
-                        
-                        <div class="print-section">
-                            <h3>پرینت گزارشها</h3>
-                            <p>گزارشهای مختلف سیستم را پرینت بگیرید:</p>
-                            <div class="print-buttons">
-                                <button type="button" class="btn-info" id="printProducts">پرینت محصولات</button>
-                                <button type="button" class="btn-info" id="printCategories">پرینت دسته بندی ها</button>
-                                <button type="button" class="btn-info" id="printSales">پرینت فروش امروز</button>
-                                <button type="button" class="btn-info" id="printInventory">پرینت موجودی انبار</button>
-                            </div>
-                        </div>
-                        
-                        <div class="telegram-status" id="telegramStatus">
-                            وضعیت تلگرام: <span id="telegramStatusText">آماده</span>
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="main-content">
@@ -992,29 +1039,6 @@
                 <div class="admin-panel">
                     <h3>فروشگاههای ثبتنام شده</h3>
                     <div id="storesList">
-                        <!-- لیست فروشگاهها اینجا نمایش داده میشود -->
-                    </div>
-                </div>
-                
-                <div class="admin-panel">
-                    <h3>آمار کلی سیستم</h3>
-                    <div class="stats">
-                        <div class="stat-card">
-                            <h3 id="adminTotalStores">۰</h3>
-                            <p>تعداد فروشگاهها</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3 id="adminTotalProducts">۰</h3>
-                            <p>کل محصولات</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3 id="adminTotalSales">۰</h3>
-                            <p>کل فروشها</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3 id="adminNewStores">۰</h3>
-                            <p>فروشگاههای جدید</p>
-                        </div>
                     </div>
                 </div>
                 
@@ -1095,31 +1119,29 @@
         </div>
     </div>
 
-    <div id="printArea" class="print-content" style="display: none;">
-    </div>
-    
     <!-- اعلان ها -->
     <div id="notification" class="notification"></div>
     
     <script>
-        // تنظیمات Supabase
-        const SUPABASE_URL = 'https://atichswkxinwqewtpvkr.supabase.co'; // جایگزین کنید با URL پروژه شما
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0aWNoc3dreGlud3Fld3RwdmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODA2NjAsImV4cCI6MjA3NzE1NjY2MH0.UmJ7mQt4bmwIpvlrnp7J1TigQ8JqB09w_0OgcIVCtFA'; // جایگزین کنید با کلید عمومی شما
+        // تنظیمات Supabase - این مقادیر توسط کاربر پر خواهند شد
+        let SUPABASE_URL = '';
+        let SUPABASE_ANON_KEY = '';
         
-        // تنظیمات تلگرام
+        // تنظیمات تلگرام (اختیاری)
         const TELEGRAM_BOT_TOKEN = '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8';
         const TELEGRAM_CHAT_ID = '8106254967';
         
-        // کلیدهای ذخیرهسازی
+        // کلیدهای ذخیره‌سازی
         const STORAGE_KEYS = {
             CURRENT_USER: 'current_user',
-            SESSION: 'user_session'
+            SUPABASE_CONFIG: 'supabase_config'
         };
         
         // متغیرهای سراسری
         let supabase;
         let currentUser = null;
         let currentStore = null;
+        let isDatabaseInitialized = false;
         
         // تابع نمایش اعلان
         function showNotification(message, type = 'info') {
@@ -1130,24 +1152,111 @@
             
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+            }, 4000);
         }
         
         // تابع فعال/غیرفعال کردن دکمه‌ها
         function setButtonLoading(button, isLoading) {
             if (isLoading) {
                 button.disabled = true;
-                button.innerHTML = button.innerHTML + '<span class="loading"></span>';
+                const originalText = button.textContent;
+                button.setAttribute('data-original-text', originalText);
+                button.innerHTML = originalText + ' <span class="loading"></span>';
             } else {
                 button.disabled = false;
-                button.innerHTML = button.textContent;
+                const originalText = button.getAttribute('data-original-text') || button.textContent;
+                button.innerHTML = originalText;
             }
         }
         
         // تابع مقداردهی اولیه Supabase
-        function initializeSupabase() {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase initialized');
+        async function initializeSupabase() {
+            try {
+                // بازیابی تنظیمات از localStorage
+                const savedConfig = localStorage.getItem(STORAGE_KEYS.SUPABASE_CONFIG);
+                if (savedConfig) {
+                    const config = JSON.parse(savedConfig);
+                    SUPABASE_URL = config.url;
+                    SUPABASE_ANON_KEY = config.key;
+                }
+                
+                if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+                    console.warn('تنظیمات Supabase موجود نیست');
+                    return false;
+                }
+                
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // بررسی اتصال با یک درخواست ساده
+                const { data, error } = await supabase.from('stores').select('count').limit(1);
+                
+                if (error) {
+                    if (error.code === '42P01') {
+                        console.warn('جداول دیتابیس وجود ندارند');
+                        showNotification('جداول دیتابیس وجود ندارند. لطفاً راه‌اندازی کنید.', 'error');
+                        return false;
+                    }
+                    throw error;
+                }
+                
+                console.log('Supabase با موفقیت مقداردهی اولیه شد');
+                isDatabaseInitialized = true;
+                showNotification('اتصال به دیتابیس برقرار شد', 'success');
+                return true;
+            } catch (error) {
+                console.error('خطا در مقداردهی اولیه Supabase:', error);
+                showNotification('خطا در اتصال به دیتابیس', 'error');
+                return false;
+            }
+        }
+        
+        // تابع ذخیره تنظیمات Supabase
+        function saveSupabaseConfig(url, key) {
+            SUPABASE_URL = url;
+            SUPABASE_ANON_KEY = key;
+            
+            const config = { url, key };
+            localStorage.setItem(STORAGE_KEYS.SUPABASE_CONFIG, JSON.stringify(config));
+            
+            // بارگذاری مجدد برای اعمال تغییرات
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+        
+        // تابع راه‌اندازی خودکار دیتابیس
+        async function setupDatabase() {
+            try {
+                // این تابع در نسخه کامل باید از RPC Supabase استفاده کند
+                // در این نسخه ساده، فقط جداول را بررسی می‌کنیم
+                showNotification('در حال بررسی وضعیت دیتابیس...', 'info');
+                
+                const { data, error } = await supabase.from('stores').select('*').limit(1);
+                
+                if (error && error.code === '42P01') {
+                    showNotification('لطفاً جداول را از طریق SQL Editor ایجاد کنید', 'error');
+                    return false;
+                }
+                
+                // بررسی وجود مدیر
+                const { data: adminData, error: adminError } = await supabase
+                    .from('admins')
+                    .select('*')
+                    .eq('email', 'admin@example.com')
+                    .single();
+                
+                if (adminError || !adminData) {
+                    showNotification('مدیر سیستم وجود ندارد. لطفاً ایجاد کنید.', 'warning');
+                } else {
+                    showNotification('دیتابیس آماده استفاده است', 'success');
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('خطا در راه‌اندازی دیتابیس:', error);
+                showNotification('خطا در راه‌اندازی دیتابیس', 'error');
+                return false;
+            }
         }
         
         // تابع ورود کاربر
@@ -1161,7 +1270,12 @@
                     .single();
                 
                 if (error) {
-                    throw error;
+                    if (error.code === 'PGRST116') {
+                        showNotification('ایمیل یا رمز عبور اشتباه است', 'error');
+                    } else {
+                        throw error;
+                    }
+                    return false;
                 }
                 
                 if (data) {
@@ -1173,6 +1287,7 @@
                 return false;
             } catch (error) {
                 console.error('خطا در ورود:', error);
+                showNotification('خطا در ورود به سیستم', 'error');
                 return false;
             }
         }
@@ -1188,14 +1303,19 @@
                     .single();
                 
                 if (error) {
-                    throw error;
+                    if (error.code === 'PGRST116') {
+                        showNotification('ایمیل یا رمز عبور مدیر اشتباه است', 'error');
+                    } else {
+                        throw error;
+                    }
+                    return false;
                 }
                 
                 if (data) {
                     currentUser = {
                         id: data.id,
-                        storeName: "مدیر سیستم",
-                        ownerName: "مدیر",
+                        store_name: "مدیر سیستم",
+                        owner_name: "مدیر",
                         email: data.email,
                         isAdmin: true
                     };
@@ -1206,6 +1326,7 @@
                 return false;
             } catch (error) {
                 console.error('خطا در ورود مدیر:', error);
+                showNotification('خطا در ورود مدیر', 'error');
                 return false;
             }
         }
@@ -1244,13 +1365,7 @@
                 }
                 
                 if (data && data.length > 0) {
-                    // ارسال گزارش خودکار به تلگرام
-                    sendAutoReport('new_store', {
-                        storeName: storeName,
-                        ownerName: ownerName,
-                        email: email
-                    });
-                    
+                    showNotification('ثبت‌نام با موفقیت انجام شد', 'success');
                     return true;
                 }
                 
@@ -1282,10 +1397,12 @@
                 if (categoriesError) throw categoriesError;
                 
                 // بارگذاری فروش‌ها
+                const today = new Date().toISOString().split('T')[0];
                 const { data: sales, error: salesError } = await supabase
                     .from('sales')
                     .select('*')
-                    .eq('store_id', storeId);
+                    .eq('store_id', storeId)
+                    .gte('sale_date', today);
                 
                 if (salesError) throw salesError;
                 
@@ -1296,6 +1413,7 @@
                 };
             } catch (error) {
                 console.error('خطا در بارگذاری داده‌های فروشگاه:', error);
+                showNotification('خطا در بارگذاری داده‌ها', 'error');
                 return {
                     products: [],
                     categories: [],
@@ -1315,8 +1433,7 @@
                 if (error) throw error;
                 
                 if (data && data.length > 0) {
-                    // ارسال گزارش خودکار به تلگرام
-                    sendAutoReport('add_product', productData);
+                    showNotification('محصول با موفقیت اضافه شد', 'success');
                     return data[0];
                 }
                 
@@ -1339,8 +1456,7 @@
                 if (error) throw error;
                 
                 if (data && data.length > 0) {
-                    // ارسال گزارش خودکار به تلگرام
-                    sendAutoReport('add_category', categoryData);
+                    showNotification('دسته‌بندی با موفقیت اضافه شد', 'success');
                     return data[0];
                 }
                 
@@ -1364,8 +1480,7 @@
                 if (error) throw error;
                 
                 if (data && data.length > 0) {
-                    // ارسال گزارش خودکار به تلگرام
-                    sendAutoReport('edit_product', productData);
+                    showNotification('محصول با موفقیت ویرایش شد', 'success');
                     return data[0];
                 }
                 
@@ -1387,9 +1502,7 @@
                 
                 if (error) throw error;
                 
-                // ارسال گزارش خودکار به تلگرام
-                sendAutoReport('delete_product', { id: productId });
-                
+                showNotification('محصول با موفقیت حذف شد', 'success');
                 return true;
             } catch (error) {
                 console.error('خطا در حذف محصول:', error);
@@ -1409,8 +1522,13 @@
                 if (error) throw error;
                 
                 if (data && data.length > 0) {
-                    // ارسال گزارش خودکار به تلگرام
-                    sendAutoReport('sale', saleData);
+                    // به‌روزرسانی وضعیت محصول
+                    await supabase
+                        .from('products')
+                        .update({ is_sold: true })
+                        .eq('id', saleData.product_id);
+                    
+                    showNotification('فروش با موفقیت ثبت شد', 'success');
                     return data[0];
                 }
                 
@@ -1434,6 +1552,7 @@
                 return data || [];
             } catch (error) {
                 console.error('خطا در بارگذاری فروشگاه‌ها:', error);
+                showNotification('خطا در بارگذاری فروشگاه‌ها', 'error');
                 return [];
             }
         }
@@ -1462,8 +1581,7 @@
                 if (error) throw error;
                 
                 if (data && data.length > 0) {
-                    // ارسال گزارش خودکار به تلگرام
-                    sendAutoReport('store_created_by_admin', storeData);
+                    showNotification('فروشگاه با موفقیت ایجاد شد', 'success');
                     return true;
                 }
                 
@@ -1475,153 +1593,26 @@
             }
         }
         
-        // تابع ارسال پیام به تلگرام
-        async function sendToTelegram(message) {
-            try {
-                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: message,
-                        parse_mode: 'HTML'
-                    })
-                });
-                
-                const result = await response.json();
-                if (result.ok) {
-                    updateTelegramStatus('پیام ارسال شد', 'active');
-                    return true;
-                } else {
-                    updateTelegramStatus('خطا در ارسال: ' + result.description, 'error');
-                    return false;
-                }
-            } catch (error) {
-                console.error('خطا در ارسال به تلگرام:', error);
-                updateTelegramStatus('خطا در اتصال به تلگرام', 'error');
-                return false;
-            }
-        }
-        
-        // تابع به روز رسانی وضعیت تلگرام
-        function updateTelegramStatus(message, type = '') {
-            const statusElement = document.getElementById('telegramStatusText');
-            const statusContainer = document.getElementById('telegramStatus');
-            
-            if (statusElement && statusContainer) {
-                statusElement.textContent = message;
-                statusContainer.className = 'telegram-status';
-                if (type) {
-                    statusContainer.classList.add(type);
-                }
-                
-                // بعد از 5 ثانیه وضعیت را به حالت عادی برگردان
-                setTimeout(() => {
-                    statusElement.textContent = 'آماده';
-                    statusContainer.className = 'telegram-status';
-                }, 5000);
-            }
-        }
-        
-        // ارسال خودکار گزارش پس از هر تغییر مهم
-        function sendAutoReport(action, details = '') {
-            let message = '';
-            const date = new Date().toLocaleDateString('fa-IR');
-            const time = new Date().toLocaleTimeString('fa-IR');
-            
-            switch(action) {
-                case 'add_product':
-                    message = `<b>➕ محصول جدید اضافه شد</b>\n\n`;
-                    message += `🏪 فروشگاه: ${currentUser.store_name}\n`;
-                    message += `📦 محصول: ${details.name}\n`;
-                    message += `💰 قیمت: ${details.price.toLocaleString('fa-IR')} افغانی\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'edit_product':
-                    message = `<b>✏️ محصول ویرایش شد</b>\n\n`;
-                    message += `🏪 فروشگاه: ${currentUser.store_name}\n`;
-                    message += `📦 محصول: ${details.name}\n`;
-                    message += `💰 قیمت جدید: ${details.price.toLocaleString('fa-IR')} افغانی\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'delete_product':
-                    message = `<b>🗑️ محصول حذف شد</b>\n\n`;
-                    message += `🏪 فروشگاه: ${currentUser.store_name}\n`;
-                    message += `📦 محصول: ${details.name}\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'add_category':
-                    message = `<b>📁 دسته بندی جدید اضافه شد</b>\n\n`;
-                    message += `🏪 فروشگاه: ${currentUser.store_name}\n`;
-                    message += `📂 دسته بندی: ${details.name}\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'sale':
-                    message = `<b>💰 فروش جدید ثبت شد</b>\n\n`;
-                    message += `🏪 فروشگاه: ${currentUser.store_name}\n`;
-                    message += `📦 محصول: ${details.product_name}\n`;
-                    message += `💰 قیمت: ${details.price.toLocaleString('fa-IR')} افغانی\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'multiple_sales':
-                    message = `<b>💰 فروش چندگانه ثبت شد</b>\n\n`;
-                    message += `🏪 فروشگاه: ${currentUser.store_name}\n`;
-                    message += `📊 تعداد محصولات فروخته شده: ${details.count}\n`;
-                    message += `💰 جمع مبلغ: ${details.total.toLocaleString('fa-IR')} افغانی\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'return_product':
-                    message = `<b>↩️ محصول بازگردانده شد</b>\n\n`;
-                    message += `🏪 فروشگاه: ${currentUser.store_name}\n`;
-                    message += `📦 محصول: ${details.name}\n`;
-                    message += `💰 قیمت: ${details.price.toLocaleString('fa-IR')} افغانی\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'new_store':
-                    message = `<b>🏪 فروشگاه جدید ثبت‌نام شد</b>\n\n`;
-                    message += `🏪 نام فروشگاه: ${details.storeName}\n`;
-                    message += `👤 صاحب فروشگاه: ${details.ownerName}\n`;
-                    message += `📧 ایمیل: ${details.email}\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-                    
-                case 'store_created_by_admin':
-                    message = `<b>🏪 حساب جدید فروشگاه ایجاد شد</b>\n\n`;
-                    message += `🏪 نام فروشگاه: ${details.store_name}\n`;
-                    message += `👤 صاحب فروشگاه: ${details.owner_name}\n`;
-                    message += `📧 ایمیل: ${details.email}\n`;
-                    message += `⏰ زمان: ${time} - ${date}`;
-                    break;
-            }
-            
-            if (message) {
-                // ارسال غیرهمزمان (بدون منتظر ماندن برای پاسخ)
-                sendToTelegram(message);
-            }
-        }
-        
         // نمایش صفحه مناسب بر اساس وضعیت کاربر
         function showAppropriatePage() {
+            const databaseSetup = document.getElementById('databaseSetup');
             const loginPage = document.getElementById('loginPage');
             const registerPage = document.getElementById('registerPage');
             const userDashboard = document.getElementById('userDashboard');
             const adminDashboard = document.getElementById('adminDashboard');
             
             // مخفی کردن تمام صفحات
+            databaseSetup.style.display = 'none';
             loginPage.style.display = 'none';
             registerPage.style.display = 'none';
             userDashboard.style.display = 'none';
             adminDashboard.style.display = 'none';
+            
+            // اگر تنظیمات Supabase وجود ندارد، صفحه راه‌اندازی نشان داده شود
+            if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+                databaseSetup.style.display = 'block';
+                return;
+            }
             
             // اگر کاربر جاری وجود دارد، پنل کاربری را نشان بده
             if (currentUser) {
@@ -1666,9 +1657,6 @@
             // بارگذاری تمام فروشگاه‌ها
             const stores = await loadAllStores();
             
-            // بهروزرسانی آمار
-            updateAdminStats(stores);
-            
             // رندر لیست فروشگاه‌ها
             renderStoresList(stores);
         }
@@ -1680,31 +1668,7 @@
             document.getElementById('totalProducts').textContent = currentStore.products.length;
             document.getElementById('totalCategories').textContent = currentStore.categories.length;
             document.getElementById('totalParents').textContent = currentStore.products.filter(p => p.parent_id === null).length;
-            
-            // تعداد فروش امروز
-            const today = new Date().toISOString().split('T')[0];
-            const todaySales = currentStore.sales.filter(s => s.sale_date.startsWith(today)).length;
-            document.getElementById('totalSold').textContent = todaySales;
-        }
-        
-        // بهروزرسانی آمار مدیریت
-        function updateAdminStats(stores) {
-            document.getElementById('adminTotalStores').textContent = stores.length;
-            
-            // محاسبه کل محصولات و فروش‌ها
-            let totalProducts = 0;
-            let totalSales = 0;
-            
-            // در این نسخه ساده، فرض می‌کنیم که داده‌ها در جداول جداگانه ذخیره شده‌اند
-            // در نسخه کامل باید از aggregate functions استفاده شود
-            document.getElementById('adminTotalProducts').textContent = '...';
-            document.getElementById('adminTotalSales').textContent = '...';
-            
-            // محاسبه فروشگاه‌های جدید (ایجاد شده در 7 روز گذشته)
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-            const newStores = stores.filter(store => new Date(store.created_at) > oneWeekAgo).length;
-            document.getElementById('adminNewStores').textContent = newStores;
+            document.getElementById('totalSold').textContent = currentStore.sales.length;
         }
         
         // رندر لیست فروشگاه‌ها در پنل مدیریت
@@ -1872,11 +1836,7 @@
                 return;
             }
             
-            // فقط نمایش فروش‌های امروز
-            const today = new Date().toISOString().split('T')[0];
-            const todaySales = currentStore.sales.filter(s => s.sale_date.startsWith(today));
-            
-            todaySales.forEach((sale, index) => {
+            currentStore.sales.forEach((sale, index) => {
                 const product = currentStore.products.find(p => p.id === sale.product_id);
                 if (!product) return;
                 
@@ -2014,8 +1974,6 @@
                     populateUserParentDropdowns();
                     updateUserStats();
                     updateUserProductsChecklist();
-                    
-                    showNotification('محصول با موفقیت حذف شد', 'success');
                 }
             }
         }
@@ -2093,7 +2051,7 @@
         
         // ویرایش دسته‌بندی کاربر
         function editUserCategory(id) {
-            alert('امکان ویرایش دسته بندی در این نسخه دمو موجود نیست!');
+            alert('امکان ویرایش دسته بندی در این نسخه موجود نیست!');
         }
         
         // بازگردانی محصول کاربر
@@ -2112,12 +2070,15 @@
                 // به‌روزرسانی وضعیت محصول
                 const sale = currentStore.sales.find(s => s.id === saleId);
                 if (sale) {
+                    await supabase
+                        .from('products')
+                        .update({ is_sold: false })
+                        .eq('id', sale.product_id);
+                    
+                    // به‌روزرسانی داده‌های محلی
                     const product = currentStore.products.find(p => p.id === sale.product_id);
                     if (product) {
-                        await updateProduct(product.id, { is_sold: false });
-                        
-                        // ارسال گزارش خودکار به تلگرام
-                        sendAutoReport('return_product', product);
+                        product.is_sold = false;
                     }
                 }
                 
@@ -2174,29 +2135,13 @@
         
         // ویرایش فروشگاه
         function editStore(storeId) {
-            alert('امکان ویرایش اطلاعات فروشگاه در این نسخه دمو موجود نیست!');
+            alert('امکان ویرایش اطلاعات فروشگاه در این نسخه موجود نیست!');
         }
         
         // حذف فروشگاه
         async function deleteStore(storeId) {
             if (confirm('آیا از حذف این فروشگاه اطمینان دارید؟ تمام داده‌های مربوط به این فروشگاه نیز حذف خواهند شد.')) {
                 try {
-                    // حذف محصولات، دسته‌بندی‌ها و فروش‌های مرتبط
-                    await supabase
-                        .from('products')
-                        .delete()
-                        .eq('store_id', storeId);
-                    
-                    await supabase
-                        .from('categories')
-                        .delete()
-                        .eq('store_id', storeId);
-                    
-                    await supabase
-                        .from('sales')
-                        .delete()
-                        .eq('store_id', storeId);
-                    
                     // حذف فروشگاه
                     const { error } = await supabase
                         .from('stores')
@@ -2214,31 +2159,6 @@
                     showNotification('خطا در حذف فروشگاه', 'error');
                 }
             }
-        }
-        
-        // پشتیبان‌گیری از داده‌های کاربر
-        function backupUserData() {
-            if (!currentUser || !currentStore) return;
-            
-            const dataToBackup = {
-                user: currentUser,
-                storeData: currentStore,
-                backupDate: new Date().toISOString()
-            };
-            
-            const dataStr = JSON.stringify(dataToBackup, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const url = URL.createObjectURL(dataBlob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `store-backup-${currentUser.store_name}-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showNotification('پشتیبان با موفقیت دانلود شد', 'success');
         }
         
         // پشتیبان‌گیری از تمام داده‌های سیستم
@@ -2301,17 +2221,15 @@
         }
         
         // رویدادهای صفحه
-        document.addEventListener('DOMContentLoaded', function() {
-            // مقداردهی اولیه Supabase
-            initializeSupabase();
-            
+        document.addEventListener('DOMContentLoaded', async function() {
             // بررسی کاربر جاری
             const storedUser = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
             if (storedUser) {
                 currentUser = JSON.parse(storedUser);
             }
             
-            // نمایش صفحه مناسب
+            // مقداردهی اولیه Supabase و نمایش صفحه مناسب
+            await initializeSupabase();
             showAppropriatePage();
             
             // رویدادهای تب‌های ورود
@@ -2341,9 +2259,6 @@
                 
                 if (await loginUser(email, password)) {
                     showAppropriatePage();
-                    showNotification('ورود موفقیت‌آمیز بود', 'success');
-                } else {
-                    showNotification('ایمیل یا رمز عبور اشتباه است', 'error');
                 }
                 
                 setButtonLoading(loginBtn, false);
@@ -2361,9 +2276,6 @@
                 
                 if (await loginAdmin(email, password)) {
                     showAppropriatePage();
-                    showNotification('ورود مدیر موفقیت‌آمیز بود', 'success');
-                } else {
-                    showNotification('ایمیل یا رمز عبور مدیر اشتباه است', 'error');
                 }
                 
                 setButtonLoading(loginBtn, false);
@@ -2373,6 +2285,12 @@
             document.getElementById('showRegisterForm').addEventListener('click', function() {
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('registerPage').style.display = 'flex';
+            });
+            
+            // رویداد نمایش راه‌اندازی دیتابیس
+            document.getElementById('showDatabaseSetup').addEventListener('click', function() {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('databaseSetup').style.display = 'block';
             });
             
             // رویداد بازگشت به صفحه ورود
@@ -2400,13 +2318,41 @@
                 setButtonLoading(registerBtn, true);
                 
                 if (await registerUser(storeName, ownerName, email, password)) {
-                    showNotification('ثبت‌نام با موفقیت انجام شد. اکنون می‌توانید وارد سیستم شوید.', 'success');
                     document.getElementById('registerPage').style.display = 'none';
                     document.getElementById('loginPage').style.display = 'flex';
                     document.getElementById('registerForm').reset();
                 }
                 
                 setButtonLoading(registerBtn, false);
+            });
+            
+            // رویداد بررسی اتصال دیتابیس
+            document.getElementById('testConnection').addEventListener('click', async function() {
+                const url = document.getElementById('supabaseUrl').value;
+                const key = document.getElementById('supabaseKey').value;
+                
+                if (!url || !key) {
+                    showNotification('لطفاً هر دو فیلد را پر کنید', 'error');
+                    return;
+                }
+                
+                const testBtn = document.getElementById('testConnection');
+                setButtonLoading(testBtn, true);
+                
+                // ذخیره تنظیمات و آزمایش اتصال
+                saveSupabaseConfig(url, key);
+                
+                setButtonLoading(testBtn, false);
+            });
+            
+            // رویداد راه‌اندازی خودکار
+            document.getElementById('autoSetup').addEventListener('click', async function() {
+                const setupBtn = document.getElementById('autoSetup');
+                setButtonLoading(setupBtn, true);
+                
+                await setupDatabase();
+                
+                setButtonLoading(setupBtn, false);
             });
             
             // رویداد خروج کاربر
@@ -2451,7 +2397,6 @@
                     updateUserStats();
                     updateUserProductsChecklist();
                     
-                    showNotification('محصول با موفقیت اضافه شد', 'success');
                     this.reset();
                 }
                 
@@ -2484,7 +2429,6 @@
                     populateUserParentDropdowns();
                     updateUserStats();
                     
-                    showNotification('دسته بندی با موفقیت اضافه شد', 'success');
                     this.reset();
                 }
                 
@@ -2526,7 +2470,6 @@
                     updateUserStats();
                     
                     document.getElementById('editProductModal').style.display = 'none';
-                    showNotification('محصول با موفقیت ویرایش شد', 'success');
                 }
                 
                 setButtonLoading(saveBtn, false);
@@ -2544,7 +2487,6 @@
                 }
                 
                 if (confirm(`آیا از ثبت ${checkedProducts.length} محصول به عنوان فروخته شده اطمینان دارید؟`)) {
-                    let totalSales = 0;
                     let successCount = 0;
                     
                     for (const checkbox of checkedProducts) {
@@ -2563,9 +2505,6 @@
                             
                             const sale = await recordSale(saleData);
                             if (sale) {
-                                // به‌روزرسانی وضعیت محصول
-                                await updateProduct(product.id, { is_sold: true });
-                                
                                 // به‌روزرسانی داده‌های محلی
                                 const productIndex = currentStore.products.findIndex(p => p.id === product.id);
                                 if (productIndex !== -1) {
@@ -2573,18 +2512,9 @@
                                 }
                                 
                                 currentStore.sales.push(sale);
-                                totalSales += product.price;
                                 successCount++;
                             }
                         }
-                    }
-                    
-                    // اگر بیش از یک محصول فروخته شده، گزارش کلی هم ارسال شود
-                    if (successCount > 1) {
-                        sendAutoReport('multiple_sales', {
-                            count: successCount,
-                            total: totalSales
-                        });
                     }
                     
                     renderUserProducts();
@@ -2594,31 +2524,6 @@
                     
                     showNotification(`${successCount} محصول با موفقیت به عنوان فروخته شده ثبت شدند`, 'success');
                 }
-            });
-            
-            // رویداد پشتیبان‌گیری کاربر
-            document.getElementById('backupData').addEventListener('click', backupUserData);
-            
-            // رویداد بازیابی داده‌های کاربر
-            document.getElementById('restoreData').addEventListener('click', function() {
-                document.getElementById('restoreFile').click();
-            });
-            
-            // رویدادهای پرینت
-            document.getElementById('printProducts').addEventListener('click', function() {
-                alert('امکان پرینت در این نسخه دمو موجود نیست!');
-            });
-            
-            document.getElementById('printCategories').addEventListener('click', function() {
-                alert('امکان پرینت در این نسخه دمو موجود نیست!');
-            });
-            
-            document.getElementById('printSales').addEventListener('click', function() {
-                alert('امکان پرینت در این نسخه دمو موجود نیست!');
-            });
-            
-            document.getElementById('printInventory').addEventListener('click', function() {
-                alert('امکان پرینت در این نسخه دمو موجود نیست!');
             });
             
             // رویدادهای پنل مدیریت
@@ -2653,7 +2558,6 @@
                 };
                 
                 if (await createStoreByAdmin(storeData)) {
-                    showNotification('حساب جدید برای فروشگاه با موفقیت ایجاد شد', 'success');
                     document.getElementById('createStoreModal').style.display = 'none';
                     document.getElementById('createStoreForm').reset();
                     renderAdminDashboard();
