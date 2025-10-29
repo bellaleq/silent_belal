@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Messenger - سیستم پیام‌رسان امن</title>
+    <title>سیستم پیام‌رسان ابری عمومی</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -902,6 +902,23 @@
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
         }
+        
+        .cloud-indicator {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .public-badge {
+            background: var(--matrix-green);
+            color: var(--dark-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -910,8 +927,8 @@
     <!-- Mobile Header -->
     <div class="mobile-header">
         <div class="logo">
-            <div class="logo-icon">S</div>
-            <span>SECURE MESSENGER</span>
+            <div class="logo-icon">C</div>
+            <span>ابر عمومی</span>
         </div>
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
@@ -923,8 +940,8 @@
         <div class="card active" id="sidebarPanel">
             <header>
                 <div class="logo">
-                    <div class="logo-icon">S</div>
-                    <span>SECURE MESSENGER</span>
+                    <div class="logo-icon">C</div>
+                    <span>ابر عمومی</span>
                 </div>
             </header>
             
@@ -939,7 +956,8 @@
             <div class="groups-container">
                 <div class="section-title">
                     <i class="fas fa-users"></i>
-                    گروه‌ها
+                    گروه‌های عمومی
+                    <span class="public-badge">همه</span>
                 </div>
                 <div id="groupsList">
                     <!-- لیست گروه‌ها در اینجا نمایش داده می‌شود -->
@@ -947,7 +965,7 @@
                 
                 <div class="section-title" style="margin-top: 20px;">
                     <i class="fas fa-user-friends"></i>
-                    کاربران
+                    کاربران آنلاین
                 </div>
                 <div id="usersList">
                     <!-- لیست کاربران در اینجا نمایش داده می‌شود -->
@@ -963,9 +981,9 @@
         <!-- پنل وسط - چت -->
         <div class="card active" id="chatPanel">
             <div class="login-container" id="loginContainer">
-                <h1>SECURE MESSENGER</h1>
-                <p>سیستم پیام‌رسان امن با قابلیت پاکسازی کامل پیام‌ها</p>
-                <p class="terminal-text">> سیستم آماده است. لطفاً وارد شوید...</p>
+                <h1>سیستم پیام‌رسان ابری عمومی</h1>
+                <p>تمام پیام‌ها و محتواها به صورت عمومی و برای همه کاربران قابل مشاهده است</p>
+                <p class="terminal-text">> سیستم ابری آماده است. لطفاً وارد شوید...</p>
                 
                 <div class="login-tabs">
                     <button class="login-tab active" id="userLoginTab">ورود کاربر</button>
@@ -1068,7 +1086,7 @@
             <header>
                 <div class="logo">
                     <div class="logo-icon">A</div>
-                    <span>پنل مدیریت</span>
+                    <span>پنل مدیریت ابری</span>
                 </div>
             </header>
             
@@ -1131,7 +1149,7 @@
                 </div>
                 
                 <div class="admin-section">
-                    <div class="section-title">آمار سیستم</div>
+                    <div class="section-title">آمار سیستم ابری</div>
                     <div class="terminal-text">
                         <div><i class="fas fa-users"></i> کاربران آنلاین: <span id="onlineUsersCount">0</span></div>
                         <div><i class="fas fa-comments"></i> تعداد گروه‌ها: <span id="groupsCount">0</span></div>
@@ -1177,9 +1195,15 @@
                     <label class="form-label">توضیحات</label>
                     <textarea class="form-input" id="groupDescription" placeholder="توضیحات گروه" rows="3"></textarea>
                 </div>
+                <div class="form-group">
+                    <label style="color: var(--matrix-green); display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-globe"></i>
+                        این گروه به صورت عمومی و برای همه کاربران قابل مشاهده خواهد بود
+                    </label>
+                </div>
                 <button class="btn btn-primary" id="createGroupBtn">
                     <i class="fas fa-plus-circle"></i>
-                    ایجاد گروه
+                    ایجاد گروه عمومی
                 </button>
             </div>
         </div>
@@ -1504,7 +1528,9 @@
                         data: {
                             full_name: name,
                             role: 'user'
-                        }
+                        },
+                        // فعال‌سازی تایید خودکار
+                        autoConfirm: true
                     }
                 });
                 
@@ -1706,7 +1732,8 @@
                     </div>
                 `;
                 
-                userItem.addEventListener('click', () => startPrivateChat(user));
+                // حذف کلیک برای چت خصوصی - همه پیام‌ها عمومی هستند
+                userItem.style.cursor = 'default';
                 usersList.appendChild(userItem);
             });
         }
@@ -1718,8 +1745,8 @@
                 if (groups.length === 0) {
                     groups = [
                         { id: '1', name: 'گروه عمومی', description: 'گفتگوی عمومی همه کاربران', members: ['1', '2', '3'], isPrivate: false, createdBy: 'admin' },
-                        { id: '2', name: 'پشتیبانی فنی', description: 'پشتیبانی و راهنمایی', members: ['1', '3'], isPrivate: true, createdBy: 'admin' },
-                        { id: '3', name: 'توسعه دهندگان', description: 'بحث‌های فنی', members: ['2', '3'], isPrivate: true, createdBy: 'admin' }
+                        { id: '2', name: 'پشتیبانی فنی', description: 'پشتیبانی و راهنمایی', members: ['1', '2', '3'], isPrivate: false, createdBy: 'admin' },
+                        { id: '3', name: 'توسعه دهندگان', description: 'بحث‌های فنی', members: ['1', '2', '3'], isPrivate: false, createdBy: 'admin' }
                     ];
                 }
                 
@@ -1755,7 +1782,10 @@
                     <div class="group-avatar">G</div>
                     <div class="user-details">
                         <div class="user-name">${group.name}</div>
-                        <div class="user-role">${group.members.length} عضو</div>
+                        <div class="user-role">${group.members.length} عضو - عمومی</div>
+                    </div>
+                    <div class="cloud-indicator">
+                        <i class="fas fa-cloud"></i>
                     </div>
                 `;
                 
@@ -1788,20 +1818,6 @@
             }
         }
         
-        // شروع چت خصوصی
-        function startPrivateChat(user) {
-            const privateGroup = {
-                id: `private_${user.id}`,
-                name: `چت با ${user.name}`,
-                description: `چت خصوصی با ${user.name}`,
-                members: [currentUser.id, user.id],
-                isPrivate: true,
-                isDirect: true
-            };
-            
-            selectGroup(privateGroup);
-        }
-        
         // بارگذاری پیام‌ها
         async function loadMessages(groupId) {
             try {
@@ -1814,7 +1830,7 @@
                     // اگر پیامی وجود ندارد، پیام خوش‌آمدگویی اضافه کن
                     const welcomeMessage = {
                         id: 'welcome_' + Date.now(),
-                        text: `به ${currentGroup.name} خوش آمدید!`,
+                        text: `به ${currentGroup.name} خوش آمدید! تمام پیام‌ها در این سیستم به صورت عمومی و برای همه قابل مشاهده است.`,
                         sender_id: 'system',
                         group_id: groupId,
                         created_at: new Date(),
@@ -1881,9 +1897,9 @@
             });
             
             let messageHeader = '';
-            if (!isSent && !isSystem) {
+            if (!isSystem) {
                 const sender = users.find(u => u.id === message.sender_id);
-                messageHeader = `<div class="message-header">${sender ? sender.name : 'کاربر'}</div>`;
+                messageHeader = `<div class="message-header">${sender ? sender.name : 'کاربر'} <span class="cloud-indicator"><i class="fas fa-cloud"></i> عمومی</span></div>`;
             }
             
             let messageContent = '';
@@ -1907,7 +1923,7 @@
                 ${messageHeader}
                 ${messageContent}
                 <div class="message-time">${timeString}</div>
-                ${!isSystem ? `<div class="type-indicator">${message.type === 'text' ? 'متن' : 'فایل'}</div>` : ''}
+                ${!isSystem ? `<div class="type-indicator">${message.type === 'text' ? 'متن' : 'فایل'} - عمومی</div>` : ''}
             `;
             
             // اگر پیام دریافت شده و هنوز خوانده نشده، تایمر حذف را تنظیم کن
@@ -2164,7 +2180,7 @@
                     name: name,
                     description: description,
                     members: [currentUser.id],
-                    isPrivate: false,
+                    isPrivate: false, // همه گروه‌ها عمومی هستند
                     createdBy: currentUser.id,
                     created_at: new Date()
                 };
@@ -2176,7 +2192,7 @@
                 document.getElementById('groupName').value = '';
                 document.getElementById('groupDescription').value = '';
                 
-                showNotification('گروه با موفقیت ایجاد شد');
+                showNotification('گروه عمومی با موفقیت ایجاد شد');
                 
             } catch (error) {
                 console.error('Error creating group:', error);
@@ -2280,7 +2296,7 @@
                 listItem.innerHTML = `
                     <div>
                         <strong>${group.name}</strong>
-                        <div>${group.members.length} عضو - ${group.isPrivate ? 'خصوصی' : 'عمومی'}</div>
+                        <div>${group.members.length} عضو - عمومی</div>
                     </div>
                     <div class="group-actions">
                         <button class="btn btn-secondary btn-small" onclick="editGroup('${group.id}')">
