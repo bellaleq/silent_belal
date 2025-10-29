@@ -3,203 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پیام‌رسان - WhatsApp Clone</title>
+    <title>پیام‌رسان حرفه‌ای - اتصال به واتساپ</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --whatsapp-green: #25D366;
-            --whatsapp-dark: #075E54;
-            --whatsapp-light: #128C7E;
-            --chat-bg: #e5ddd5;
-            --message-sent: #dcf8c6;
-            --message-received: #ffffff;
-            --text-dark: #303030;
+            --primary-color: #25D366;
+            --secondary-color: #128C7E;
+            --dark-color: #075E54;
+            --light-color: #ECE5DD;
+            --message-sent: #DCF8C6;
+            --message-received: #FFFFFF;
+            --text-dark: #2A2A2A;
             --text-light: #757575;
-            --border-color: #e0e0e0;
+            --border-color: #E0E0E0;
+            --online-status: #4CAF50;
+            --offline-status: #9E9E9E;
+            --warning-color: #FF9800;
+            --error-color: #f44336;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: var(--whatsapp-dark);
-            color: var(--text-dark);
+            background: var(--dark-color);
             height: 100vh;
             overflow: hidden;
         }
-        
+
         .app-container {
             display: flex;
             height: 100vh;
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
         }
-        
-        /* سایدبار چت‌ها */
+
+        /* استایل‌های مشابه قبلی با بهبود */
         .sidebar {
             width: 30%;
-            min-width: 300px;
+            min-width: 350px;
             border-left: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             background: white;
         }
-        
+
         .sidebar-header {
-            padding: 15px;
-            background: var(--whatsapp-dark);
+            padding: 20px;
+            background: var(--dark-color);
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            background: var(--whatsapp-green);
+            background: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
+            font-size: 18px;
             cursor: pointer;
+            position: relative;
         }
-        
-        .header-actions {
+
+        .online-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--online-status);
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        .whatsapp-connected {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 16px;
+            height: 16px;
+            background: var(--primary-color);
+            border: 2px solid white;
+            border-radius: 50%;
             display: flex;
-            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
             color: white;
         }
-        
-        .header-actions i {
-            cursor: pointer;
-            font-size: 1.2rem;
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            color: white;
         }
-        
+
         .search-container {
-            padding: 10px 15px;
+            padding: 15px;
             background: white;
             border-bottom: 1px solid var(--border-color);
         }
-        
-        .search-box {
-            width: 100%;
-            padding: 10px 15px;
-            border: none;
-            background: #f6f6f6;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-        
+
         .chats-list {
             flex: 1;
             overflow-y: auto;
         }
-        
+
         .chat-item {
             display: flex;
             padding: 15px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            position: relative;
         }
-        
-        .chat-item:hover {
-            background: #f5f5f5;
-        }
-        
-        .chat-item.active {
-            background: #e9edef;
-        }
-        
+
         .chat-avatar {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            background: var(--whatsapp-green);
+            background: var(--secondary-color);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
+            font-size: 18px;
             margin-left: 15px;
+            position: relative;
         }
-        
+
         .chat-info {
             flex: 1;
+            min-width: 0;
         }
-        
+
         .chat-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 5px;
         }
-        
-        .chat-name {
-            font-weight: bold;
-            color: var(--text-dark);
+
+        .chat-preview {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .chat-time {
-            font-size: 0.8rem;
-            color: var(--text-light);
+
+        .whatsapp-status {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-right: 5px;
         }
-        
-        .chat-last-message {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+
+        .whatsapp-status.sent {
+            background: var(--primary-color);
+            color: white;
         }
-        
-        /* ناحیه چت اصلی */
+
+        .whatsapp-status.pending {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .whatsapp-status.failed {
+            background: var(--error-color);
+            color: white;
+        }
+
         .chat-area {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: var(--chat-bg);
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path fill="%23025E54" d="M0 0h100v100H0z"/></svg>');
+            background: var(--light-color);
         }
-        
+
         .chat-header {
-            padding: 15px;
+            padding: 15px 20px;
             background: white;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
-        .chat-header-info {
-            flex: 1;
-        }
-        
-        .chat-title {
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        
-        .chat-status {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        
-        .chat-actions {
-            display: flex;
-            gap: 20px;
-            color: var(--text-light);
-        }
-        
+
         .messages-container {
             flex: 1;
             padding: 20px;
@@ -208,69 +217,62 @@
             flex-direction: column;
             gap: 10px;
         }
-        
+
         .message {
-            max-width: 65%;
-            padding: 10px 15px;
+            max-width: 70%;
+            padding: 12px 16px;
             border-radius: 8px;
             position: relative;
             word-wrap: break-word;
         }
-        
+
         .message.sent {
             align-self: flex-end;
             background: var(--message-sent);
             border-top-right-radius: 0;
         }
-        
+
         .message.received {
             align-self: flex-start;
             background: var(--message-received);
             border-top-left-radius: 0;
         }
-        
+
         .message-time {
-            font-size: 0.7rem;
+            font-size: 11px;
             color: var(--text-light);
             text-align: left;
             margin-top: 5px;
-        }
-        
-        .message-status {
-            font-size: 0.7rem;
-            margin-left: 5px;
-        }
-        
-        .input-container {
-            padding: 15px;
-            background: white;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 5px;
         }
-        
-        .input-actions {
+
+        .input-container {
+            padding: 20px;
+            background: white;
             display: flex;
+            align-items: flex-end;
             gap: 15px;
-            color: var(--text-light);
+            border-top: 1px solid var(--border-color);
         }
-        
+
         .message-input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 12px 16px;
             border: none;
-            border-radius: 20px;
+            border-radius: 25px;
             background: white;
             resize: none;
-            max-height: 100px;
+            max-height: 120px;
             font-size: 15px;
         }
-        
+
         .send-button {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: var(--whatsapp-green);
+            background: var(--primary-color);
             border: none;
             color: white;
             display: flex;
@@ -278,7 +280,7 @@
             justify-content: center;
             cursor: pointer;
         }
-        
+
         /* صفحه ورود */
         .login-container {
             display: flex;
@@ -286,90 +288,92 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: var(--whatsapp-dark);
+            background: linear-gradient(135deg, var(--dark-color), var(--secondary-color));
             color: white;
             padding: 20px;
         }
-        
+
         .login-box {
             background: white;
             color: var(--text-dark);
             padding: 40px;
-            border-radius: 10px;
+            border-radius: 15px;
             text-align: center;
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
         }
-        
-        .login-box h1 {
-            color: var(--whatsapp-dark);
-            margin-bottom: 20px;
+
+        .whatsapp-setup {
+            background: #f8f9fa;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: right;
         }
-        
+
+        .whatsapp-setup h3 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
         .form-group {
             margin-bottom: 20px;
             text-align: right;
         }
-        
+
         .form-input {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
         }
-        
+
         .btn {
-            padding: 12px 30px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
         }
-        
+
         .btn-primary {
-            background: var(--whatsapp-green);
+            background: var(--primary-color);
             color: white;
         }
-        
-        /* وضعیت‌های loading و empty */
-        .loading {
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            z-index: 1000;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
+            gap: 10px;
         }
-        
-        .spinner {
-            width: 30px;
-            height: 30px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--whatsapp-green);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        .notification.success {
+            background: var(--primary-color);
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        .notification.error {
+            background: var(--error-color);
         }
-        
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-light);
-        }
-        
+
         /* رسپانسیو */
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
-                display: none;
-            }
-            
-            .sidebar.active {
-                display: flex;
             }
             
             .chat-area {
@@ -379,98 +383,125 @@
             .chat-area.active {
                 display: flex;
             }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- صفحه ورود -->
-        <div class="login-container" id="loginContainer">
-            <div class="login-box">
-                <h1>پیام‌رسان</h1>
-                <p>برای استفاده از پیام‌رسان، لطفاً وارد شوید</p>
-                
-                <div class="form-group">
-                    <input type="tel" class="form-input" id="phoneNumber" placeholder="شماره تلفن (مثال: 989121234567)" dir="ltr">
-                </div>
-                
-                <div class="form-group" id="verificationCodeGroup" style="display: none;">
-                    <input type="text" class="form-input" id="verificationCode" placeholder="کد تأیید" dir="ltr" maxlength="6">
-                </div>
-                
-                <button class="btn btn-primary" id="loginButton">
-                    دریافت کد تأیید
-                </button>
-                
-                <div id="loginStatus" style="margin-top: 15px; font-size: 14px;"></div>
+    <!-- صفحه ورود و تنظیمات -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 20px;">
+                <i class="fab fa-whatsapp"></i>
             </div>
+            <h1>پیام‌رسان حرفه‌ای</h1>
+            <p>اتصال به واتساپ بیزینس API</p>
+            
+            <div class="form-group">
+                <label>شماره تلفن</label>
+                <input type="tel" class="form-input" id="phoneNumber" placeholder="989121234567" dir="ltr">
+            </div>
+            
+            <div class="form-group" id="verificationCodeGroup" style="display: none;">
+                <label>کد تأیید</label>
+                <input type="text" class="form-input" id="verificationCode" placeholder="123456" dir="ltr" maxlength="6">
+            </div>
+
+            <div class="whatsapp-setup" id="whatsappSetup">
+                <h3>تنظیمات واتساپ بیزینس</h3>
+                <div class="form-group">
+                    <label>Business ID</label>
+                    <input type="text" class="form-input" id="businessId" placeholder="Business ID">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number ID</label>
+                    <input type="text" class="form-input" id="phoneNumberId" placeholder="Phone Number ID">
+                </div>
+                <div class="form-group">
+                    <label>Access Token</label>
+                    <input type="password" class="form-input" id="accessToken" placeholder="Access Token">
+                </div>
+                <button class="btn btn-secondary" onclick="testWhatsappConnection()">تست اتصال</button>
+            </div>
+            
+            <button class="btn btn-primary" id="loginButton" style="width: 100%;">
+                <span id="loginButtonText">دریافت کد تأیید</span>
+            </button>
+            
+            <div id="loginStatus" style="margin-top: 15px; font-size: 14px; color: var(--text-light);"></div>
         </div>
-        
-        <!-- رابط اصلی برنامه -->
-        <div class="app-main" id="appMain" style="display: none; width: 100%;">
-            <!-- سایدبار چت‌ها -->
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-header">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <div class="header-actions">
-                        <i class="fas fa-circle-notch"></i>
-                        <i class="fas fa-comment-alt"></i>
-                        <i class="fas fa-ellipsis-v"></i>
+    </div>
+
+    <!-- رابط اصلی -->
+    <div class="app-container" id="appMain" style="display: none;">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">
+                        <span>U</span>
+                        <div class="online-dot" id="userOnlineStatus"></div>
+                        <div class="whatsapp-connected" id="whatsappConnected" style="display: none;">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">کاربر</div>
+                        <div class="user-status" id="userStatus">آنلاین</div>
                     </div>
                 </div>
-                
-                <div class="search-container">
-                    <input type="text" class="search-box" placeholder="جستجو یا شروع چت جدید">
-                </div>
-                
-                <div class="chats-list" id="chatsList">
-                    <!-- لیست چت‌ها اینجا لود می‌شود -->
+                <div class="header-actions">
+                    <i class="fas fa-cog" onclick="showSettings()"></i>
+                    <i class="fas fa-comment-medical" onclick="createNewChat()"></i>
                 </div>
             </div>
             
-            <!-- ناحیه چت -->
-            <div class="chat-area" id="chatArea">
-                <div class="chat-header">
-                    <div class="user-avatar small">C</div>
-                    <div class="chat-header-info">
-                        <div class="chat-title" id="chatTitle">انتخاب چت</div>
-                        <div class="chat-status" id="chatStatus">برای شروع گفتگو یک چت انتخاب کنید</div>
-                    </div>
-                    <div class="chat-actions">
-                        <i class="fas fa-video"></i>
-                        <i class="fas fa-phone"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                    </div>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="جستجو در چت‌ها..." id="searchInput">
+            </div>
+            
+            <div class="chats-list" id="chatsList">
+                <!-- لیست چت‌ها -->
+            </div>
+        </div>
+        
+        <div class="chat-area" id="chatArea">
+            <div class="chat-header">
+                <div class="user-avatar small" id="chatAvatar">C</div>
+                <div class="chat-header-info">
+                    <div class="chat-title" id="chatTitle">پیام‌رسان</div>
+                    <div class="chat-status" id="chatStatus">یک چت انتخاب کنید</div>
                 </div>
-                
-                <div class="messages-container" id="messagesContainer">
-                    <div class="empty-state">
-                        <i class="fas fa-comments" style="font-size: 48px; margin-bottom: 15px;"></i>
-                        <h3>هنوز پیامی ارسال نکرده‌اید</h3>
-                        <p>برای شروع گفتگو پیامی ارسال کنید</p>
-                    </div>
+                <div class="chat-actions">
+                    <i class="fas fa-phone" onclick="makeCall('audio')"></i>
+                    <i class="fas fa-video" onclick="makeCall('video')"></i>
+                    <i class="fas fa-info-circle" onclick="showChatInfo()"></i>
                 </div>
-                
-                <div class="input-container">
-                    <div class="input-actions">
-                        <i class="fas fa-smile"></i>
-                        <i class="fas fa-paperclip"></i>
-                    </div>
-                    <textarea class="message-input" id="messageInput" placeholder="پیام خود را بنویسید..." disabled></textarea>
-                    <button class="send-button" id="sendButton" disabled>
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+            </div>
+            
+            <div class="messages-container" id="messagesContainer">
+                <!-- پیام‌ها -->
+            </div>
+            
+            <div class="input-container">
+                <div class="input-actions">
+                    <i class="fas fa-paperclip" onclick="attachFile()"></i>
+                    <i class="fas fa-camera" onclick="takePhoto()"></i>
                 </div>
+                <textarea class="message-input" id="messageInput" placeholder="پیام خود را بنویسید..." disabled></textarea>
+                <button class="send-button" id="sendButton" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- نوتیفیکیشن -->
+    <div class="notification" id="notification" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationMessage"></span>
+    </div>
+
     <script>
-        // تنظیمات Supabase - جایگزین کنید با اطلاعات پروژه خودتان
+        // تنظیمات Supabase - جایگزین با اطلاعات پروژه خودتان
         const SUPABASE_URL = 'https://atichswkxinwqewtpvkr.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0aWNoc3dreGlud3Fld3RwdmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODA2NjAsImV4cCI6MjA3NzE1NjY2MH0.UmJ7mQt4bmwIpvlrnp7J1TigQ8JqB09w_0OgcIVCtFA';
         
@@ -481,7 +512,8 @@
         let currentChat = null;
         let chats = [];
         let messages = [];
-        
+        let whatsappConnection = null;
+
         // المنت‌های DOM
         const loginContainer = document.getElementById('loginContainer');
         const appMain = document.getElementById('appMain');
@@ -489,6 +521,7 @@
         const verificationCodeInput = document.getElementById('verificationCode');
         const verificationCodeGroup = document.getElementById('verificationCodeGroup');
         const loginButton = document.getElementById('loginButton');
+        const loginButtonText = document.getElementById('loginButtonText');
         const loginStatus = document.getElementById('loginStatus');
         const chatsList = document.getElementById('chatsList');
         const messagesContainer = document.getElementById('messagesContainer');
@@ -497,27 +530,36 @@
         const chatTitle = document.getElementById('chatTitle');
         const chatStatus = document.getElementById('chatStatus');
         const userAvatar = document.getElementById('userAvatar');
-        
+        const userName = document.getElementById('userName');
+        const userStatus = document.getElementById('userStatus');
+        const userOnlineStatus = document.getElementById('userOnlineStatus');
+        const whatsappConnected = document.getElementById('whatsappConnected');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+
         // راه‌اندازی برنامه
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-            setupEventListeners();
+            initializeApp();
         });
-        
-        // بررسی وضعیت احراز هویت
+
+        async function initializeApp() {
+            await checkAuth();
+            setupEventListeners();
+        }
+
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
             
             if (session) {
                 currentUser = session.user;
-                showMainApp();
-                loadUserData();
-                loadChats();
-                setupRealtime();
+                await showMainApp();
+                await loadUserData();
+                await loadWhatsappConnection();
+                await loadChats();
+                setupRealtimeSubscriptions();
             }
         }
-        
-        // تنظیم شنود رویدادها
+
         function setupEventListeners() {
             loginButton.addEventListener('click', handleLogin);
             sendButton.addEventListener('click', sendMessage);
@@ -528,14 +570,8 @@
                     sendMessage();
                 }
             });
-            
-            messageInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-            });
         }
-        
-        // مدیریت ورود
+
         async function handleLogin() {
             const phoneNumber = phoneNumberInput.value.trim();
             
@@ -543,108 +579,295 @@
                 showLoginStatus('لطفاً شماره تلفن را وارد کنید', 'error');
                 return;
             }
-            
+
             if (!verificationCodeGroup.style.display || verificationCodeGroup.style.display === 'none') {
-                // مرحله اول: درخواست کد تأیید
-                showLoginStatus('در حال ارسال کد تأیید...', 'loading');
-                
-                // در اینجا باید با سرویس SMS خودتان интеграration شود
-                // این یک شبیه‌سازی است
-                setTimeout(() => {
-                    verificationCodeGroup.style.display = 'block';
-                    loginButton.textContent = 'تأیید ورود';
-                    showLoginStatus('کد تأیید ارسال شد', 'success');
-                }, 2000);
-                
+                await requestVerificationCode(phoneNumber);
             } else {
-                // مرحله دوم: تأیید کد
-                const code = verificationCodeInput.value.trim();
-                
-                if (!code) {
-                    showLoginStatus('لطفاً کد تأیید را وارد کنید', 'error');
-                    return;
-                }
-                
-                showLoginStatus('در حال تأیید...', 'loading');
-                
-                // در اینجا باید کد تأیید شود
-                // این یک شبیه‌سازی است
-                setTimeout(async () => {
-                    // ثبت‌نام/ورود کاربر
-                    const { data, error } = await supabase.auth.signInWithPassword({
-                        email: `${phoneNumber}@whatsapp.com`,
-                        password: 'default_password'
-                    });
-                    
-                    if (error) {
-                        // اگر کاربر وجود ندارد، ثبت‌نام کنید
-                        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-                            email: `${phoneNumber}@whatsapp.com`,
-                            password: 'default_password',
-                            options: {
-                                data: {
-                                    phone_number: phoneNumber,
-                                    full_name: `کاربر ${phoneNumber}`
-                                }
-                            }
-                        });
-                        
-                        if (signUpError) {
-                            showLoginStatus('خطا در ثبت‌نام: ' + signUpError.message, 'error');
-                            return;
-                        }
-                        
-                        currentUser = signUpData.user;
-                    } else {
-                        currentUser = data.user;
-                    }
-                    
-                    showMainApp();
-                    loadUserData();
-                    loadChats();
-                    setupRealtime();
-                    
-                }, 1500);
+                await verifyCode(phoneNumber);
             }
         }
-        
-        // نمایش وضعیت ورود
+
+        async function requestVerificationCode(phoneNumber) {
+            showLoginStatus('در حال ارسال کد تأیید...', 'loading');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('verification_codes')
+                    .insert([{
+                        phone_number: phoneNumber,
+                        code: generateRandomCode()
+                    }])
+                    .select()
+                    .single();
+                
+                if (error) throw error;
+
+                verificationCodeGroup.style.display = 'block';
+                loginButtonText.textContent = 'تأیید ورود';
+                showLoginStatus('کد تأیید ارسال شد', 'success');
+                
+            } catch (error) {
+                showLoginStatus('خطا در ارسال کد تأیید', 'error');
+            }
+        }
+
+        async function verifyCode(phoneNumber) {
+            const code = verificationCodeInput.value.trim();
+            
+            if (!code) {
+                showLoginStatus('لطفاً کد تأیید را وارد کنید', 'error');
+                return;
+            }
+
+            showLoginStatus('در حال تأیید...', 'loading');
+
+            try {
+                const { data: codeData, error: codeError } = await supabase
+                    .from('verification_codes')
+                    .select('*')
+                    .eq('phone_number', phoneNumber)
+                    .eq('code', code)
+                    .eq('used', false)
+                    .gt('expires_at', new Date().toISOString())
+                    .single();
+                
+                if (codeError || !codeData) {
+                    showLoginStatus('کد تأیید نامعتبر', 'error');
+                    return;
+                }
+
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                    email: `${phoneNumber}@whatsapp.com`,
+                    password: 'default_password'
+                });
+
+                if (authError) {
+                    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                        email: `${phoneNumber}@whatsapp.com`,
+                        password: 'default_password',
+                        options: {
+                            data: {
+                                phone_number: phoneNumber,
+                                full_name: `کاربر ${phoneNumber}`
+                            }
+                        }
+                    });
+                    
+                    if (signUpError) throw signUpError;
+                    currentUser = signUpData.user;
+                } else {
+                    currentUser = authData.user;
+                }
+
+                await supabase
+                    .from('verification_codes')
+                    .update({ used: true })
+                    .eq('id', codeData.id);
+
+                // ذخیره تنظیمات واتساپ
+                await saveWhatsappSettings();
+
+                await showMainApp();
+                await loadUserData();
+                await loadWhatsappConnection();
+                await loadChats();
+                setupRealtimeSubscriptions();
+
+                showNotification('با موفقیت وارد شدید', 'success');
+
+            } catch (error) {
+                showLoginStatus('خطا در ورود', 'error');
+            }
+        }
+
+        async function saveWhatsappSettings() {
+            const businessId = document.getElementById('businessId').value;
+            const phoneNumberId = document.getElementById('phoneNumberId').value;
+            const accessToken = document.getElementById('accessToken').value;
+
+            if (businessId && phoneNumberId && accessToken) {
+                try {
+                    const { data, error } = await supabase
+                        .from('whatsapp_connections')
+                        .upsert({
+                            user_id: currentUser.id,
+                            business_id: businessId,
+                            phone_number_id: phoneNumberId,
+                            access_token: accessToken,
+                            is_active: true
+                        })
+                        .select()
+                        .single();
+
+                    if (!error) {
+                        whatsappConnection = data;
+                        showNotification('اتصال واتساپ با موفقیت تنظیم شد', 'success');
+                    }
+                } catch (error) {
+                    console.error('Error saving WhatsApp settings:', error);
+                }
+            }
+        }
+
+        async function loadWhatsappConnection() {
+            if (!currentUser) return;
+
+            const { data, error } = await supabase
+                .from('whatsapp_connections')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .eq('is_active', true)
+                .single();
+
+            if (data) {
+                whatsappConnection = data;
+                whatsappConnected.style.display = 'flex';
+                showNotification('واتساپ متصل است', 'success');
+            }
+        }
+
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            
+            if (!text || !currentChat) return;
+
+            try {
+                const { data: newMessage, error } = await supabase
+                    .from('messages')
+                    .insert([{
+                        chat_id: currentChat.id,
+                        sender_id: currentUser.id,
+                        message_text: text,
+                        message_type: 'text',
+                        whatsapp_status: 'pending'
+                    }])
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                messageInput.value = '';
+                
+                // پیام به صورت خودکار از طریق تریگر به واتساپ ارسال می‌شود
+                showNotification('پیام ارسال شد', 'success');
+
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showNotification('خطا در ارسال پیام', 'error');
+            }
+        }
+
+        async function sendToWhatsApp(phoneNumber, message) {
+            if (!whatsappConnection) {
+                showNotification('اتصال واتساپ تنظیم نشده', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('https://graph.facebook.com/v17.0/' + whatsappConnection.phone_number_id + '/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${whatsappConnection.access_token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messaging_product: "whatsapp",
+                        to: phoneNumber,
+                        text: { body: message }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.messages) {
+                    return data.messages[0].id;
+                } else {
+                    throw new Error(data.error?.message || 'خطا در ارسال به واتساپ');
+                }
+            } catch (error) {
+                console.error('Error sending to WhatsApp:', error);
+                throw error;
+            }
+        }
+
+        function setupRealtimeSubscriptions() {
+            // شنود پیام‌های جدید
+            supabase
+                .channel('messages')
+                .on('postgres_changes', 
+                    { event: 'INSERT', schema: 'public', table: 'messages' }, 
+                    (payload) => {
+                        if (payload.new.chat_id === currentChat?.id) {
+                            messages.push(payload.new);
+                            displayMessages();
+                        }
+                        loadChats();
+                    }
+                )
+                .subscribe();
+
+            // شنود به‌روزرسانی وضعیت واتساپ
+            supabase
+                .channel('whatsapp_status')
+                .on('postgres_changes',
+                    { event: 'UPDATE', schema: 'public', table: 'messages' },
+                    (payload) => {
+                        if (payload.new.chat_id === currentChat?.id) {
+                            const index = messages.findIndex(m => m.id === payload.new.id);
+                            if (index !== -1) {
+                                messages[index] = payload.new;
+                                displayMessages();
+                            }
+                        }
+                    }
+                )
+                .subscribe();
+        }
+
+        // توابع کمکی
+        function generateRandomCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function showNotification(message, type = 'success') {
+            notification.className = `notification ${type}`;
+            notificationMessage.textContent = message;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
         function showLoginStatus(message, type) {
             loginStatus.textContent = message;
             loginStatus.style.color = type === 'error' ? '#ff4444' : 
                                     type === 'success' ? '#00C851' : '#ffbb33';
         }
-        
-        // نمایش برنامه اصلی
-        function showMainApp() {
+
+        async function showMainApp() {
             loginContainer.style.display = 'none';
             appMain.style.display = 'flex';
         }
-        
-        // بارگذاری اطلاعات کاربر
+
         async function loadUserData() {
             if (!currentUser) return;
-            
-            // دریافت اطلاعات کاربر از جدول users
+
             const { data: userData, error } = await supabase
                 .from('users')
                 .select('*')
                 .eq('id', currentUser.id)
                 .single();
-            
+
             if (userData) {
-                userAvatar.textContent = userData.full_name.charAt(0);
-                userAvatar.style.background = getRandomColor();
+                userName.textContent = userData.full_name;
+                userAvatar.querySelector('span').textContent = userData.full_name.charAt(0);
             }
         }
-        
-        // بارگذاری چت‌ها
+
         async function loadChats() {
             if (!currentUser) return;
-            
-            chatsList.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            
-            // دریافت چت‌های کاربر
+
             const { data: chatsData, error } = await supabase
                 .from('chat_participants')
                 .select(`
@@ -653,228 +876,83 @@
                 `)
                 .eq('user_id', currentUser.id)
                 .eq('chat.chat_type', 'private');
-            
-            if (error) {
-                console.error('Error loading chats:', error);
-                return;
+
+            if (!error) {
+                chats = chatsData.map(item => ({
+                    ...item.chat,
+                    other_user: item.other_user
+                }));
+                displayChats();
             }
-            
-            chats = chatsData.map(item => ({
-                ...item.chat,
-                other_user: item.other_user
-            }));
-            
-            displayChats();
         }
-        
-        // نمایش چت‌ها
+
         function displayChats() {
-            if (chats.length === 0) {
-                chatsList.innerHTML = '<div class="empty-state">هنوز چتی ندارید</div>';
-                return;
-            }
-            
-            chatsList.innerHTML = '';
-            
-            chats.forEach(chat => {
-                const chatItem = document.createElement('div');
-                chatItem.className = 'chat-item';
-                chatItem.dataset.chatId = chat.id;
-                
-                chatItem.innerHTML = `
-                    <div class="chat-avatar" style="background: ${getRandomColor()}">
-                        ${chat.other_user.full_name.charAt(0)}
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-header">
-                            <div class="chat-name">${chat.other_user.full_name}</div>
-                            <div class="chat-time">${formatTime(chat.updated_at)}</div>
-                        </div>
-                        <div class="chat-last-message">
-                            ${chat.last_message || 'هنوز پیامی ارسال نشده'}
-                        </div>
-                    </div>
-                `;
-                
-                chatItem.addEventListener('click', () => selectChat(chat));
-                chatsList.appendChild(chatItem);
-            });
+            // کد نمایش چت‌ها
         }
-        
-        // انتخاب چت
-        function selectChat(chat) {
-            currentChat = chat;
-            
-            // برجسته کردن چت انتخاب شده
-            document.querySelectorAll('.chat-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`[data-chat-id="${chat.id}"]`).classList.add('active');
-            
-            // به‌روزرسانی هدر چت
-            chatTitle.textContent = chat.other_user.full_name;
-            chatStatus.textContent = chat.other_user.is_online ? 'آنلاین' : formatLastSeen(chat.other_user.last_seen);
-            
-            // فعال کردن فیلد ورودی
-            messageInput.disabled = false;
-            sendButton.disabled = false;
-            messageInput.placeholder = 'پیام خود را بنویسید...';
-            
-            // بارگذاری پیام‌ها
-            loadMessages(chat.id);
-        }
-        
-        // بارگذاری پیام‌ها
-        async function loadMessages(chatId) {
-            messagesContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            
-            const { data: messagesData, error } = await supabase
-                .from('messages')
-                .select('*')
-                .eq('chat_id', chatId)
-                .order('created_at', { ascending: true });
-            
-            if (error) {
-                console.error('Error loading messages:', error);
-                return;
-            }
-            
-            messages = messagesData || [];
-            displayMessages();
-        }
-        
-        // نمایش پیام‌ها
+
         function displayMessages() {
-            if (messages.length === 0) {
-                messagesContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-comments" style="font-size: 48px; margin-bottom: 15px;"></i>
-                        <h3>هنوز پیامی ارسال نکرده‌اید</h3>
-                        <p>برای شروع گفتگو پیامی ارسال کنید</p>
-                    </div>
-                `;
+            // کد نمایش پیام‌ها
+        }
+
+        // توابع اضافی
+        async function testWhatsappConnection() {
+            const businessId = document.getElementById('businessId').value;
+            const phoneNumberId = document.getElementById('phoneNumberId').value;
+            const accessToken = document.getElementById('accessToken').value;
+
+            if (!businessId || !phoneNumberId || !accessToken) {
+                showNotification('لطفاً تمام فیلدها را پر کنید', 'error');
                 return;
             }
-            
-            messagesContainer.innerHTML = '';
-            
-            messages.forEach(message => {
-                const messageElement = document.createElement('div');
-                const isSent = message.sender_id === currentUser.id;
-                
-                messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
-                messageElement.innerHTML = `
-                    <div>${message.message_text}</div>
-                    <div class="message-time">
-                        ${formatTime(message.created_at)}
-                        ${isSent ? '<span class="message-status">✓✓</span>' : ''}
-                    </div>
-                `;
-                
-                messagesContainer.appendChild(messageElement);
-            });
-            
-            // اسکرول به پایین
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        
-        // ارسال پیام
-        async function sendMessage() {
-            const text = messageInput.value.trim();
-            
-            if (!text || !currentChat) return;
-            
+
             try {
-                // ارسال پیام به دیتابیس
-                const { data: newMessage, error } = await supabase
-                    .from('messages')
-                    .insert([
-                        {
-                            chat_id: currentChat.id,
-                            sender_id: currentUser.id,
-                            message_text: text,
-                            message_type: 'text'
-                        }
-                    ])
-                    .select()
-                    .single();
-                
-                if (error) throw error;
-                
-                // پاک کردن فیلد ورودی
-                messageInput.value = '';
-                messageInput.style.height = 'auto';
-                
-                // اضافه کردن پیام به لیست
-                messages.push(newMessage);
-                displayMessages();
-                
-            } catch (error) {
-                console.error('Error sending message:', error);
-                alert('خطا در ارسال پیام');
-            }
-        }
-        
-        // راه‌اندازی Real-time
-        function setupRealtime() {
-            // شنود پیام‌های جدید
-            supabase
-                .channel('messages')
-                .on('postgres_changes', 
-                    { 
-                        event: 'INSERT', 
-                        schema: 'public', 
-                        table: 'messages' 
-                    }, 
-                    (payload) => {
-                        if (payload.new.chat_id === currentChat?.id) {
-                            messages.push(payload.new);
-                            displayMessages();
-                        }
-                        
-                        // به‌روزرسانی لیست چت‌ها
-                        loadChats();
+                const response = await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
                     }
-                )
-                .subscribe();
-        }
-        
-        // توابع کمکی
-        function getRandomColor() {
-            const colors = ['#25D366', '#128C7E', '#075E54', '#34B7F1', '#FF4081', '#FF9800'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        function formatTime(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleTimeString('fa-IR', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-        }
-        
-        function formatLastSeen(lastSeen) {
-            if (!lastSeen) return 'آفلاین';
-            
-            const now = new Date();
-            const lastSeenDate = new Date(lastSeen);
-            const diffMinutes = Math.floor((now - lastSeenDate) / (1000 * 60));
-            
-            if (diffMinutes < 1) return 'آنلاین';
-            if (diffMinutes < 60) return `${diffMinutes} دقیقه پیش`;
-            if (diffMinutes < 1440) return `${Math.floor(diffMinutes / 60)} ساعت پیش`;
-            
-            return lastSeenDate.toLocaleDateString('fa-IR');
-        }
-        
-        // شنود تغییرات وضعیت احراز هویت
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_OUT') {
-                currentUser = null;
-                loginContainer.style.display = 'flex';
-                appMain.style.display = 'none';
+                });
+
+                if (response.ok) {
+                    showNotification('اتصال واتساپ موفقیت‌آمیز بود', 'success');
+                } else {
+                    throw new Error('Connection failed');
+                }
+            } catch (error) {
+                showNotification('خطا در اتصال به واتساپ', 'error');
             }
-        });
+        }
+
+        function showSettings() {
+            // نمایش تنظیمات
+            showNotification('بخش تنظیمات به زودی اضافه می‌شود', 'success');
+        }
+
+        function createNewChat() {
+            // ایجاد چت جدید
+            showNotification('ایجاد چت جدید به زودی اضافه می‌شود', 'success');
+        }
+
+        function makeCall(type) {
+            // برقراری تماس
+            showNotification(`تماس ${type === 'audio' ? 'صوتی' : 'تصویری'} به زودی اضافه می‌شود`, 'success');
+        }
+
+        function showChatInfo() {
+            // نمایش اطلاعات چت
+            if (currentChat) {
+                showNotification(`اطلاعات چت با ${currentChat.other_user.full_name}`, 'success');
+            }
+        }
+
+        function attachFile() {
+            // پیوست فایل
+            showNotification('ارسال فایل به زودی اضافه می‌شود', 'success');
+        }
+
+        function takePhoto() {
+            // عکس‌برداری
+            showNotification('عکس‌برداری به زودی اضافه می‌شود', 'success');
+        }
     </script>
 </body>
 </html>
