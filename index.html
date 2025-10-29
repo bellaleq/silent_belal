@@ -3,705 +3,1956 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم مدیریت فروشگاه - نسخه ابری حرفهای</title>
-    <meta name="description" content="سیستم مدیریت چند فروشگاهی با قابلیتهای پیشرفته و امنیت بالا">
-    <meta name="keywords" content="مدیریت فروشگاه, سیستم فروش, مدیریت محصولات, فروشگاه آنلاین">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>Secure Messenger - سیستم پاکسازی پیام</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --matrix-green: #00ff41;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --card-bg: #111111;
+            --border-color: #003b00;
+            --text-primary: #00ff41;
+            --text-secondary: #008f11;
+            --danger: #ff003c;
+            --warning: #ffaa00;
+            --purple: #8a2be2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 65, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 65, 0.05) 0%, transparent 20%);
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 65, 0.03) 2px,
+                rgba(0, 255, 65, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 15px;
+            height: 95vh;
+            padding: 20px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--matrix-green), transparent);
+        }
+        
+        header {
+            padding: 20px;
+            background: var(--darker-bg);
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+        
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--matrix-green);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background: var(--matrix-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-weight: bold;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: var(--matrix-green);
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            height: 100%;
+        }
+        
+        .login-container h1 {
+            margin-bottom: 20px;
+            color: var(--matrix-green);
+            text-shadow: 0 0 15px var(--matrix-green);
+        }
+        
+        .login-container p {
+            margin-bottom: 30px;
+            max-width: 500px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        
+        .login-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .login-tab {
+            padding: 12px 24px;
+            background: var(--darker-bg);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .login-tab.active {
+            background: var(--matrix-green);
+            color: var(--dark-bg);
+            font-weight: bold;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--darker-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--matrix-green);
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .btn-primary {
+            background: var(--matrix-green);
+            color: var(--dark-bg);
+        }
+        
+        .btn-primary:hover {
+            background: #00cc33;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--matrix-green);
+            border: 1px solid var(--matrix-green);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #cc002f;
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.5);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark-bg);
+        }
+        
+        .chat-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .chat-header {
+            background: var(--darker-bg);
+            color: var(--matrix-green);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: var(--darker-bg);
+        }
+        
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            max-width: 70%;
+            position: relative;
+            word-wrap: break-word;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            transition: all 0.3s;
+        }
+        
+        .message.sent {
+            align-self: flex-end;
+            border-color: var(--matrix-green);
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .message.received {
+            align-self: flex-start;
+            border-color: var(--border-color);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            text-align: left;
+            color: var(--text-secondary);
+        }
+        
+        .message.deleting {
+            animation: fadeOut 0.5s forwards;
+        }
+        
+        .delete-timer {
+            height: 2px;
+            background: var(--warning);
+            border-radius: 1px;
+            margin-top: 5px;
+            transition: width 1s linear;
+        }
+        
+        .message-actions {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: none;
+        }
+        
+        .message:hover .message-actions {
+            display: block;
+        }
+        
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .file-attachment {
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(0, 255, 65, 0.1);
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .file-icon {
+            margin-right: 8px;
+        }
+        
+        @keyframes fadeOut {
+            from { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            to { 
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+        
+        .input-container {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            gap: 10px;
+            background: var(--card-bg);
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: var(--darker-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--matrix-green);
+            font-family: 'Courier New', monospace;
+            resize: none;
+            height: 60px;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        .send-button {
+            background: var(--matrix-green);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 6px;
+            width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        
+        .send-button:hover {
+            background: #00cc33;
+        }
+        
+        .send-button:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+        }
+        
+        .upload-btn {
+            background: transparent;
+            color: var(--matrix-green);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            width: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            border-color: var(--matrix-green);
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .groups-container, .users-container {
+            padding: 15px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .section-title {
+            margin-bottom: 15px;
+            color: var(--matrix-green);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .group-item, .user-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        
+        .group-item:hover, .user-item:hover {
+            border-color: var(--border-color);
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .group-item.active, .user-item.active {
+            border-color: var(--matrix-green);
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .group-avatar, .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background: var(--matrix-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--matrix-green);
+        }
+        
+        .user-status.offline {
+            background: var(--text-secondary);
+        }
+        
+        .admin-panel {
+            display: none;
+        }
+        
+        .admin-section {
+            margin-bottom: 20px;
+        }
+        
+        .admin-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .user-list, .group-list-admin {
+            list-style-type: none;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        
+        .user-list li, .group-list-admin li {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-actions, .group-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .logout-button {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 15px;
+            font-weight: bold;
+        }
+        
+        .logout-button:hover {
+            background: rgba(255, 0, 60, 0.1);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 6px;
+            color: var(--matrix-green);
+            background: var(--card-bg);
+            border: 1px solid var(--matrix-green);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            z-index: 1000;
+            display: none;
+            font-weight: bold;
+        }
+        
+        .notification.error {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0, 255, 65, 0.3);
+            border-top-color: var(--matrix-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--matrix-green);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--matrix-green);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .cleanup-section {
+            background: rgba(255, 0, 60, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .cleanup-title {
+            color: var(--danger);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 250px 1fr;
+            }
+            
+            .admin-panel {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .card {
+                margin-bottom: 15px;
+            }
+        }
+        
+        .type-indicator {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .terminal-text {
+            color: var(--matrix-green);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="ti ti-shopping-cart"></i>
-                    سیستم مدیریت فروشگاه
-                </div>
-                <div class="user-info" id="userInfo" style="display: none;">
-                    <div id="userName"></div>
-                    <div class="user-avatar" id="userAvatar"></div>
-                    <button id="userProfile" class="btn-info">
-                        <i class="ti ti-user"></i>
-                        پروفایل
-                    </button>
-                    <button id="userLogout" class="btn-danger">
-                        <i class="ti ti-logout"></i>
-                        خروج
-                    </button>
-                    <button id="adminLogout" class="btn-danger" style="display: none;">
-                        <i class="ti ti-logout"></i>
-                        خروج مدیر
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
+    <div class="matrix-bg"></div>
+    
     <div class="container">
-        <!-- صفحه ورود -->
-        <div id="loginPage" class="page">
-            <div class="auth-container">
-                <div class="auth-header">
-                    <h2>ورود به سیستم</h2>
-                    <p>سیستم مدیریت چند فروشگاهی</p>
+        <!-- پنل سمت چپ - گروهها و کاربران -->
+        <div class="card">
+            <header>
+                <div class="logo">
+                    <div class="logo-icon">S</div>
+                    <span>SECURE MESSENGER</span>
+                </div>
+            </header>
+            
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">کاربر</div>
+                    <div class="user-role" id="userRole">کاربر عادی</div>
+                </div>
+            </div>
+            
+            <div class="groups-container">
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    گروهها
+                </div>
+                <div id="groupsList">
+                    <!-- لیست گروهها در اینجا نمایش داده میشود -->
                 </div>
                 
-                <div class="tabs">
-                    <div class="tab active" id="userLoginTab">ورود فروشگاه</div>
-                    <div class="tab" id="adminLoginTab">ورود مدیر</div>
+                <div class="section-title" style="margin-top: 20px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    کاربران
+                </div>
+                <div id="usersList">
+                    <!-- لیست کاربران در اینجا نمایش داده میشود -->
+                </div>
+            </div>
+            
+            <button class="logout-button" id="logoutButton" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                خروج از سیستم
+            </button>
+        </div>
+        
+        <!-- پنل وسط - چت -->
+        <div class="card">
+            <div class="login-container" id="loginContainer">
+                <h1>SECURE MESSENGER</h1>
+                <p>سیستم پیامرسان امن با قابلیت پاکسازی کامل پیامها</p>
+                <p class="terminal-text">> سیستم آماده است. لطفاً وارد شوید...</p>
+                
+                <div class="login-tabs">
+                    <button class="login-tab active" id="userLoginTab">ورود کاربر</button>
+                    <button class="login-tab" id="adminLoginTab">ورود مدیر</button>
+                    <button class="login-tab" id="registerTab">ثبتنام کاربر</button>
                 </div>
                 
-                <form id="userLoginForm">
+                <!-- فرم ورود کاربر -->
+                <div id="userLoginForm">
                     <div class="form-group">
-                        <label for="userEmail">ایمیل:</label>
-                        <input type="email" id="userEmail" required>
+                        <label class="form-label">ایمیل</label>
+                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com">
                     </div>
                     <div class="form-group">
-                        <label for="userPassword">رمز عبور:</label>
-                        <input type="password" id="userPassword" required>
+                        <label class="form-label">رمز عبور</label>
+                        <input type="password" class="form-input" id="userPassword" placeholder="••••••••">
                     </div>
-                    <button type="submit" class="btn-primary" style="width: 100%;">
-                        <i class="ti ti-login"></i>
-                        ورود
-                    </button>
-                    
-                    <div class="google-btn-container">
-                        <div id="g_id_onload"
-                            data-client_id="627857769759-7stscotup44r2aqmdpavr615bu20sk99.apps.googleusercontent.com"
-                            data-context="signin"
-                            data-ux_mode="popup"
-                            data-callback="handleGoogleSignIn"
-                            data-auto_prompt="false">
-                        </div>
-
-                        <div class="g_id_signin"
-                            data-type="standard"
-                            data-shape="rectangular"
-                            data-theme="outline"
-                            data-text="signin_with"
-                            data-size="large"
-                            data-logo_alignment="left">
-                        </div>
-                    </div>
-                </form>
+                    <button class="btn btn-primary" id="userLoginBtn">ورود به سیستم</button>
+                </div>
                 
-                <form id="adminLoginForm" style="display: none;">
+                <!-- فرم ورود مدیر -->
+                <div id="adminLoginForm" style="display: none;">
                     <div class="form-group">
-                        <label for="adminEmail">ایمیل مدیر:</label>
-                        <input type="email" id="adminEmail" required>
+                        <label class="form-label">ایمیل مدیر</label>
+                        <input type="email" class="form-input" id="adminEmail" placeholder="admin@system.com">
                     </div>
                     <div class="form-group">
-                        <label for="adminPassword">رمز عبور مدیر:</label>
-                        <input type="password" id="adminPassword" required>
+                        <label class="form-label">رمز عبور مدیر</label>
+                        <input type="password" class="form-input" id="adminPassword" placeholder="••••••••">
                     </div>
-                    <button type="submit" class="btn-primary" style="width: 100%;">
-                        <i class="ti ti-login"></i>
-                        ورود مدیر
-                    </button>
-                </form>
+                    <button class="btn btn-primary" id="adminLoginBtn">ورود به پنل مدیریت</button>
+                </div>
                 
-                <div style="text-align: center; margin-top: 20px;">
-                    <span>حساب کاربری ندارید؟ </span>
-                    <button id="showRegisterForm" class="btn-info" style="padding: 5px 10px;">
-                        <i class="ti ti-user-plus"></i>
-                        ثبت نام
-                    </button>
-                    <div style="margin-top: 10px;">
-                        <span class="auth-link" id="forgotPassword">رمز عبور خود را فراموش کردهاید؟</span>
+                <!-- فرم ثبتنام کاربر -->
+                <div id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">نام کامل</label>
+                        <input type="text" class="form-input" id="regName" placeholder="نام و نام خانوادگی">
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">ایمیل</label>
+                        <input type="email" class="form-input" id="regEmail" placeholder="user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">رمز عبور</label>
+                        <input type="password" class="form-input" id="regPassword" placeholder="حداقل 8 کاراکتر">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">تکرار رمز عبور</label>
+                        <input type="password" class="form-input" id="regPasswordConfirm" placeholder="••••••••">
+                    </div>
+                    <button class="btn btn-primary" id="registerBtn">ثبتنام در سیستم</button>
+                </div>
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="chat-header">
+                    <h2 id="chatTitle">گروه عمومی</h2>
+                    <div class="chat-actions">
+                        <button class="btn btn-secondary btn-small" id="clearChatBtn">پاک کردن چت</button>
+                        <button class="btn btn-danger btn-small" id="deleteAllMessagesBtn">حذف تمام پیامها</button>
+                    </div>
+                </div>
+                <div class="messages-container" id="messagesContainer">
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-state-icon">💬</div>
+                        <h3>هنوز پیامی وجود ندارد</h3>
+                        <p>اولین پیام را ارسال کنید یا از لیست سمت چپ یک گروه انتخاب کنید</p>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <button class="upload-btn" id="uploadBtn" title="ارسال فایل">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </button>
+                    <textarea class="message-input" id="messageInput" placeholder="پیام خود را اینجا تایپ کنید..." disabled></textarea>
+                    <button class="send-button" id="sendButton" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
-
-        <!-- صفحه ثبت نام -->
-        <div id="registerPage" class="page hidden">
-            <div class="auth-container">
-                <div class="auth-header">
-                    <h2>ثبت نام فروشگاه جدید</h2>
-                    <p>فرم ثبت نام فروشگاه در سیستم</p>
+        
+        <!-- پنل سمت راست - مدیریت -->
+        <div class="card admin-panel" id="adminPanel">
+            <header>
+                <div class="logo">
+                    <div class="logo-icon">A</div>
+                    <span>پنل مدیریت</span>
                 </div>
-                
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label for="storeName">نام فروشگاه:</label>
-                        <input type="text" id="storeName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="ownerName">نام صاحب فروشگاه:</label>
-                        <input type="text" id="ownerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerEmail">ایمیل:</label>
-                        <input type="email" id="registerEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerPassword">رمز عبور:</label>
-                        <input type="password" id="registerPassword" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">تکرار رمز عبور:</label>
-                        <input type="password" id="confirmPassword" required>
-                    </div>
-                    <button type="submit" class="btn-primary" style="width: 100%;">
-                        <i class="ti ti-user-plus"></i>
-                        ثبت نام
-                    </button>
-                </form>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <button id="backToLogin" class="btn-info" style="width: 100%;">
-                        <i class="ti ti-arrow-back"></i>
-                        بازگشت به صفحه ورود
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- صفحه بازیابی رمز عبور -->
-        <div id="forgotPasswordPage" class="page hidden">
-            <div class="auth-container">
-                <div class="auth-header">
-                    <h2>بازیابی رمز عبور</h2>
-                    <p>ایمیل خود را وارد کنید تا لینک بازیابی برای شما ارسال شود</p>
-                </div>
-                
-                <form id="forgotPasswordForm">
-                    <div class="form-group">
-                        <label for="recoveryEmail">ایمیل:</label>
-                        <input type="email" id="recoveryEmail" required>
-                    </div>
-                    <button type="submit" class="btn-primary" style="width: 100%;">
-                        <i class="ti ti-send"></i>
-                        ارسال لینک بازیابی
-                    </button>
-                </form>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <button id="backToLoginFromForgot" class="btn-info" style="width: 100%;">
-                        <i class="ti ti-arrow-back"></i>
-                        بازگشت به صفحه ورود
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- داشبورد کاربر -->
-        <div id="userDashboard" class="page hidden">
-            <div id="pendingApproval" class="notification warning" style="position: relative; margin-bottom: 20px; display: none;">
-                حساب شما در انتظار تأیید مدیر است. پس از تأیید میتوانید از امکانات سیستم استفاده کنید.
-            </div>
+            </header>
             
-            <div id="userDashboardContent">
-                <div class="user-info-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div>
-                        <h2 id="userStoreName">فروشگاه</h2>
-                        <div id="userStatus"></div>
+            <div class="groups-container">
+                <div class="admin-section">
+                    <div class="section-title">مدیریت کاربران</div>
+                    <div class="admin-controls">
+                        <button class="btn btn-primary btn-small" id="addUserBtn">افزودن کاربر</button>
+                        <button class="btn btn-secondary btn-small" id="refreshUsersBtn">بروزرسانی</button>
                     </div>
-                    <div class="user-actions" style="display: flex; gap: 10px;">
-                        <button id="backupData" class="btn-info">
-                            <i class="ti ti-download"></i>
-                            پشتیبانگیری
-                        </button>
-                        <button id="printProducts" class="btn-info">
-                            <i class="ti ti-printer"></i>
-                            چاپ محصولات
-                        </button>
+                    <ul class="user-list" id="adminUserList">
+                        <!-- لیست کاربران برای مدیر -->
+                    </ul>
+                </div>
+                
+                <div class="admin-section">
+                    <div class="section-title">مدیریت گروهها</div>
+                    <div class="admin-controls">
+                        <button class="btn btn-primary btn-small" id="addGroupBtn">ایجاد گروه</button>
+                        <button class="btn btn-secondary btn-small" id="refreshGroupsBtn">بروزرسانی</button>
+                    </div>
+                    <ul class="group-list-admin" id="adminGroupList">
+                        <!-- لیست گروهها برای مدیر -->
+                    </ul>
+                </div>
+                
+                <div class="admin-section">
+                    <div class="section-title">پاکسازی سیستم</div>
+                    <div class="cleanup-section">
+                        <div class="cleanup-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            عملیات پاکسازی
+                        </div>
+                        <div class="admin-controls">
+                            <button class="btn btn-danger btn-small" id="clearAllMessagesBtn">حذف تمام پیامها</button>
+                            <button class="btn btn-warning btn-small" id="clearUserMessagesBtn">حذف پیامهای کاربر</button>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px;">
+                            توجه: این عملیات غیرقابل بازگشت است!
+                        </p>
                     </div>
                 </div>
                 
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="ti ti-package"></i>
-                        </div>
-                        <div class="stat-number" id="totalProducts">0</div>
-                        <div>کل محصولات</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="ti ti-category"></i>
-                        </div>
-                        <div class="stat-number" id="totalCategories">0</div>
-                        <div>دستهبندیها</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="ti ti-box"></i>
-                        </div>
-                        <div class="stat-number" id="totalParents">0</div>
-                        <div>محصولات اصلی</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="ti ti-shopping-cart"></i>
-                        </div>
-                        <div class="stat-number" id="totalSold">0</div>
-                        <div>فروش امروز</div>
-                    </div>
-                </div>
-                
-                <div class="tabs">
-                    <div class="tab active" data-tab="products">محصولات</div>
-                    <div class="tab" data-tab="categories">دستهبندیها</div>
-                    <div class="tab" data-tab="sales">فروشها</div>
-                    <div class="tab" data-tab="settings">تنظیمات</div>
-                    <div class="tab" data-tab="profile">پروفایل</div>
-                </div>
-                
-                <!-- تب محصولات -->
-                <div id="userProductsTab" class="user-tab">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>لیست محصولات</h3>
-                            <div>
-                                <button id="exportProducts" class="btn-info">
-                                    <i class="ti ti-download"></i>
-                                    خروجی
-                                </button>
-                            </div>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>نام محصول</th>
-                                    <th>دستهبندی</th>
-                                    <th>قیمت (افغانی)</th>
-                                    <th>زیرمجموعه</th>
-                                    <th>وضعیت</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productsTableBody">
-                                <!-- محصولات اینجا نمایش داده میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>افزودن محصول جدید</h3>
-                        </div>
-                        <form id="productForm" style="padding: 20px;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div class="form-group">
-                                    <label for="productName">نام محصول:</label>
-                                    <input type="text" id="productName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productCategory">دستهبندی:</label>
-                                    <select id="productCategory" required>
-                                        <option value="">انتخاب کنید</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productPrice">قیمت (افغانی):</label>
-                                    <input type="number" id="productPrice" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productParent">زیرمجموعه:</label>
-                                    <select id="productParent">
-                                        <option value="">هیچکدام (محصول اصلی)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="productDescription">توضیحات:</label>
-                                <textarea id="productDescription" rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="btn-primary">
-                                <i class="ti ti-plus"></i>
-                                افزودن محصول
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- تب دستهبندیها -->
-                <div id="userCategoriesTab" class="user-tab hidden">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>لیست دستهبندیها</h3>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>نام دستهبندی</th>
-                                    <th>زیرمجموعه</th>
-                                    <th>تعداد محصولات</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="categoriesTableBody">
-                                <!-- دستهبندیها اینجا نمایش داده میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>افزودن دستهبندی جدید</h3>
-                        </div>
-                        <form id="categoryForm" style="padding: 20px;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div class="form-group">
-                                    <label for="categoryName">نام دستهبندی:</label>
-                                    <input type="text" id="categoryName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="categoryParent">زیرمجموعه:</label>
-                                    <select id="categoryParent">
-                                        <option value="">هیچکدام (دستهبندی اصلی)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn-primary">
-                                <i class="ti ti-plus"></i>
-                                افزودن دستهبندی
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- تب فروشها -->
-                <div id="userSalesTab" class="user-tab hidden">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>فروشهای امروز</h3>
-                        </div>
-                        <div id="soldItemsList" style="padding: 20px;">
-                            <!-- فروشهای امروز اینجا نمایش داده میشوند -->
-                        </div>
-                    </div>
-                    
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>ثبت فروش جدید</h3>
-                        </div>
-                        <div style="padding: 20px;">
-                            <div id="productsChecklist">
-                                <!-- لیست محصولات برای انتخاب -->
-                            </div>
-                            <button id="markAsSold" class="btn-success" style="margin-top: 15px;">
-                                <i class="ti ti-shopping-cart"></i>
-                                ثبت به عنوان فروخته شده
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- تب تنظیمات -->
-                <div id="userSettingsTab" class="user-tab hidden">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>تنظیمات تلگرام</h3>
-                        </div>
-                        <div style="padding: 20px;">
-                            <div class="form-group">
-                                <label for="userTelegramToken">توکن ربات تلگرام:</label>
-                                <input type="text" id="userTelegramToken" placeholder="توکن ربات تلگرام خود را وارد کنید">
-                            </div>
-                            <div class="form-group">
-                                <label for="userTelegramChatId">Chat ID:</label>
-                                <input type="text" id="userTelegramChatId" placeholder="Chat ID خود را وارد کنید">
-                            </div>
-                            <div id="telegramStatus" class="telegram-status">
-                                <span id="telegramStatusText">آماده</span>
-                            </div>
-                            <button id="saveTelegramSettings" class="btn-primary">
-                                <i class="ti ti-device-floppy"></i>
-                                ذخیره تنظیمات تلگرام
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>مدیریت دادهها</h3>
-                        </div>
-                        <div style="padding: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button id="restoreData" class="btn-warning">
-                                <i class="ti ti-upload"></i>
-                                بازیابی
-                            </button>
-                            <input type="file" id="restoreFile" accept=".json" style="display: none;">
-                            <button id="clearData" class="btn-danger">
-                                <i class="ti ti-trash"></i>
-                                پاک کردن تمام دادهها
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>گزارشگیری</h3>
-                        </div>
-                        <div style="padding: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button id="printCategories" class="btn-info">
-                                <i class="ti ti-printer"></i>
-                                چاپ دستهبندیها
-                            </button>
-                            <button id="printSales" class="btn-info">
-                                <i class="ti ti-printer"></i>
-                                چاپ فروشها
-                            </button>
-                            <button id="printInventory" class="btn-info">
-                                <i class="ti ti-printer"></i>
-                                چاپ موجودی
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- تب پروفایل -->
-                <div id="userProfileTab" class="user-tab hidden">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3>اطلاعات حساب کاربری</h3>
-                        </div>
-                        <div style="padding: 20px;">
-                            <form id="profileForm">
-                                <div class="form-group">
-                                    <label for="profileStoreName">نام فروشگاه:</label>
-                                    <input type="text" id="profileStoreName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="profileOwnerName">نام صاحب فروشگاه:</label>
-                                    <input type="text" id="profileOwnerName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="profileEmail">ایمیل:</label>
-                                    <input type="email" id="profileEmail" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="currentPassword">رمز عبور فعلی:</label>
-                                    <input type="password" id="currentPassword">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newPassword">رمز عبور جدید:</label>
-                                    <input type="password" id="newPassword">
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmNewPassword">تکرار رمز عبور جدید:</label>
-                                    <input type="password" id="confirmNewPassword">
-                                </div>
-                                <button type="submit" class="btn-primary">
-                                    <i class="ti ti-device-floppy"></i>
-                                    ذخیره تغییرات
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- داشبورد مدیر -->
-        <div id="adminDashboard" class="page hidden">
-            <div class="user-info-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2>پنل مدیریت سیستم</h2>
-                <div class="user-actions" style="display: flex; gap: 10px;">
-                    <button id="backupAllData" class="btn-info">
-                        <i class="ti ti-download"></i>
-                        پشتیبانگیری کلی
-                    </button>
-                    <button id="createStoreAccount" class="btn-primary">
-                        <i class="ti ti-plus"></i>
-                        ایجاد فروشگاه
-                    </button>
-                </div>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="ti ti-building-store"></i>
-                    </div>
-                    <div class="stat-number" id="adminTotalStores">0</div>
-                    <div>فروشگاهها</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="ti ti-package"></i>
-                    </div>
-                    <div class="stat-number" id="adminTotalProducts">0</div>
-                    <div>کل محصولات</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="ti ti-shopping-cart"></i>
-                    </div>
-                    <div class="stat-number" id="adminTotalSales">0</div>
-                    <div>فروشها</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="ti ti-user-plus"></i>
-                    </div>
-                    <div class="stat-number" id="adminNewStores">0</div>
-                    <div>فروشگاههای جدید</div>
-                </div>
-            </div>
-            
-            <div class="tabs">
-                <div class="tab active" data-tab="stores">مدیریت فروشگاهها</div>
-                <div class="tab" data-tab="approvals">درخواست های تأیید</div>
-                <div class="tab" data-tab="credentials">اطلاعات کاربران</div>
-                <div class="tab" data-tab="system">تنظیمات سیستم</div>
-            </div>
-            
-            <!-- تب مدیریت فروشگاهها -->
-            <div id="adminStoresTab" class="admin-tab">
-                <div id="storesList">
-                    <!-- لیست فروشگاهها اینجا نمایش داده میشوند -->
-                </div>
-            </div>
-            
-            <!-- تب درخواست های تأیید -->
-            <div id="adminApprovalsTab" class="admin-tab hidden">
-                <h3 style="margin-bottom: 20px;">درخواست های در انتظار تأیید</h3>
-                
-                <div id="approvalList">
-                    <!-- درخواست های تأیید اینجا نمایش داده میشوند -->
-                </div>
-            </div>
-            
-            <!-- تب اطلاعات کاربران -->
-            <div id="adminCredentialsTab" class="admin-tab hidden">
-                <h3 style="margin-bottom: 20px;">اطلاعات کاربران سیستم</h3>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>نام فروشگاه</th>
-                                <th>صاحب فروشگاه</th>
-                                <th>ایمیل</th>
-                                <th>رمز عبور</th>
-                                <th>وضعیت</th>
-                                <th>تاریخ ثبتنام</th>
-                                <th>نوع ورود</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userCredentialsTable">
-                            <!-- اطلاعات کاربران اینجا نمایش داده میشوند -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- تب تنظیمات سیستم -->
-            <div id="adminSystemTab" class="admin-tab hidden">
-                <h3 style="margin-bottom: 20px;">تنظیمات و مدیریت سیستم</h3>
-                
-                <div class="table-container">
-                    <div style="padding: 20px;">
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-                            <button id="resetAllData" class="btn-danger">
-                                <i class="ti ti-refresh"></i>
-                                بازنشانی تمام دادهها
-                            </button>
-                            <button id="viewAllData" class="btn-warning">
-                                <i class="ti ti-database"></i>
-                                مشاهده تمام دادهها
-                            </button>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>اطلاعات مدیر سیستم:</label>
-                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 8px;">
-                                <div><strong>ایمیل:</strong> admin@example.com</div>
-                                <div><strong>رمز عبور:</strong> admin123</div>
-                            </div>
-                        </div>
+                <div class="admin-section">
+                    <div class="section-title">آمار سیستم</div>
+                    <div class="terminal-text">
+                        <div>کاربران آنلاین: <span id="onlineUsersCount">0</span></div>
+                        <div>تعداد گروهها: <span id="groupsCount">0</span></div>
+                        <div>پیامهای امروز: <span id="messagesToday">0</span></div>
+                        <div>کل پیامها: <span id="totalMessages">0</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <!-- مودالها -->
-    <div id="editProductModal" class="modal">
+    <div class="modal" id="createGroupModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>ویرایش محصول</h3>
-                <span class="close-modal">&times;</span>
+                <h3>ایجاد گروه جدید</h3>
+                <button class="modal-close" id="closeGroupModal">&times;</button>
             </div>
-            <form id="editProductForm">
-                <input type="hidden" id="editProductId">
+            <div class="modal-body">
                 <div class="form-group">
-                    <label for="editProductName">نام محصول:</label>
-                    <input type="text" id="editProductName" required>
+                    <label class="form-label">نام گروه</label>
+                    <input type="text" class="form-input" id="groupName" placeholder="نام گروه">
                 </div>
                 <div class="form-group">
-                    <label for="editProductCategory">دستهبندی:</label>
-                    <select id="editProductCategory" required>
-                        <option value="">انتخاب کنید</option>
-                    </select>
+                    <label class="form-label">توضیحات</label>
+                    <textarea class="form-input" id="groupDescription" placeholder="توضیحات گروه" rows="3"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="editProductPrice">قیمت (افغانی):</label>
-                    <input type="number" id="editProductPrice" required>
-                </div>
-                <div class="form-group">
-                    <label for="editProductParent">زیرمجموعه:</label>
-                    <select id="editProductParent">
-                        <option value="">هیچکدام (محصول اصلی)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="editProductDescription">توضیحات:</label>
-                    <textarea id="editProductDescription" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn-primary">
-                    <i class="ti ti-device-floppy"></i>
-                    ذخیره تغییرات
-                </button>
-            </form>
+                <button class="btn btn-primary" id="createGroupBtn">ایجاد گروه</button>
+            </div>
         </div>
     </div>
-
-    <div id="createStoreModal" class="modal">
+    
+    <div class="modal" id="addUserModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>ایجاد حساب فروشگاه جدید</h3>
-                <span class="close-modal">&times;</span>
+                <h3>افزودن کاربر جدید</h3>
+                <button class="modal-close" id="closeUserModal">&times;</button>
             </div>
-            <form id="createStoreForm">
+            <div class="modal-body">
                 <div class="form-group">
-                    <label for="newStoreName">نام فروشگاه:</label>
-                    <input type="text" id="newStoreName" required>
+                    <label class="form-label">نام کامل</label>
+                    <input type="text" class="form-input" id="newUserName" placeholder="نام و نام خانوادگی">
                 </div>
                 <div class="form-group">
-                    <label for="newOwnerName">نام صاحب فروشگاه:</label>
-                    <input type="text" id="newOwnerName" required>
+                    <label class="form-label">ایمیل</label>
+                    <input type="email" class="form-input" id="newUserEmail" placeholder="user@example.com">
                 </div>
                 <div class="form-group">
-                    <label for="newStoreEmail">ایمیل:</label>
-                    <input type="email" id="newStoreEmail" required>
+                    <label class="form-label">رمز عبور</label>
+                    <input type="password" class="form-input" id="newUserPassword" placeholder="حداقل 8 کاراکتر">
                 </div>
                 <div class="form-group">
-                    <label for="newStorePassword">رمز عبور:</label>
-                    <input type="password" id="newStorePassword" required>
+                    <label class="form-label">نقش کاربر</label>
+                    <select class="form-input" id="newUserRole">
+                        <option value="user">کاربر عادی</option>
+                        <option value="moderator">ناظر</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn-primary">
-                    <i class="ti ti-plus"></i>
-                    ایجاد حساب
-                </button>
-            </form>
+                <button class="btn btn-primary" id="createUserBtn">ایجاد کاربر</button>
+            </div>
         </div>
     </div>
+    
+    <div class="notification" id="notification"></div>
 
-    <!-- ناحیه چاپ -->
-    <div id="printArea" class="print-area"></div>
-
-    <!-- بارگذاری فایلهای JavaScript -->
-    <script src="auth.js"></script>
-    <script src="products.js"></script>
-    <script src="categories.js"></script>
-    <script src="sales.js"></script>
-    <script src="admin.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // تنظیمات Supabase
+        const SUPABASE_URL = 'https://atichswkxinwqewtpvkr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0aWNoc3dreGlud3Fld3RwdmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODA2NjAsImV4cCI6MjA3NzE1NjY2MH0.UmJ7mQt4bmwIpvlrnp7J1TigQ8JqB09w_0OgcIVCtFA';
+        
+        // ایجاد کلاینت Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // وضعیت برنامه
+        let currentUser = null;
+        let currentGroup = null;
+        let isAdmin = false;
+        let messages = [];
+        let users = [];
+        let groups = [];
+        let messageTimers = {};
+        
+        // المنتهای DOM
+        const loginContainer = document.getElementById('loginContainer');
+        const chatContainer = document.getElementById('chatContainer');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const userAvatar = document.getElementById('userAvatar');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const usersList = document.getElementById('usersList');
+        const groupsList = document.getElementById('groupsList');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminUserList = document.getElementById('adminUserList');
+        const adminGroupList = document.getElementById('adminGroupList');
+        const logoutButton = document.getElementById('logoutButton');
+        const notification = document.getElementById('notification');
+        const chatTitle = document.getElementById('chatTitle');
+        const emptyState = document.getElementById('emptyState');
+        
+        // راهاندازی برنامه
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            checkAuthState();
+        });
+        
+        // تنظیم رویدادها
+        function setupEventListeners() {
+            // تبهای ورود
+            document.getElementById('userLoginTab').addEventListener('click', () => switchLoginTab('user'));
+            document.getElementById('adminLoginTab').addEventListener('click', () => switchLoginTab('admin'));
+            document.getElementById('registerTab').addEventListener('click', () => switchLoginTab('register'));
+            
+            // دکمههای ورود
+            document.getElementById('userLoginBtn').addEventListener('click', userLogin);
+            document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
+            document.getElementById('registerBtn').addEventListener('click', registerUser);
+            
+            // دکمههای چت
+            sendButton.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // دکمههای پاکسازی
+            document.getElementById('clearChatBtn').addEventListener('click', clearCurrentChat);
+            document.getElementById('deleteAllMessagesBtn').addEventListener('click', deleteAllUserMessages);
+            document.getElementById('clearAllMessagesBtn').addEventListener('click', clearAllMessages);
+            document.getElementById('clearUserMessagesBtn').addEventListener('click', clearUserMessages);
+            
+            // دکمه آپلود فایل
+            document.getElementById('uploadBtn').addEventListener('click', uploadFile);
+            
+            // دکمههای مدیریت
+            document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
+            document.getElementById('addGroupBtn').addEventListener('click', showAddGroupModal);
+            document.getElementById('refreshUsersBtn').addEventListener('click', loadUsers);
+            document.getElementById('refreshGroupsBtn').addEventListener('click', loadGroups);
+            document.getElementById('createGroupBtn').addEventListener('click', createGroup);
+            document.getElementById('createUserBtn').addEventListener('click', createUser);
+            
+            // بستن مودالها
+            document.getElementById('closeGroupModal').addEventListener('click', () => {
+                document.getElementById('createGroupModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeUserModal').addEventListener('click', () => {
+                document.getElementById('addUserModal').style.display = 'none';
+            });
+            
+            // خروج
+            logoutButton.addEventListener('click', signOut);
+        }
+        
+        // تغییر تب ورود
+        function switchLoginTab(tab) {
+            document.getElementById('userLoginTab').classList.remove('active');
+            document.getElementById('adminLoginTab').classList.remove('active');
+            document.getElementById('registerTab').classList.remove('active');
+            
+            document.getElementById('userLoginForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            
+            switch(tab) {
+                case 'user':
+                    document.getElementById('userLoginTab').classList.add('active');
+                    document.getElementById('userLoginForm').style.display = 'block';
+                    break;
+                case 'admin':
+                    document.getElementById('adminLoginTab').classList.add('active');
+                    document.getElementById('adminLoginForm').style.display = 'block';
+                    break;
+                case 'register':
+                    document.getElementById('registerTab').classList.add('active');
+                    document.getElementById('registerForm').style.display = 'block';
+                    break;
+            }
+        }
+        
+        // بررسی وضعیت احراز هویت
+        async function checkAuthState() {
+            const { data, error } = await supabase.auth.getSession();
+            
+            if (data.session) {
+                currentUser = data.session.user;
+                await initializeApp();
+            }
+        }
+        
+        // ورود کاربر
+        async function userLogin() {
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            
+            if (!email || !password) {
+                showNotification('لطفاً ایمیل و رمز عبور را وارد کنید', true);
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) throw error;
+                
+                currentUser = data.user;
+                isAdmin = false;
+                await initializeApp();
+                showNotification('با موفقیت وارد شدید');
+                
+            } catch (error) {
+                console.error('Error signing in:', error);
+                showNotification('خطا در ورود: ' + error.message, true);
+            }
+        }
+        
+        // ورود مدیر
+        async function adminLogin() {
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (!email || !password) {
+                showNotification('لطفاً ایمیل و رمز عبور مدیر را وارد کنید', true);
+                return;
+            }
+            
+            try {
+                // در حالت واقعی، این اطلاعات از دیتابیس چک میشود
+                if (email === 'admin@system.com' && password === 'admin123') {
+                    currentUser = {
+                        id: 'admin',
+                        email: 'admin@system.com',
+                        user_metadata: { full_name: 'مدیر سیستم' }
+                    };
+                    isAdmin = true;
+                    await initializeApp();
+                    showNotification('به پنل مدیریت خوش آمدید');
+                } else {
+                    showNotification('اطلاعات ورود مدیر نادرست است', true);
+                }
+                
+            } catch (error) {
+                console.error('Error in admin login:', error);
+                showNotification('خطا در ورود مدیر', true);
+            }
+        }
+        
+        // ثبتنام کاربر جدید
+        async function registerUser() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+            
+            if (!name || !email || !password) {
+                showNotification('لطفاً تمام فیلدها را پر کنید', true);
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                showNotification('رمز عبور و تکرار آن مطابقت ندارند', true);
+                return;
+            }
+            
+            if (password.length < 8) {
+                showNotification('رمز عبور باید حداقل 8 کاراکتر باشد', true);
+                return;
+            }
+            
+            try {
+                // در حالت واقعی، کاربر در Supabase Auth ثبت میشود
+                showNotification('ثبتنام با موفقیت انجام شد. منتظر تایید مدیر باشید.');
+                switchLoginTab('user');
+                
+                // پاک کردن فرم
+                document.getElementById('regName').value = '';
+                document.getElementById('regEmail').value = '';
+                document.getElementById('regPassword').value = '';
+                document.getElementById('regPasswordConfirm').value = '';
+                
+            } catch (error) {
+                console.error('Error registering user:', error);
+                showNotification('خطا در ثبتنام: ' + error.message, true);
+            }
+        }
+        
+        // خروج
+        async function signOut() {
+            try {
+                if (!isAdmin) {
+                    const { error } = await supabase.auth.signOut();
+                    if (error) throw error;
+                }
+                
+                currentUser = null;
+                isAdmin = false;
+                showLoginScreen();
+                showNotification('با موفقیت خارج شدید');
+                
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showNotification('خطا در خروج', true);
+            }
+        }
+        
+        // مقداردهی اولیه برنامه
+        async function initializeApp() {
+            try {
+                displayUserInfo();
+                showChatScreen();
+                await loadUsers();
+                await loadGroups();
+                
+                if (isAdmin) {
+                    adminPanel.style.display = 'block';
+                    loadAdminData();
+                }
+                
+                // انتخاب گروه پیشفرض
+                if (groups.length > 0) {
+                    selectGroup(groups[0]);
+                }
+                
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showNotification('خطا در بارگذاری برنامه', true);
+            }
+        }
+        
+        // نمایش اطلاعات کاربر
+        function displayUserInfo() {
+            if (!currentUser) return;
+            
+            userName.textContent = currentUser.user_metadata?.full_name || currentUser.email;
+            userRole.textContent = isAdmin ? 'مدیر سیستم' : 'کاربر عادی';
+            
+            const initial = (currentUser.user_metadata?.full_name || 'User').charAt(0).toUpperCase();
+            userAvatar.textContent = initial;
+            
+            userInfo.style.display = 'flex';
+            logoutButton.style.display = 'block';
+        }
+        
+        // نمایش صفحه ورود
+        function showLoginScreen() {
+            loginContainer.style.display = 'flex';
+            chatContainer.style.display = 'none';
+            userInfo.style.display = 'none';
+            logoutButton.style.display = 'none';
+            adminPanel.style.display = 'none';
+        }
+        
+        // نمایش صفحه چت
+        function showChatScreen() {
+            loginContainer.style.display = 'none';
+            chatContainer.style.display = 'flex';
+            userInfo.style.display = 'flex';
+            logoutButton.style.display = 'block';
+        }
+        
+        // بارگذاری کاربران
+        async function loadUsers() {
+            try {
+                // در حالت واقعی از Supabase بارگذاری میشود
+                users = [
+                    { id: '1', name: 'کاربر نمونه ۱', email: 'user1@example.com', avatar: null, isOnline: true, role: 'user', status: 'active' },
+                    { id: '2', name: 'کاربر نمونه ۲', email: 'user2@example.com', avatar: null, isOnline: true, role: 'user', status: 'active' },
+                    { id: '3', name: 'ناظر سیستم', email: 'mod@example.com', avatar: null, isOnline: false, role: 'moderator', status: 'active' }
+                ];
+                
+                displayUsers();
+                
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+        
+        // نمایش کاربران
+        function displayUsers() {
+            if (!usersList) return;
+            
+            usersList.innerHTML = '';
+            
+            users.forEach(user => {
+                if (user.id === currentUser.id) return;
+                
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.dataset.userId = user.id;
+                
+                userItem.innerHTML = `
+                    <div class="user-status ${user.isOnline ? '' : 'offline'}"></div>
+                    <div class="user-avatar-small">
+                        ${user.avatar ? `<img src="${user.avatar}" alt="${user.name}">` : user.name.charAt(0)}
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">${user.name}</div>
+                        <div class="user-role">${user.role === 'moderator' ? 'ناظر' : 'کاربر'} - ${user.isOnline ? 'آنلاین' : 'آفلاین'}</div>
+                    </div>
+                `;
+                
+                userItem.addEventListener('click', () => startPrivateChat(user));
+                usersList.appendChild(userItem);
+            });
+        }
+        
+        // بارگذاری گروهها
+        async function loadGroups() {
+            try {
+                // در حالت واقعی از Supabase بارگذاری میشود
+                groups = [
+                    { id: '1', name: 'گروه عمومی', description: 'گفتگوی عمومی همه کاربران', members: ['1', '2', '3'], isPrivate: false, createdBy: 'admin' },
+                    { id: '2', name: 'پشتیبانی فنی', description: 'پشتیبانی و راهنمایی', members: ['1', '3'], isPrivate: true, createdBy: 'admin' },
+                    { id: '3', name: 'توسعه دهندگان', description: 'بحثهای فنی', members: ['2', '3'], isPrivate: true, createdBy: 'admin' }
+                ];
+                
+                displayGroups();
+                
+            } catch (error) {
+                console.error('Error loading groups:', error);
+            }
+        }
+        
+        // نمایش گروهها
+        function displayGroups() {
+            if (!groupsList) return;
+            
+            groupsList.innerHTML = '';
+            
+            groups.forEach(group => {
+                const groupItem = document.createElement('div');
+                groupItem.className = 'group-item';
+                groupItem.dataset.groupId = group.id;
+                
+                if (currentGroup && currentGroup.id === group.id) {
+                    groupItem.classList.add('active');
+                }
+                
+                groupItem.innerHTML = `
+                    <div class="group-avatar">G</div>
+                    <div class="user-details">
+                        <div class="user-name">${group.name}</div>
+                        <div class="user-role">${group.members.length} عضو</div>
+                    </div>
+                `;
+                
+                groupItem.addEventListener('click', () => selectGroup(group));
+                groupsList.appendChild(groupItem);
+            });
+        }
+        
+        // انتخاب گروه
+        function selectGroup(group) {
+            currentGroup = group;
+            displayGroups();
+            chatTitle.textContent = group.name;
+            loadMessages(group.id);
+            
+            // فعال کردن فیلد ورودی پیام
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+        }
+        
+        // شروع چت خصوصی
+        function startPrivateChat(user) {
+            const privateGroup = {
+                id: `private_${user.id}`,
+                name: `چت با ${user.name}`,
+                description: `چت خصوصی با ${user.name}`,
+                members: [currentUser.id, user.id],
+                isPrivate: true,
+                isDirect: true
+            };
+            
+            selectGroup(privateGroup);
+        }
+        
+        // بارگذاری پیامها
+        async function loadMessages(groupId) {
+            try {
+                messagesContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+                
+                // در حالت واقعی از Supabase بارگذاری میشود
+                setTimeout(() => {
+                    messages = [
+                        {
+                            id: '1',
+                            text: 'سلام! به گروه خوش آمدید.',
+                            sender_id: '1',
+                            group_id: groupId,
+                            created_at: new Date(Date.now() - 60000),
+                            is_read: true,
+                            type: 'text'
+                        },
+                        {
+                            id: '2',
+                            text: 'ممنون! فضای خوبی دارید اینجا.',
+                            sender_id: currentUser.id,
+                            group_id: groupId,
+                            created_at: new Date(Date.now() - 30000),
+                            is_read: true,
+                            type: 'text'
+                        }
+                    ];
+                    
+                    displayMessages();
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                showNotification('خطا در بارگذاری پیامها', true);
+            }
+        }
+        
+        // نمایش پیامها
+        function displayMessages() {
+            if (!messagesContainer) return;
+            
+            messagesContainer.innerHTML = '';
+            
+            if (messages.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            messages.forEach(message => {
+                displayMessage(message);
+            });
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // نمایش یک پیام
+        function displayMessage(message) {
+            const messageElement = document.createElement('div');
+            const isSent = message.sender_id === currentUser.id;
+            
+            messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
+            messageElement.dataset.messageId = message.id;
+            
+            const timeString = new Date(message.created_at).toLocaleTimeString('fa-IR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            let messageHeader = '';
+            if (!isSent) {
+                const sender = users.find(u => u.id === message.sender_id);
+                messageHeader = `<div class="message-header">${sender ? sender.name : 'کاربر'}</div>`;
+            }
+            
+            let messageContent = '';
+            if (message.type === 'text') {
+                messageContent = `<div>${message.text}</div>`;
+            } else if (message.type === 'file') {
+                messageContent = `
+                    <div class="file-attachment">
+                        <span class="file-icon">📎</span>
+                        <strong>${message.file_name}</strong>
+                        <div>(${formatFileSize(message.file_size)})</div>
+                        <a href="${message.file_url}" target="_blank" style="color: var(--matrix-green);">دانلود</a>
+                    </div>
+                `;
+            }
+            
+            messageElement.innerHTML = `
+                <div class="message-actions">
+                    <button class="btn-small" onclick="deleteSingleMessage('${message.id}')">×</button>
+                </div>
+                ${messageHeader}
+                ${messageContent}
+                <div class="message-time">${timeString}</div>
+                <div class="type-indicator">${message.type === 'text' ? 'متن' : 'فایل'}</div>
+            `;
+            
+            // اگر پیام دریافت شده و هنوز خوانده نشده، تایمر حذف را تنظیم کن
+            if (!isSent && !message.is_read) {
+                const deleteTimer = document.createElement('div');
+                deleteTimer.className = 'delete-timer';
+                messageElement.appendChild(deleteTimer);
+                
+                startDeleteTimer(message.id, deleteTimer);
+            }
+            
+            messagesContainer.appendChild(messageElement);
+        }
+        
+        // شروع تایمر حذف پیام
+        function startDeleteTimer(messageId, timerElement) {
+            if (messageTimers[messageId]) {
+                clearTimeout(messageTimers[messageId]);
+            }
+            
+            messageTimers[messageId] = setTimeout(() => {
+                deleteSingleMessage(messageId);
+            }, 20000);
+            
+            let width = 100;
+            const interval = setInterval(() => {
+                width -= (100 / 20);
+                timerElement.style.width = `${width}%`;
+                
+                if (width <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+        
+        // حذف یک پیام
+        function deleteSingleMessage(messageId) {
+            const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+            if (messageElement) {
+                messageElement.classList.add('deleting');
+                setTimeout(() => {
+                    messageElement.remove();
+                    delete messageTimers[messageId];
+                    
+                    // حذف از آرایه پیامها
+                    messages = messages.filter(m => m.id !== messageId);
+                    
+                    // اگر همه پیامها حذف شدند، حالت خالی نمایش داده شود
+                    if (messages.length === 0) {
+                        emptyState.style.display = 'block';
+                    }
+                    
+                    // در حالت واقعی از دیتابیس نیز حذف میشود
+                    showNotification('پیام حذف شد');
+                }, 500);
+            }
+        }
+        
+        // پاک کردن چت فعلی
+        function clearCurrentChat() {
+            if (!currentGroup) {
+                showNotification('لطفاً ابتدا یک گروه انتخاب کنید', true);
+                return;
+            }
+            
+            if (confirm('آیا از پاک کردن تمام پیامهای این چت اطمینان دارید؟ این عمل غیرقابل بازگشت است.')) {
+                // پاک کردن تمام تایمرها
+                Object.keys(messageTimers).forEach(messageId => {
+                    clearTimeout(messageTimers[messageId]);
+                });
+                messageTimers = {};
+                
+                // پاک کردن پیامها از آرایه
+                messages = messages.filter(m => m.group_id !== currentGroup.id);
+                
+                // پاک کردن نمایش پیامها
+                messagesContainer.innerHTML = '';
+                emptyState.style.display = 'block';
+                
+                showNotification('تمام پیامهای این چت پاک شد');
+            }
+        }
+        
+        // حذف تمام پیامهای کاربر
+        function deleteAllUserMessages() {
+            if (confirm('آیا از حذف تمام پیامهای ارسالی و دریافتی خود اطمینان دارید؟ این عمل غیرقابل بازگشت است.')) {
+                // پاک کردن تمام تایمرها
+                Object.keys(messageTimers).forEach(messageId => {
+                    clearTimeout(messageTimers[messageId]);
+                });
+                messageTimers = {};
+                
+                // پاک کردن پیامهای کاربر از آرایه
+                messages = messages.filter(m => m.sender_id !== currentUser.id);
+                
+                // نمایش مجدد پیامها
+                displayMessages();
+                
+                showNotification('تمام پیامهای شما حذف شد');
+            }
+        }
+        
+        // حذف تمام پیامهای سیستم (مدیر)
+        function clearAllMessages() {
+            if (!isAdmin) {
+                showNotification('شما دسترسی لازم برای این عمل را ندارید', true);
+                return;
+            }
+            
+            if (confirm('آیا از حذف تمام پیامهای سیستم اطمینان دارید؟ این عمل غیرقابل بازگشت است و بر تمام کاربران تاثیر میگذارد.')) {
+                // پاک کردن تمام تایمرها
+                Object.keys(messageTimers).forEach(messageId => {
+                    clearTimeout(messageTimers[messageId]);
+                });
+                messageTimers = {};
+                
+                // پاک کردن تمام پیامها
+                messages = [];
+                
+                // پاک کردن نمایش پیامها
+                if (messagesContainer) {
+                    messagesContainer.innerHTML = '';
+                    emptyState.style.display = 'block';
+                }
+                
+                showNotification('تمام پیامهای سیستم حذف شد');
+            }
+        }
+        
+        // حذف پیامهای یک کاربر خاص (مدیر)
+        function clearUserMessages() {
+            if (!isAdmin) {
+                showNotification('شما دسترسی لازم برای این عمل را ندارید', true);
+                return;
+            }
+            
+            const userId = prompt('لطفاً ID کاربر مورد نظر را وارد کنید:');
+            if (userId) {
+                if (confirm(`آیا از حذف تمام پیامهای کاربر ${userId} اطمینان دارید؟`)) {
+                    // پاک کردن پیامهای کاربر
+                    messages = messages.filter(m => m.sender_id !== userId);
+                    
+                    // نمایش مجدد پیامها
+                    displayMessages();
+                    
+                    showNotification(`تمام پیامهای کاربر ${userId} حذف شد`);
+                }
+            }
+        }
+        
+        // ارسال پیام
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            
+            if (!text || !currentGroup) return;
+            
+            try {
+                const newMessage = {
+                    id: Date.now().toString(),
+                    text: text,
+                    sender_id: currentUser.id,
+                    group_id: currentGroup.id,
+                    created_at: new Date(),
+                    is_read: false,
+                    type: 'text'
+                };
+                
+                // اضافه کردن به آرایه پیامها
+                messages.push(newMessage);
+                
+                // نمایش پیام
+                displayMessage(newMessage);
+                
+                messageInput.value = '';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // شبیهسازی دریافت پاسخ
+                simulateReply(newMessage);
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showNotification('خطا در ارسال پیام', true);
+            }
+        }
+        
+        // آپلود فایل
+        async function uploadFile() {
+            showNotification('قابلیت آپلود فایل به زودی اضافه میشود');
+        }
+        
+        // شبیهسازی پاسخ
+        function simulateReply(originalMessage) {
+            if (currentGroup.isDirect) return;
+            
+            setTimeout(() => {
+                const otherUsers = currentGroup.members.filter(id => id !== currentUser.id);
+                if (otherUsers.length > 0) {
+                    const randomUserId = otherUsers[Math.floor(Math.random() * otherUsers.length)];
+                    const randomUser = users.find(u => u.id === randomUserId);
+                    
+                    if (randomUser) {
+                        const replyMessage = {
+                            id: (Date.now() + 1).toString(),
+                            text: `پاسخ به: "${originalMessage.text}"`,
+                            sender_id: randomUser.id,
+                            group_id: currentGroup.id,
+                            created_at: new Date(),
+                            is_read: false,
+                            type: 'text'
+                        };
+                        
+                        messages.push(replyMessage);
+                        displayMessage(replyMessage);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                }
+            }, 2000);
+        }
+        
+        // نمایش مودال افزودن کاربر
+        function showAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'flex';
+        }
+        
+        // نمایش مودال ایجاد گروه
+        function showAddGroupModal() {
+            document.getElementById('createGroupModal').style.display = 'flex';
+        }
+        
+        // ایجاد گروه جدید
+        async function createGroup() {
+            const name = document.getElementById('groupName').value;
+            const description = document.getElementById('groupDescription').value;
+            
+            if (!name) {
+                showNotification('لطفاً نام گروه را وارد کنید', true);
+                return;
+            }
+            
+            try {
+                const newGroup = {
+                    id: Date.now().toString(),
+                    name: name,
+                    description: description,
+                    members: [currentUser.id],
+                    isPrivate: false,
+                    createdBy: currentUser.id,
+                    created_at: new Date()
+                };
+                
+                groups.push(newGroup);
+                displayGroups();
+                
+                document.getElementById('createGroupModal').style.display = 'none';
+                document.getElementById('groupName').value = '';
+                document.getElementById('groupDescription').value = '';
+                
+                showNotification('گروه با موفقیت ایجاد شد');
+                
+            } catch (error) {
+                console.error('Error creating group:', error);
+                showNotification('خطا در ایجاد گروه', true);
+            }
+        }
+        
+        // ایجاد کاربر جدید
+        async function createUser() {
+            const name = document.getElementById('newUserName').value;
+            const email = document.getElementById('newUserEmail').value;
+            const password = document.getElementById('newUserPassword').value;
+            const role = document.getElementById('newUserRole').value;
+            
+            if (!name || !email || !password) {
+                showNotification('لطفاً تمام فیلدها را پر کنید', true);
+                return;
+            }
+            
+            try {
+                const newUser = {
+                    id: Date.now().toString(),
+                    name: name,
+                    email: email,
+                    avatar: null,
+                    isOnline: false,
+                    role: role,
+                    status: 'active',
+                    created_at: new Date()
+                };
+                
+                users.push(newUser);
+                displayUsers();
+                
+                document.getElementById('addUserModal').style.display = 'none';
+                document.getElementById('newUserName').value = '';
+                document.getElementById('newUserEmail').value = '';
+                document.getElementById('newUserPassword').value = '';
+                
+                showNotification('کاربر با موفقیت ایجاد شد');
+                
+            } catch (error) {
+                console.error('Error creating user:', error);
+                showNotification('خطا در ایجاد کاربر', true);
+            }
+        }
+        
+        // بارگذاری دادههای مدیریت
+        function loadAdminData() {
+            displayAdminUsers();
+            displayAdminGroups();
+            updateStats();
+        }
+        
+        // نمایش کاربران برای مدیر
+        function displayAdminUsers() {
+            if (!adminUserList) return;
+            
+            adminUserList.innerHTML = '';
+            
+            users.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <div>
+                        <strong>${user.name}</strong>
+                        <div>${user.email} - ${user.role === 'moderator' ? 'ناظر' : 'کاربر'}</div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editUser('${user.id}')">ویرایش</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteUser('${user.id}')">حذف</button>
+                    </div>
+                `;
+                adminUserList.appendChild(listItem);
+            });
+        }
+        
+        // نمایش گروهها برای مدیر
+        function displayAdminGroups() {
+            if (!adminGroupList) return;
+            
+            adminGroupList.innerHTML = '';
+            
+            groups.forEach(group => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <div>
+                        <strong>${group.name}</strong>
+                        <div>${group.members.length} عضو - ${group.isPrivate ? 'خصوصی' : 'عمومی'}</div>
+                    </div>
+                    <div class="group-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editGroup('${group.id}')">ویرایش</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteGroup('${group.id}')">حذف</button>
+                    </div>
+                `;
+                adminGroupList.appendChild(listItem);
+            });
+        }
+        
+        // بهروزرسانی آمار
+        function updateStats() {
+            document.getElementById('onlineUsersCount').textContent = users.filter(u => u.isOnline).length;
+            document.getElementById('groupsCount').textContent = groups.length;
+            document.getElementById('messagesToday').textContent = messages.filter(m => {
+                const today = new Date();
+                const messageDate = new Date(m.created_at);
+                return messageDate.toDateString() === today.toDateString();
+            }).length;
+            document.getElementById('totalMessages').textContent = messages.length;
+        }
+        
+        // نمایش اعلان
+        function showNotification(message, isError = false) {
+            notification.textContent = message;
+            notification.className = `notification ${isError ? 'error' : ''}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 4000);
+        }
+        
+        // فرمت سایز فایل
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // توابع مدیریت (برای دکمهها)
+        function editUser(userId) {
+            showNotification(`ویرایش کاربر ${userId} - این قابلیت به زودی اضافه میشود`);
+        }
+        
+        function deleteUser(userId) {
+            if (confirm('آیا از حذف این کاربر اطمینان دارید؟')) {
+                users = users.filter(u => u.id !== userId);
+                displayAdminUsers();
+                showNotification('کاربر با موفقیت حذف شد');
+            }
+        }
+        
+        function editGroup(groupId) {
+            showNotification(`ویرایش گروه ${groupId} - این قابلیت به زودی اضافه میشود`);
+        }
+        
+        function deleteGroup(groupId) {
+            if (confirm('آیا از حذف این گروه اطمینان دارید؟')) {
+                groups = groups.filter(g => g.id !== groupId);
+                displayAdminGroups();
+                showNotification('گروه با موفقیت حذف شد');
+            }
+        }
+        
+        // شنود تغییرات وضعیت احراز هویت
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                currentUser = session.user;
+                isAdmin = false;
+                initializeApp();
+            } else if (event === 'SIGNED_OUT') {
+                currentUser = null;
+                showLoginScreen();
+            }
+        });
+    </script>
 </body>
 </html>
