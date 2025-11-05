@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silent - سیستم مدیریت فروشگاه</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff6b6b;
+            --success: #4cd964;
+            --warning: #ffcc00;
+            --dark: #2d3748;
+            --light: #f8f9fa;
+            --gray: #718096;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            right: 0;
+            background-color: white;
+            transition: var(--transition);
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 8rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to left, var(--primary), var(--secondary));
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .feature-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to left, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .feature-card:hover:before {
+            transform: scaleX(1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover .feature-icon {
+            color: var(--secondary);
+            transform: scale(1.1);
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1.2rem;
+            color: var(--dark);
+            font-size: 1.4rem;
+        }
+        
+        /* Dashboard Preview */
+        .dashboard-preview {
+            background-color: white;
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-preview:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .dashboard-content {
+            flex: 1;
+        }
+        
+        .dashboard-image {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-image:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        /* Statistics Section */
+        .statistics {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-item {
+            padding: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .stat-text {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            padding: 6rem 0;
+            background-color: #f8f9fa;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-content {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .testimonial-content:before {
+            content: '\201C';
+            font-size: 4rem;
+            color: var(--primary);
+            opacity: 0.2;
+            position: absolute;
+            top: -1.5rem;
+            right: -0.5rem;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .author-info h4 {
+            margin-bottom: 0.3rem;
+        }
+        
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 0;
+            background-color: white;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .pricing-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pricing-card.featured {
+            border-top: 5px solid var(--accent);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+        
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .pricing-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .price {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2.5rem;
+            text-align: right;
+        }
+        
+        .pricing-features li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .pricing-features li i {
+            color: var(--success);
+            margin-left: 0.7rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 0.7rem;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: var(--accent);
+            bottom: 0;
+            right: 0;
+            border-radius: 2px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+            transform: translateX(-5px);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        /* Scroll to Top Button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .scroll-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+            
+            .pricing-card.featured:hover {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .hero {
+                padding: 5rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .dashboard-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .features-grid, .pricing-grid, .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-card, .pricing-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="logo-text">Silent</div>
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="#">صفحه اصلی</a></li>
+                        <li><a href="#">امکانات</a></li>
+                        <li><a href="#">نمونه کارها</a></li>
+                        <li><a href="#">قیمت ها</a></li>
+                        <li><a href="#">تماس با ما</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="user-actions">
+                    <button class="btn btn-outline">ورود</button>
+                    <button class="btn btn-primary">ثبت نام</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>سیستم مدیریت جامع فروشگاه شما</h1>
+            <p>با Silent تمامی عملیات فروشگاه خود را به ساده ترین شکل مدیریت کنید. ثبت کالاها، پیگیری درآمد و هزینه ها، گزارشگیری هوشمند و بسیاری امکانات دیگر در یک پنل کاربری زیبا و کاربرپسند.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+                    <i class="fas fa-rocket"></i>
+                    شروع کنید
+                </button>
+                <button class="btn btn-outline" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+                    <i class="fas fa-play-circle"></i>
+                    مشاهده دمو
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>امکانات جامع Silent</h2>
+                <p>تمام ابزارهایی که برای مدیریت موفق فروشگاه خود نیاز دارید در یک پلتفرم</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h3>مدیریت کالاها</h3>
+                    <p>ثبت، ویرایش و حذف محصولات به همراه تصاویر، دسته بندی و موجودی انبار</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>مدیریت مالی</h3>
+                    <p>ثبت درآمدها و هزینه ها، پیگیری سود و زیان و گزارشگیری مالی پیشرفته</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>مدیریت مشتریان</h3>
+                    <p>ثبت اطلاعات مشتریان، تاریخچه خرید و سیستم اطلاع رسانی هوشمند</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3>فاکتور و صورت حساب</h3>
+                    <p>صدور فاکتورهای حرفهای، چاپ و ارسال برای مشتریان به صورت خودکار</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>گزارشگیری جامع</h3>
+                    <p>گزارش های گرافیکی و تحلیلی از تمامی بخش های فروشگاه در قالب نمودار</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>پنل موبایل</h3>
+                    <p>دسترسی کامل به تمامی امکانات از طریق اپلیکیشن موبایل در iOS و Android</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number" data-count="1500">0</span>
+                    <span class="stat-text">فروشگاه فعال</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="50000">0</span>
+                    <span class="stat-text">محصول مدیریت شده</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="98">0</span>
+                    <span class="stat-text">رضایت کاربران</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="24">0</span>
+                    <span class="stat-text">پشتیبانی 24/7</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="dashboard-preview">
+        <div class="container">
+            <div class="dashboard-container">
+                <div class="dashboard-content">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--primary);">پنل مدیریتی زیبا و کاربرپسند</h2>
+                    <p style="margin-bottom: 1.5rem; color: var(--gray); line-height: 1.8;">پنل مدیریت Silent با طراحی مدرن و رنگبندی زیبا، تجربهای لذتبخش از مدیریت فروشگاه را برای شما فراهم میکند. تمامی اطلاعات مهم در یک نگاه قابل دسترسی است.</p>
+                    <ul style="list-style: none; margin-bottom: 2.5rem;">
+                        <li style="padding: 0.7rem 0; display: flex; align-items: center;">
+                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 0.7rem; font-size: 1.2rem;"></i>
+                            طراحی ریسپانسیو و سازگار با تمام دستگاهها
+                        </li>
+                        <li style="padding: 0.7rem 0; display: flex; align-items: center;">
+                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 0.7rem; font-size: 1.2rem;"></i>
+                            رابط کاربری ساده و قابل درک برای همه
+                        </li>
+                        <li style="padding: 0.7rem 0; display: flex; align-items: center;">
+                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 0.7rem; font-size: 1.2rem;"></i>
+                            رنگبندی زیبا و متناسب با برند شما
+                        </li>
+                    </ul>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-external-link-alt"></i>
+                        مشاهده دمو
+                    </button>
+                </div>
+                
+                <div class="dashboard-image">
+                    <div style="text-align: center; position: relative; z-index: 2;">
+                        <i class="fas fa-desktop" style="font-size: 5rem; margin-bottom: 1.5rem;"></i>
+                        <p style="font-size: 1.8rem; font-weight: 600;">پنل مدیریت Silent</p>
+                        <p>برای تایید ثبت نام خود به واتساپ مدیریت در تماس باشید</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>نظرات کاربران</h2>
+                <p>آنچه مشتریان ما درباره Silent میگویند</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>استفاده از Silent تحول بزرگی در کسب و کار من ایجاد کرد. مدیریت موجودی و گزارشگیری مالی بسیار ساده شده و در وقت من صرفهجویی زیادی شده است.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">م.ح</div>
+                        <div class="author-info">
+                            <h4>محمد حسینی</h4>
+                            <p>مدیر فروشگاه پوشاک</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>پنل کاربری Silent بسیار زیبا و کاربرپسند است. حتی بدون آموزش خاصی توانستم تمام امور فروشگاهم را مدیریت کنم. پشتیبانی 24 ساعته هم عالی است.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">ف.ر</div>
+                        <div class="author-info">
+                            <h4>فاطمه رضایی</h4>
+                            <p>صاحب فروشگاه لوازم آرایشی</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>با استفاده از Silent توانستم فروشگاه آنلاین خود را به خوبی مدیریت کنم. امکان صدور فاکتورهای حرفهای و گزارشگیری دقیق از مهمترین ویژگیهای آن است.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">ع.ک</div>
+                        <div class="author-info">
+                            <h4>علی کریمی</h4>
+                            <p>مدیر فروشگاه اینترنتی</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>پلن های قیمت گذاری</h2>
+                <p>پلن های متنوع برای نیازهای مختلف کسب و کار شما</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>پایه</h3>
+                        <p>مناسب برای فروشگاه های کوچک</p>
+                    </div>
+                    <div class="price">رایگان<span>/ماه</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> مدیریت تا 100 کالا</li>
+                        <li><i class="fas fa-check"></i> گزارش های پایه</li>
+                        <li><i class="fas fa-check"></i> پشتیبانی ایمیلی</li>
+                        <li><i class="fas fa-check"></i> فضای ذخیرهسازی 1GB</li>
+                        <li><i class="fas fa-times" style="color: var(--accent);"></i> اپلیکیشن موبایل</li>
+                    </ul>
+                    <button class="btn btn-outline" style="color: var(--dark); border-color: var(--dark); width: 100%;">شروع کنید</button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">پیشنهاد ویژه</div>
+                    <div class="pricing-header">
+                        <h3>حرفهای</h3>
+                        <p>مناسب برای اکثر فروشگاه ها</p>
+                    </div>
+                    <div class="price">1500<span> افغانی/ماه</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> مدیریت نامحدود کالاها</li>
+                        <li><i class="fas fa-check"></i> گزارش های پیشرفته</li>
+                        <li><i class="fas fa-check"></i> پشتیبانی تلفنی و ایمیلی</li>
+                        <li><i class="fas fa-check"></i> فضای ذخیرهسازی 10GB</li>
+                        <li><i class="fas fa-check"></i> اپلیکیشن موبایل</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">انتخاب پلن</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>سازمانی</h3>
+                        <p>مناسب برای فروشگاه های زنجیرهای</p>
+                    </div>
+                    <div class="price">3000<span> افغانی/ماه</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> همه امکانات پلن حرفهای</li>
+                        <li><i class="fas fa-check"></i> پنل مدیریت چند فروشگاهی</li>
+                        <li><i class="fas fa-check"></i> پشتیبانی VIP</li>
+                        <li><i class="fas fa-check"></i> فضای ذخیرهسازی نامحدود</li>
+                        <li><i class="fas fa-check"></i> اپلیکیشن سفارشی</li>
+                    </ul>
+                    <button class="btn btn-outline" style="color: var(--dark); border-color: var(--dark); width: 100%;">تماس با ما</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>آماده اید فروشگاه خود را متحول کنید؟</h2>
+            <p>همین امروز Silent را امتحان کنید و تفاوت را در مدیریت کسب و کار خود احساس کنید</p>
+            <button class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem;">
+                <i class="fas fa-rocket"></i>
+                شروع دوره آزمایشی رایگان
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>درباره Silent</h3>
+                    <p style="color: #cbd5e0; margin-bottom: 1.5rem; line-height: 1.8;">Silent یک پلتفرم جامع مدیریت فروشگاه است که به شما کمک میکند کسب و کار خود را به ساده ترین شکل ممکن مدیریت کنید.</p>
+                    <div class="social-icons">
+                        <a href="https://t.me/kapisa_2"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.instagram.com/kapisa_2/?igsh=MW56ZGd5ZzQ4MWM5eA%3D%3D#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/bellal.yaqoobi.3/map"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/93796304080"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.youtube.com/@kapisagroup_2?si=EO6D706yaTFIIXzN"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>لینک های مفید</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> صفحه اصلی</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> امکانات</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> نمونه کارها</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> قیمت ها</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> وبلاگ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>پشتیبانی</h3>
+                    <ul>
+                        <li><a href="https://t.me/kapisa_2"><i class="fas fa-chevron-left"></i> مرکز راهنمایی</a></li>
+                        <li><a href="https://t.me/kapisa_2"><i class="fas fa-chevron-left"></i> تماس با پشتیبانی</a></li>
+                        <li><a href="https://wa.me/93796304080"><i class="fas fa-chevron-left"></i> سوالات متداول</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> مقالات آموزشی</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>تماس با ما</h3>
+                    <ul>
+                        <li style="display: flex; align-items: center; margin-bottom: 1.2rem;">
+                            <i class="fas fa-map-marker-alt" style="margin-left: 0.7rem; color: var(--accent);"></i>
+                            کابل شهر نو چهاراهی حاجی یعقوب
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: 1.2rem;">
+                            <i class="fas fa-phone" style="margin-left: 0.7rem; color: var(--accent);"></i>
+                            0770777097
+                        </li>
+                        <li style="display: flex; align-items: center;">
+                            <i class="fas fa-envelope" style="margin-left: 0.7rem; color: var(--accent);"></i>
+                            wwtn6191@gmail.com
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>تمامی حقوق برای Silent محفوظ است © ۲۰۲۳</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <script>
+        // Simple script for smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add animation to elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    
+                    // Animate statistics numbers
+                    if(entry.target.classList.contains('stat-number')) {
+                        animateValue(entry.target, 0, parseInt(entry.target.getAttribute('data-count')), 1500);
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements for animation
+        document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card, .stat-number').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(element);
+        });
+        
+        // Animate statistics numbers
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Scroll to top button
+        const scrollToTopBtn = document.querySelector('.scroll-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('active');
+            } else {
+                scrollToTopBtn.classList.remove('active');
+            }
+        });
+        
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Header scroll effect
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 100) {
+                header.style.padding = '0.5rem 0';
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+            } else {
+                header.style.padding = '1rem 0';
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            }
+        });
+                // کدهای جاوااسکریپت قبلی در اینجا قرار دارند
+        // ...
+        
+        // اضافه کردن رویداد کلیک برای دکمههای ثبت نام و ورود
+        document.addEventListener('DOMContentLoaded', function() {
+            // دکمه ثبت نام در هدر
+            const signupBtnHeader = document.querySelector('.user-actions .btn-primary');
+            if(signupBtnHeader) {
+                signupBtnHeader.addEventListener('click', function() {
+                    window.location.href = 'https://story-lovat-one.vercel.app/';
+                });
+            }
+            
+            // دکمه ورود در هدر
+            const loginBtnHeader = document.querySelector('.user-actions .btn-outline');
+            if(loginBtnHeader) {
+                loginBtnHeader.addEventListener('click', function() {
+                    window.location.href = 'https://story-lovat-one.vercel.app/';
+                });
+            }
+            
+            // دکمه شروع کنید در بخش Hero
+            const startBtnHero = document.querySelector('.hero-buttons .btn-primary');
+            if(startBtnHero) {
+                startBtnHero.addEventListener('click', function() {
+                    window.location.href = 'https://story-lovat-one.vercel.app/';
+                });
+            }
+            
+            // دکمه شروع دوره آزمایشی رایگان در بخش CTA
+            const trialBtnCTA = document.querySelector('.cta .btn-primary');
+            if(trialBtnCTA) {
+                trialBtnCTA.addEventListener('click', function() {
+                    window.location.href = 'https://story-lovat-one.vercel.app/';
+                });
+            }
+            
+            // دکمه انتخاب پلن در بخش قیمتگذاری
+            const selectPlanBtn = document.querySelector('.pricing-card.featured .btn-primary');
+            if(selectPlanBtn) {
+                selectPlanBtn.addEventListener('click', function() {
+                    window.location.href = 'https://story-lovat-one.vercel.app/';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
